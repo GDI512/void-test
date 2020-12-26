@@ -1,0 +1,15 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+ColumnLimit: 120
+IndentWidth: 4
+ConstructorInitializerIndentWidth: 8
+AccessModifierOffset: -2
+SortIncludes: false
+PointerAlignment: Left
+BreakBeforeBraces: Attach
+NamespaceIndentation: All
+AlwaysBreakTemplateDeclarations: Yes
+FixNamespaceComments: false
+AllowShortFunctionsOnASingleLine: Empty
+...
