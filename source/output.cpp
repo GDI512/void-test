@@ -3,15 +3,15 @@
 
 namespace test::core::fmt {
 
-    constexpr auto space = "\044\044\044\044";
-    constexpr auto scope = "(unit\044%s)\n";
-    constexpr auto error = "(error\044%s)\n";
-    constexpr auto success = "(ok\044%s)\n";
-    constexpr auto exception = "(unhandled exception\044%s)\n";
-    constexpr auto registry_error = "(unit\044-\044error\044[%i/%i])\n";
-    constexpr auto registry_success = "(unit\044-\044ok\044[%i/%i])\n";
-    constexpr auto verifier_error = "(verifier\044-\044error\044[%i/%i] [%i/%i/%i])\n";
-    constexpr auto verifier_success = "(verifier\044-\044ok\044[%i/%i] [%i/%i/%i])\n";
+    constexpr auto space = "\040\040\040\040";
+    constexpr auto scope = "(unit\040%s)\n";
+    constexpr auto error = "(error\040%s)\n";
+    constexpr auto success = "(ok\040%s)\n";
+    constexpr auto exception = "(unhandled exception\040%s)\n";
+    constexpr auto registry_error = "(unit\040-\040error\040[%i/%i])\n";
+    constexpr auto registry_success = "(unit\040-\040ok\040[%i/%i])\n";
+    constexpr auto verifier_error = "(verifier\040-\040error\040[%i/%i] [%i/%i/%i])\n";
+    constexpr auto verifier_success = "(verifier\040-\040ok\040[%i/%i] [%i/%i/%i])\n";
 
 }
 

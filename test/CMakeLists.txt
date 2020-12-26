@@ -9,3 +9,4 @@ endfunction ()
 
 add_test_executable (unit unit.cpp)
 add_test_executable (state state.cpp)
+add_test_executable (resource resource.cpp)
