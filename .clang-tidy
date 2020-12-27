@@ -8,6 +8,7 @@ Checks: '-*,
          clang-diagnostic-*,
          -readability-redundant-access-specifiers,
          -readability-else-after-return,
+         -readability-magic-numbers,
          -bugprone-unused-raii'
 CheckOptions:
   - key: readability-identifier-naming.ClassCase

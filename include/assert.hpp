@@ -31,8 +31,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_equal(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_equal(const T& left, const U& right) noexcept -> bool {
         if (left == right) {
             core::registry::on_success();
             core::output::on_success(__func__);
@@ -44,8 +44,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_not_equal(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_not_equal(const T& left, const U& right) noexcept -> bool {
         if (left != right) {
             core::registry::on_success();
             core::output::on_success(__func__);
@@ -57,8 +57,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_less(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_less(const T& left, const U& right) noexcept -> bool {
         if (left < right) {
             core::registry::on_success();
             core::output::on_success(__func__);
@@ -70,8 +70,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_not_less(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_not_less(const T& left, const U& right) noexcept -> bool {
         if (left >= right) {
             core::registry::on_success();
             core::output::on_success(__func__);
@@ -83,8 +83,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_greater(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_greater(const T& left, const U& right) noexcept -> bool {
         if (left > right) {
             core::registry::on_success();
             core::output::on_success(__func__);
@@ -96,8 +96,8 @@ namespace test {
         }
     }
 
-    template <typename T>
-    auto assert_not_greater(const T& left, const T& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto assert_not_greater(const T& left, const U& right) noexcept -> bool {
         if (left <= right) {
             core::registry::on_success();
             core::output::on_success(__func__);
