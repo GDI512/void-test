@@ -1,6 +1,13 @@
 ---
-Checks: '-*,clang-analyzer-*,clang-diagnostic-*,bugprone-*,performance-*,readability-*,
-         cert-*,-readability-redundant-access-specifiers,-readability-else-after-return,
+Checks: '-*,
+         cert-*,
+         bugprone-*,
+         performance-*,
+         readability-*,
+         clang-analyzer-*,
+         clang-diagnostic-*,
+         -readability-redundant-access-specifiers,
+         -readability-else-after-return,
          -bugprone-unused-raii'
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
@@ -21,4 +28,7 @@ CheckOptions:
     value: UPPER_CASE
   - key: readability-identifier-naming.IgnoreMainLikeFunctions
     value: 1
+UseColor: true
+WarningsAsErrors: '*'
+HeaderFilterRegex: '*.h, *.hpp, *.hh, *.hxx'
 ...
