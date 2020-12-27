@@ -5,7 +5,10 @@ project (container_test LANGUAGES CXX)
 set (bin ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set (test ${CMAKE_CURRENT_SOURCE_DIR}/test)
 set (source ${CMAKE_CURRENT_SOURCE_DIR}/source)
+set (example ${CMAKE_CURRENT_SOURCE_DIR}/example)
 set (include ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 
 enable_testing ()
 
@@ -17,7 +20,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
     add_compile_options (/W4)
 endif ()
 
-set (CMAKE_CXX_CLANG_TIDY clang-tidy)
-
 add_subdirectory (${source} ${bin})
 add_subdirectory (${test} ${bin}/test)
+add_subdirectory (${example} ${bin}/example)

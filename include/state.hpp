@@ -3,7 +3,18 @@
 
 #include "utility.hpp"
 
+namespace test {
+
+    constexpr auto exit_success = 0;
+    constexpr auto exit_failure = 1;
+
+    auto status() noexcept -> int;
+
+}
+
 namespace test::core {
+
+    extern int exit_status;
 
     template <typename T>
     class auto_node {

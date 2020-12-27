@@ -1,7 +1,17 @@
 #include <state.hpp>
 #include <output.hpp>
 
+namespace test {
+
+    auto status() noexcept -> int {
+        return core::exit_status;
+    }
+
+}
+
 namespace test::core {
+
+    int exit_status = exit_success;
 
     template <typename T>
     typename auto_node<T>::pointer auto_node<T>::active = nullptr;
@@ -31,12 +41,11 @@ namespace test::core {
     }
 
     registry::~registry() noexcept {
-        if (!empty()) {
-            if (status()) {
-                output::on_registry_success(info);
-            } else {
-                output::on_registry_error(info);
-            }
+        if (status() && !empty()) {
+            output::on_registry_success(info);
+        } else if (!status()) {
+            exit_status = exit_failure;
+            output::on_registry_error(info);
         }
     }
 
@@ -63,12 +72,11 @@ namespace test::core {
     }
 
     verifier::~verifier() noexcept {
-        if (!empty()) {
-            if (status()) {
-                output::on_verifier_success(info);
-            } else {
-                output::on_verifier_error(info);
-            }
+        if (status() && !empty()) {
+            output::on_verifier_success(info);
+        } else if (!status()) {
+            exit_status = exit_failure;
+            output::on_verifier_error(info);
         }
     }
 
