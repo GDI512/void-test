@@ -8,7 +8,7 @@ namespace test::core {
 
     class output {
       private:
-        static size_type indent;
+        static size_type indent_level;
 
       public:
         ~output() noexcept;
@@ -19,10 +19,10 @@ namespace test::core {
         static auto on_error(string source) noexcept -> void;
         static auto on_success(string source) noexcept -> void;
         static auto on_exception(string source) noexcept -> void;
-        static auto on_registry_error(registry::state data) noexcept -> void;
-        static auto on_registry_success(registry::state data) noexcept -> void;
-        static auto on_verifier_error(verifier::state data) noexcept -> void;
-        static auto on_verifier_success(verifier::state data) noexcept -> void;
+        static auto on_test_registry_error(test_registry::state data) noexcept -> void;
+        static auto on_test_registry_success(test_registry::state data) noexcept -> void;
+        static auto on_resource_verifier_error(resource_verifier::state data) noexcept -> void;
+        static auto on_resource_verifier_success(resource_verifier::state data) noexcept -> void;
     };
 
 }

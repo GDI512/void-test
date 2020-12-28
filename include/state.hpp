@@ -8,7 +8,7 @@ namespace test {
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
 
-    auto status() noexcept -> int;
+    auto exit_status() noexcept -> int;
 
 }
 
@@ -17,40 +17,44 @@ namespace test::core {
     extern int exit_status;
 
     template <typename T>
-    class auto_node {
+    class static_list {
       public:
-        using pointer = auto_node*;
+        using pointer = static_list*;
         using reference = T&;
 
       private:
-        static pointer active;
+        static pointer active_node;
 
       private:
-        pointer previous;
+        pointer previous_node;
 
       public:
-        ~auto_node() noexcept;
-        auto_node() noexcept;
+        ~static_list() noexcept;
+        static_list() noexcept;
 
       public:
         static auto current() noexcept -> reference;
     };
 
-    class scope : public auto_node<scope> {
-      public:
-        using state = string;
-
+    class scope : public static_list<scope> {
       private:
-        state info;
+        string name;
 
       public:
-        scope(string info) noexcept;
+        ~scope() = default;
+        scope(string name) noexcept;
+        scope(scope&& other) = delete;
+        scope(const scope& other) = delete;
 
       public:
-        auto data() noexcept -> state;
+        auto operator=(scope&& other) -> scope& = delete;
+        auto operator=(const scope& other) -> scope& = delete;
+
+      public:
+        auto data() noexcept -> string;
     };
 
-    class registry : public auto_node<registry> {
+    class test_registry : public static_list<test_registry> {
       public:
         struct state {
             size_type passed;
@@ -58,23 +62,27 @@ namespace test::core {
         };
 
       private:
-        state info;
+        state count;
 
       public:
-        ~registry() noexcept;
-        registry() noexcept;
+        ~test_registry() noexcept;
+        test_registry() noexcept;
+        test_registry(test_registry&& other) = delete;
+        test_registry(const test_registry& other) = delete;
+
+      public:
+        auto operator=(test_registry&& other) -> test_registry& = delete;
+        auto operator=(const test_registry& other) -> test_registry& = delete;
 
       public:
         auto data() const noexcept -> state;
         auto empty() const noexcept -> bool;
         auto status() const noexcept -> bool;
-
-      public:
-        static auto on_error() noexcept -> size_type;
-        static auto on_success() noexcept -> size_type;
+        auto on_error() noexcept -> size_type;
+        auto on_success() noexcept -> size_type;
     };
 
-    class verifier : public auto_node<verifier> {
+    class resource_verifier : public static_list<resource_verifier> {
       public:
         struct state {
             size_type destroyed;
@@ -85,28 +93,32 @@ namespace test::core {
         };
 
       private:
-        state info;
+        state count;
 
       public:
-        ~verifier() noexcept;
-        verifier() noexcept;
+        ~resource_verifier() noexcept;
+        resource_verifier() noexcept;
+        resource_verifier(resource_verifier&& other) = delete;
+        resource_verifier(const resource_verifier& other) = delete;
+
+      public:
+        auto operator=(resource_verifier&& other) -> resource_verifier& = delete;
+        auto operator=(const resource_verifier& other) -> resource_verifier& = delete;
 
       public:
         auto data() const noexcept -> state;
         auto empty() const noexcept -> bool;
         auto status() const noexcept -> bool;
-
-      public:
-        static auto on_destruction() noexcept -> size_type;
-        static auto on_contruction() noexcept -> size_type;
-        static auto on_destructor_error() noexcept -> size_type;
-        static auto on_constructor_error() noexcept -> size_type;
-        static auto on_operator_error() noexcept -> size_type;
+        auto on_destruction() noexcept -> size_type;
+        auto on_contruction() noexcept -> size_type;
+        auto on_destructor_error() noexcept -> size_type;
+        auto on_constructor_error() noexcept -> size_type;
+        auto on_operator_error() noexcept -> size_type;
     };
 
-    extern template class auto_node<scope>;
-    extern template class auto_node<registry>;
-    extern template class auto_node<verifier>;
+    extern template class static_list<scope>;
+    extern template class static_list<test_registry>;
+    extern template class static_list<resource_verifier>;
 
 }
 

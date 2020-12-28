@@ -6,7 +6,7 @@
 // clang-format off
 
 #define VOID_TEST_BEGIN int main() {
-#define VOID_TEST_END return test::status(); }
+#define VOID_TEST_END return test::exit_status(); }
 
 // clang-format on
 

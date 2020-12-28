@@ -1,33 +1,34 @@
 #include <resource.hpp>
 #include <state.hpp>
+#include <cstdint>
 
 namespace test {
 
-    constexpr auto invalid_pointer_value = 0xBEEF;
+    constexpr auto invalid_pointer_value = static_cast<intptr_t>(0xBEEF);
 
     resource::~resource() noexcept {
-        core::verifier::on_destruction();
+        core::resource_verifier::current().on_destruction();
         if (self != this) {
-            core::verifier::on_destructor_error();
+            core::resource_verifier::current().on_destructor_error();
         }
         self = reinterpret_cast<resource*>(invalid_pointer_value);
     }
 
     resource::resource(int value) noexcept : value(value), self(this) {
-        core::verifier::on_contruction();
+        core::resource_verifier::current().on_contruction();
     }
 
     resource::resource(resource&& other) noexcept : value(other.value), self(this) {
-        core::verifier::on_contruction();
+        core::resource_verifier::current().on_contruction();
         if (other.self != &other) {
-            core::verifier::on_constructor_error();
+            core::resource_verifier::current().on_constructor_error();
         }
     }
 
     resource::resource(const resource& other) noexcept : value(other.value), self(this) {
-        core::verifier::on_contruction();
+        core::resource_verifier::current().on_contruction();
         if (other.self != &other) {
-            core::verifier::on_constructor_error();
+            core::resource_verifier::current().on_constructor_error();
         }
     }
 
@@ -42,7 +43,7 @@ namespace test {
     auto resource::operator=(resource&& other) noexcept -> resource& {
         value = other.value;
         if (self != this || other.self != &other) {
-            core::verifier::on_operator_error();
+            core::resource_verifier::current().on_operator_error();
         }
         return *this;
     }
@@ -50,7 +51,7 @@ namespace test {
     auto resource::operator=(const resource& other) noexcept -> resource& {
         value = other.value;
         if (self != this || other.self != &other) {
-            core::verifier::on_operator_error();
+            core::resource_verifier::current().on_operator_error();
         }
         return *this;
     }

@@ -17,60 +17,60 @@ namespace test::core::fmt {
 
 namespace test::core {
 
-    size_type output::indent = 0;
+    size_type output::indent_level = 0;
 
     output::~output() noexcept {
-        indent--;
+        indent_level--;
     }
 
     output::output() noexcept {
-        indent++;
+        indent_level++;
     }
 
-    static auto rprint(string text, size_type count) noexcept -> void {
+    static auto repeat(string text, size_type count) noexcept -> void {
         while (count-- > 0) {
             fputs(text, stdout);
         }
     }
 
     auto output::on_scope(string name) noexcept -> void {
-        rprint(fmt::space, indent);
+        repeat(fmt::space, indent_level);
         printf(fmt::scope, name);
     }
 
     auto output::on_error(string source) noexcept -> void {
-        rprint(fmt::space, indent);
+        repeat(fmt::space, indent_level);
         printf(fmt::error, source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        rprint(fmt::space, indent);
+        repeat(fmt::space, indent_level);
         printf(fmt::success, source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        rprint(fmt::space, indent);
+        repeat(fmt::space, indent_level);
         printf(fmt::exception, source);
     }
 
-    auto output::on_registry_error(registry::state data) noexcept -> void {
-        rprint(fmt::space, indent);
+    auto output::on_test_registry_error(test_registry::state data) noexcept -> void {
+        repeat(fmt::space, indent_level);
         printf(fmt::registry_error, data.failed, data.passed + data.failed);
     }
 
-    auto output::on_registry_success(registry::state data) noexcept -> void {
-        rprint(fmt::space, indent);
+    auto output::on_test_registry_success(test_registry::state data) noexcept -> void {
+        repeat(fmt::space, indent_level);
         printf(fmt::registry_success, data.failed, data.passed + data.failed);
     }
 
-    auto output::on_verifier_error(verifier::state data) noexcept -> void {
-        rprint(fmt::space, indent);
+    auto output::on_resource_verifier_error(resource_verifier::state data) noexcept -> void {
+        repeat(fmt::space, indent_level);
         printf(fmt::verifier_error, data.destroyed, data.constructed, data.destructor_errors, data.constructor_errors,
                data.operator_errors);
     }
 
-    auto output::on_verifier_success(verifier::state data) noexcept -> void {
-        rprint(fmt::space, indent);
+    auto output::on_resource_verifier_success(resource_verifier::state data) noexcept -> void {
+        repeat(fmt::space, indent_level);
         printf(fmt::verifier_success, data.destroyed, data.constructed, data.destructor_errors, data.constructor_errors,
                data.operator_errors);
     }

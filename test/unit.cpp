@@ -23,7 +23,7 @@ int main() {
 
         });
 
-        CHECK(test::status() == test::exit_success);
+        CHECK(test::exit_status() == test::exit_success);
 
         test::unit("unit with failing assertions", [](){
 
@@ -41,7 +41,7 @@ int main() {
 
         });
 
-        CHECK(test::status() == test::exit_failure);
+        CHECK(test::exit_status() == test::exit_failure);
 
     });
 

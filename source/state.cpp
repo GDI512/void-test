@@ -3,7 +3,7 @@
 
 namespace test {
 
-    auto status() noexcept -> int {
+    auto exit_status() noexcept -> int {
         return core::exit_status;
     }
 
@@ -14,109 +14,109 @@ namespace test::core {
     int exit_status = exit_success;
 
     template <typename T>
-    typename auto_node<T>::pointer auto_node<T>::active = nullptr;
+    typename static_list<T>::pointer static_list<T>::active_node = nullptr;
 
     template <typename T>
-    auto_node<T>::~auto_node() noexcept {
-        active = previous;
-    }
-
-    template <typename T>
-    auto_node<T>::auto_node() noexcept {
-        previous = active;
-        active = this;
+    static_list<T>::~static_list() noexcept {
+        active_node = previous_node;
     }
 
     template <typename T>
-    auto auto_node<T>::current() noexcept -> reference {
-        return static_cast<T&>(*active);
+    static_list<T>::static_list() noexcept {
+        previous_node = active_node;
+        active_node = this;
     }
 
-    scope::scope(string info) noexcept : info(info) {
-        output::on_scope(info);
+    template <typename T>
+    auto static_list<T>::current() noexcept -> reference {
+        return static_cast<T&>(*active_node);
     }
 
-    auto scope::data() noexcept -> state {
-        return info;
+    scope::scope(string name) noexcept : name(name) {
+        output::on_scope(name);
     }
 
-    registry::~registry() noexcept {
+    auto scope::data() noexcept -> string {
+        return name;
+    }
+
+    test_registry::~test_registry() noexcept {
         if (status() && !empty()) {
-            output::on_registry_success(info);
+            output::on_test_registry_success(count);
         } else if (!status()) {
             exit_status = exit_failure;
-            output::on_registry_error(info);
+            output::on_test_registry_error(count);
         }
     }
 
-    registry::registry() noexcept : info() {}
+    test_registry::test_registry() noexcept : count() {}
 
-    auto registry::data() const noexcept -> state {
-        return info;
+    auto test_registry::data() const noexcept -> state {
+        return count;
     }
 
-    auto registry::empty() const noexcept -> bool {
-        return info.passed == 0 && info.failed == 0;
+    auto test_registry::empty() const noexcept -> bool {
+        return count.passed == 0 && count.failed == 0;
     }
 
-    auto registry::status() const noexcept -> bool {
-        return info.failed == 0;
+    auto test_registry::status() const noexcept -> bool {
+        return count.failed == 0;
     }
 
-    auto registry::on_error() noexcept -> size_type {
-        return current().info.failed++;
+    auto test_registry::on_error() noexcept -> size_type {
+        return count.failed++;
     }
 
-    auto registry::on_success() noexcept -> size_type {
-        return current().info.passed++;
+    auto test_registry::on_success() noexcept -> size_type {
+        return count.passed++;
     }
 
-    verifier::~verifier() noexcept {
+    resource_verifier::~resource_verifier() noexcept {
         if (status() && !empty()) {
-            output::on_verifier_success(info);
+            output::on_resource_verifier_success(count);
         } else if (!status()) {
             exit_status = exit_failure;
-            output::on_verifier_error(info);
+            output::on_resource_verifier_error(count);
         }
     }
 
-    verifier::verifier() noexcept : info() {}
+    resource_verifier::resource_verifier() noexcept : count() {}
 
-    auto verifier::data() const noexcept -> state {
-        return info;
+    auto resource_verifier::data() const noexcept -> state {
+        return count;
     }
 
-    auto verifier::empty() const noexcept -> bool {
-        return info.destroyed == 0 && info.constructed == 0;
+    auto resource_verifier::empty() const noexcept -> bool {
+        return count.destroyed == 0 && count.constructed == 0;
     }
 
-    auto verifier::status() const noexcept -> bool {
-        return info.destroyed == info.constructed && info.destructor_errors == 0 && info.constructor_errors == 0 &&
-               info.operator_errors == 0;
+    auto resource_verifier::status() const noexcept -> bool {
+        return count.destroyed == count.constructed && count.destructor_errors == 0 && count.constructor_errors == 0 &&
+               count.operator_errors == 0;
     }
 
-    auto verifier::on_destruction() noexcept -> size_type {
-        return current().info.destroyed++;
+    auto resource_verifier::on_destruction() noexcept -> size_type {
+        return count.destroyed++;
     }
 
-    auto verifier::on_contruction() noexcept -> size_type {
-        return current().info.constructed++;
+    auto resource_verifier::on_contruction() noexcept -> size_type {
+        return count.constructed++;
     }
 
-    auto verifier::on_destructor_error() noexcept -> size_type {
-        return current().info.destructor_errors++;
+    auto resource_verifier::on_destructor_error() noexcept -> size_type {
+        return count.destructor_errors++;
     }
 
-    auto verifier::on_constructor_error() noexcept -> size_type {
-        return current().info.constructor_errors++;
+    auto resource_verifier::on_constructor_error() noexcept -> size_type {
+        return count.constructor_errors++;
     }
 
-    auto verifier::on_operator_error() noexcept -> size_type {
-        return current().info.operator_errors++;
+    auto resource_verifier::on_operator_error() noexcept -> size_type {
+        return count.operator_errors++;
     }
 
-    template class auto_node<scope>;
-    template class auto_node<registry>;
-    template class auto_node<verifier>;
+    template class static_list<scope>;
+    template class static_list<test_registry>;
+    template class static_list<resource_verifier>;
 
 }

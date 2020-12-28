@@ -10,13 +10,13 @@ namespace test {
     template <typename F>
     auto unit(string name, F&& content) noexcept -> bool {
         auto scope = core::scope(name);
-        auto registry = core::registry();
-        auto verifier = core::verifier();
+        auto registry = core::test_registry();
+        auto verifier = core::resource_verifier();
         auto output = core::output();
         try {
             content();
         } catch (...) {
-            core::registry::on_error();
+            core::test_registry::current().on_error();
             core::output::on_exception(name);
         }
         return registry.status() && verifier.status();
