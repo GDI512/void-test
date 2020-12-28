@@ -1,16 +1,16 @@
 cmake_minimum_required (VERSION 3.17)
 
-project (container_test LANGUAGES CXX)
+project (voidtest LANGUAGES CXX)
 
-set (bin ${CMAKE_CURRENT_BINARY_DIR}/bin)
-set (test ${CMAKE_CURRENT_SOURCE_DIR}/test)
-set (source ${CMAKE_CURRENT_SOURCE_DIR}/source)
-set (example ${CMAKE_CURRENT_SOURCE_DIR}/example)
-set (include ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-set (CMAKE_CXX_CLANG_TIDY clang-tidy)
+option (TESTS "Build tests")
+option (EXAMPLES "Build examples")
+option (LINT "Set CMake to run clang-tidy")
 
 enable_testing ()
+
+if (LINT)
+    set (CMAKE_CXX_CLANG_TIDY clang-tidy)
+endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     add_compile_options (-Wall -Wextra)
@@ -20,6 +20,12 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
     add_compile_options (/W4)
 endif ()
 
-add_subdirectory (${source} ${bin})
-add_subdirectory (${test} ${bin}/test)
-add_subdirectory (${example} ${bin}/example)
+add_subdirectory (source)
+
+if (TESTS)
+    add_subdirectory (test ${CMAKE_CURRENT_BINARY_DIR}/test)
+endif ()
+
+if (EXAMPLES)
+    add_subdirectory (example ${CMAKE_CURRENT_BINARY_DIR}/example)
+endif ()
