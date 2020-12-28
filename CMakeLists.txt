@@ -6,8 +6,6 @@ option (TESTS "Build tests")
 option (EXAMPLES "Build examples")
 option (LINT "Set CMake to run clang-tidy")
 
-enable_testing ()
-
 if (LINT)
     set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
@@ -23,9 +21,10 @@ endif ()
 add_subdirectory (source)
 
 if (TESTS)
-    add_subdirectory (test ${CMAKE_CURRENT_BINARY_DIR}/test)
+    enable_testing ()
+    add_subdirectory (test)
 endif ()
 
 if (EXAMPLES)
-    add_subdirectory (example ${CMAKE_CURRENT_BINARY_DIR}/example)
+    add_subdirectory (example)
 endif ()
