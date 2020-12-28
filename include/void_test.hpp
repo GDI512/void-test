@@ -2,6 +2,7 @@
 #define VOID_TEST_HPP
 
 #include "unit.hpp"
+#include "macro.hpp"
 #include "assert.hpp"
 #include "resource.hpp"
 
