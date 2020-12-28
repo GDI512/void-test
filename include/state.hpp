@@ -110,7 +110,7 @@ namespace test::core {
         auto empty() const noexcept -> bool;
         auto status() const noexcept -> bool;
         auto on_destruction() noexcept -> size_type;
-        auto on_contruction() noexcept -> size_type;
+        auto on_construction() noexcept -> size_type;
         auto on_destructor_error() noexcept -> size_type;
         auto on_constructor_error() noexcept -> size_type;
         auto on_operator_error() noexcept -> size_type;

@@ -52,9 +52,9 @@ int main() {
             CHECK(resource_verifier::current().data().constructor_errors == 0);
             CHECK(resource_verifier::current().data().operator_errors == 0);
 
-            CHECK(resource_verifier::current().on_contruction() == 0);
-            CHECK(resource_verifier::current().on_contruction() == 1);
-            CHECK(resource_verifier::current().on_contruction() == 2);
+            CHECK(resource_verifier::current().on_construction() == 0);
+            CHECK(resource_verifier::current().on_construction() == 1);
+            CHECK(resource_verifier::current().on_construction() == 2);
 
             CHECK(!resource_verifier::current().status());
             CHECK(resource_verifier::current().data().destroyed == 0);

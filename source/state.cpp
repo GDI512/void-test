@@ -99,7 +99,7 @@ namespace test::core {
         return count.destroyed++;
     }
 
-    auto resource_verifier::on_contruction() noexcept -> size_type {
+    auto resource_verifier::on_construction() noexcept -> size_type {
         return count.constructed++;
     }
 

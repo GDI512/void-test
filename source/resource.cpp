@@ -15,18 +15,18 @@ namespace test {
     }
 
     resource::resource(int value) noexcept : value(value), self(this) {
-        core::resource_verifier::current().on_contruction();
+        core::resource_verifier::current().on_construction();
     }
 
     resource::resource(resource&& other) noexcept : value(other.value), self(this) {
-        core::resource_verifier::current().on_contruction();
+        core::resource_verifier::current().on_construction();
         if (other.self != &other) {
             core::resource_verifier::current().on_constructor_error();
         }
     }
 
     resource::resource(const resource& other) noexcept : value(other.value), self(this) {
-        core::resource_verifier::current().on_contruction();
+        core::resource_verifier::current().on_construction();
         if (other.self != &other) {
             core::resource_verifier::current().on_constructor_error();
         }
