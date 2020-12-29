@@ -6,7 +6,7 @@ This is a C++ testing framework / library designed to have as little impact on c
 * Fast to compile
 * Does not include any external or standard library headers in its own header files
 * Supports most common assertions
-* Supports checking RAII classes through `test::resource` class
+* Supports checking RAII classes through `void_test::resource` class
 * Just Works™ (Hopefully™)
 
 # How to
@@ -27,24 +27,24 @@ Make sure `void_test.hpp` is in your include path and you are linking your execu
 
     VOID_TEST_BEGIN
 
-    test::unit("a test unit", [](){
+    void_test::unit("a test unit", [](){
 
-        test::unit("a nested unit", [](){
+        void_test::unit("a nested unit", [](){
 
             auto vector = std::vector<int>();
-            test::assert_equal(vector.size(), 0u);
-            test::assert_equal(vector.capacity(), 0u);
+            void_test::assert_equal(vector.size(), 0u);
+            void_test::assert_equal(vector.capacity(), 0u);
 
         });
 
-        test::unit("some other unit", [](){
+        void_test::unit("some other unit", [](){
 
             auto vector = std::vector<int>(256);
-            test::assert_equal(vector.size(), 256u);
-            test::assert_equal(vector.capacity(), 256u);
+            void_test::assert_equal(vector.size(), 256u);
+            void_test::assert_equal(vector.capacity(), 256u);
             vector.push_back(0);
-            test::assert_equal(vector.size(), 257u);
-            test::assert_greater(vector.capacity(), 257u);
+            void_test::assert_equal(vector.size(), 257u);
+            void_test::assert_greater(vector.capacity(), 257u);
 
         });
 

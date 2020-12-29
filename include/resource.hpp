@@ -1,7 +1,7 @@
 #ifndef VOID_TEST_RESOURCE_HPP
 #define VOID_TEST_RESOURCE_HPP
 
-namespace test {
+namespace void_test {
 
     class resource {
       private:

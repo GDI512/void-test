@@ -1,7 +1,7 @@
 #include <output.hpp>
 #include <cstdio>
 
-namespace test::core::format {
+namespace void_test::core::format {
 
     constexpr auto space = "\040\040\040\040";
     constexpr auto scope = "(unit\040%s)\n";
@@ -15,7 +15,7 @@ namespace test::core::format {
 
 }
 
-namespace test::core {
+namespace void_test::core {
 
     size_type output::indent_level = 0;
 
@@ -53,23 +53,23 @@ namespace test::core {
         printf(format::exception, source);
     }
 
-    auto output::on_test_registry_error(test_registry::state data) noexcept -> void {
+    auto output::on_registry_error(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::registry_error, data.failed, data.passed + data.failed);
     }
 
-    auto output::on_test_registry_success(test_registry::state data) noexcept -> void {
+    auto output::on_registry_success(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::registry_success, data.failed, data.passed + data.failed);
     }
 
-    auto output::on_resource_verifier_error(resource_verifier::state data) noexcept -> void {
+    auto output::on_verifier_error(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::verifier_error, data.destroyed, data.constructed, data.destructor_errors,
                data.constructor_errors, data.operator_errors);
     }
 
-    auto output::on_resource_verifier_success(resource_verifier::state data) noexcept -> void {
+    auto output::on_verifier_success(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::verifier_success, data.destroyed, data.constructed, data.destructor_errors,
                data.constructor_errors, data.operator_errors);

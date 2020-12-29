@@ -1,14 +1,14 @@
 #ifndef VOID_TEST_UTILITY_HPP
 #define VOID_TEST_UTILITY_HPP
 
-namespace test {
+namespace void_test {
 
     using string = const char*;
     using size_type = unsigned int;
 
 }
 
-namespace test::core {
+namespace void_test::core {
 
     namespace impl {
 
@@ -59,6 +59,26 @@ namespace test::core {
         static_assert(!is_lvalue_reference<T>);
         return static_cast<T&&>(value);
     }
+
+    template <typename T>
+    class static_list {
+      public:
+        using pointer = static_list*;
+        using reference = T&;
+
+      private:
+        static pointer active_node;
+
+      private:
+        pointer previous_node;
+
+      public:
+        ~static_list() noexcept;
+        static_list() noexcept;
+
+      public:
+        static auto current() noexcept -> reference;
+    };
 
 }
 

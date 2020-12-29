@@ -1,69 +1,104 @@
+// -----------------------------------------------------------------------------
+//  Test file for the resource class, which is used to report RAII errors
+//  within container classes and similar.
+//      1. Check if constructing a resource reports a new object to the
+//         verifier
+//      2. Check if destroying a resource reports object destruction to the
+//         verifier
+//      3. Check if destroying the same object twice reports an error
+//      4. Check if copy constructing from a destroyed object reports an error
+//      5. Check if copy assignment from a destroyed object reports an error
+//      6. Check if move constructing from a destroyed object reports an error
+//      7. Check if move assignment from a destroyed object reports an error
+// -----------------------------------------------------------------------------
+
 #include <void_test.hpp>
-#include "common.hpp"
 
-#include <memory>
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
 
-// clang-format off
+#include <utility>
+#include <cassert>
 
-using test::resource;
-using test::core::resource_verifier;
-
-constexpr auto count = 64;
+using void_test::resource;
+using void_test::core::verifier;
 
 int main() {
-
-test::unit("main unit", [](){
-
-    resource array[count];  // We create the first array of `count` objects...
-
-    CHECK(resource_verifier::current().data().destroyed == 0);          // ...so resource_verifier
-    CHECK(resource_verifier::current().data().constructed == count);    // should only register `count`
-    CHECK(resource_verifier::current().data().destructor_errors == 0);  // as constructed
-    CHECK(resource_verifier::current().data().constructor_errors == 0);
-    CHECK(resource_verifier::current().data().operator_errors == 0);
-
-    std::destroy(std::begin(array), std::end(array));   // We destroy the first array
-
-    CHECK(resource_verifier::current().data().destroyed == count);      // `count` objects destroyed,
-    CHECK(resource_verifier::current().data().constructed == count);    // that's what resource_verifier
-    CHECK(resource_verifier::current().data().destructor_errors == 0);  // should see. No RAII errors yet
-    CHECK(resource_verifier::current().data().constructor_errors == 0);
-    CHECK(resource_verifier::current().data().operator_errors == 0);
-
-    std::destroy(std::begin(array), std::end(array));   // We destroy the first array a second time
-
-    CHECK(resource_verifier::current().data().destroyed == count * 2);      // `count` * 2 is the expected
-    CHECK(resource_verifier::current().data().constructed == count);        // amount of destroyed objects.
-    CHECK(resource_verifier::current().data().destructor_errors == count);  // resource_verifier should now
-    CHECK(resource_verifier::current().data().constructor_errors == 0);     // see `count` destructor errors
-    CHECK(resource_verifier::current().data().operator_errors == 0);
-
-    resource other[count];  // Now we create the second array
-
-    CHECK(resource_verifier::current().data().destroyed == count * 2);      // No errors here, just another
-    CHECK(resource_verifier::current().data().constructed == count * 2);    // `count` objects constructed
-    CHECK(resource_verifier::current().data().destructor_errors == count);
-    CHECK(resource_verifier::current().data().constructor_errors == 0);
-    CHECK(resource_verifier::current().data().operator_errors == 0);
-
-    std::uninitialized_copy(std::begin(array), std::end(array), std::begin(other)); // Copy constructors are called
-
-    CHECK(resource_verifier::current().data().destroyed == count * 2);
-    CHECK(resource_verifier::current().data().constructed == count * 3);    // The correct amount of constructed
-    CHECK(resource_verifier::current().data().destructor_errors == count);  // objects is 3 * `count` because
-    CHECK(resource_verifier::current().data().constructor_errors == count); // we copy constructed into an
-    CHECK(resource_verifier::current().data().operator_errors == 0);        // initialized area in memory
-
-    std::copy(std::begin(array), std::end(array), std::begin(other));   // Copy assignment from destroyed array
-
-    CHECK(resource_verifier::current().data().destroyed == count * 2);
-    CHECK(resource_verifier::current().data().constructed == count * 3);
-    CHECK(resource_verifier::current().data().destructor_errors == count);  // No objects constructed this time
-    CHECK(resource_verifier::current().data().constructor_errors == count); // but assigning from a destroyed array
-    CHECK(resource_verifier::current().data().operator_errors == count);    // is a bad idea
-
-});
-
+    { // 1.
+        verifier state;
+        resource object;
+        assert(state.data().destroyed == 0);
+        assert(state.data().constructed == 1);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 0);
+        assert(state.data().operator_errors == 0);
+    }
+    { // 2.
+        verifier state;
+        resource object;
+        object.~resource();
+        assert(state.data().destroyed == 1);
+        assert(state.data().constructed == 1);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 0);
+        assert(state.data().operator_errors == 0);
+    }
+    { // 3.
+        verifier state;
+        resource object;
+        object.~resource();
+        object.~resource();
+        assert(state.data().destroyed == 2);
+        assert(state.data().constructed == 1);
+        assert(state.data().destructor_errors == 1);
+        assert(state.data().constructor_errors == 0);
+        assert(state.data().operator_errors == 0);
+    }
+    { // 4.
+        verifier state;
+        resource object;
+        object.~resource();
+        resource other(object);
+        assert(state.data().destroyed == 1);
+        assert(state.data().constructed == 2);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 1);
+        assert(state.data().operator_errors == 0);
+    }
+    { // 5.
+        verifier state;
+        resource object;
+        resource other;
+        object.~resource();
+        other = object;
+        assert(state.data().destroyed == 1);
+        assert(state.data().constructed == 2);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 0);
+        assert(state.data().operator_errors == 1);
+    }
+    { // 6.
+        verifier state;
+        resource object;
+        object.~resource();
+        resource other(std::move(object));
+        assert(state.data().destroyed == 1);
+        assert(state.data().constructed == 2);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 1);
+        assert(state.data().operator_errors == 0);
+    }
+    { // 7.
+        verifier state;
+        resource object;
+        resource other;
+        object.~resource();
+        other = std::move(object);
+        assert(state.data().destroyed == 1);
+        assert(state.data().constructed == 2);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 0);
+        assert(state.data().operator_errors == 1);
+    }
 }
-
-// clang-format on
