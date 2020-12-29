@@ -3,16 +3,14 @@ This is a C++ testing framework / library designed to have as little impact on c
 
 # Features and design goals
 * Macro-free (mostly)
-* Fast to compile
 * Does not include any external or standard library headers in its own header files
 * Supports most common assertions
 * Supports checking RAII classes through `void_test::resource` class
-* Just Works™ (Hopefully™)
 
 # How to
 
 ## Build
-Run the following commands then copy the library file and the include folder somewhere.
+Run the following commands:
 
     git clone https://github.com/GDI512/void-test
     cd void-test
@@ -51,8 +49,6 @@ Make sure `void_test.hpp` is in your include path and you are linking your execu
     });
 
     VOID_TEST_END
-
-You get the idea.
 
 # Notes
 
