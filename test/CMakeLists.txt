@@ -7,6 +7,7 @@ function (add_test_executable target source)
     add_test (NAME ${target}_test COMMAND ${target})
 endfunction ()
 
+add_test_executable (assert assert.cpp)
 add_test_executable (registry registry.cpp)
 add_test_executable (resource resource.cpp)
 add_test_executable (scope scope.cpp)

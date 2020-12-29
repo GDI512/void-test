@@ -21,7 +21,7 @@ namespace void_test {
 
     template <typename F, typename... A>
     auto check(F&& function, A&&... arguments) noexcept -> bool {
-        if (function(core::forward(arguments)...)) {
+        if (function(core::forward<A>(arguments)...)) {
             core::registry::current().on_success();
             core::output::on_success(__func__);
             return true;
@@ -113,7 +113,7 @@ namespace void_test {
     template <typename F, typename... A>
     auto check_throws(F&& function, A&&... arguments) noexcept -> bool {
         try {
-            function(core::forward(arguments)...);
+            function(core::forward<A>(arguments)...);
             core::registry::current().on_error();
             core::output::on_error(__func__);
             return false;
@@ -127,7 +127,7 @@ namespace void_test {
     template <typename F, typename... A>
     auto check_nothrows(F&& function, A&&... arguments) noexcept -> bool {
         try {
-            function(core::forward(arguments)...);
+            function(core::forward<A>(arguments)...);
             core::registry::current().on_success();
             core::output::on_success(__func__);
             return true;
