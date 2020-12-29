@@ -1,10 +1,15 @@
+# =============================================================================
+#   Test directory CMakeLists.txt file. All test-related configuration and
+#   test targets should go here.
+# =============================================================================
+
 cmake_minimum_required (VERSION 3.17)
 
 function (add_test_executable target source)
-    add_executable (${target})
-    target_sources (${target} PRIVATE ${source})
-    target_link_libraries (${target} PRIVATE void_test)
-    add_test (NAME ${target}_test COMMAND ${target})
+  add_executable (${target})
+  target_sources (${target} PRIVATE ${source})
+  target_link_libraries (${target} PRIVATE ${VOID_TEST_TARGET})
+  add_test (NAME ${target}_test COMMAND ${target})
 endfunction ()
 
 add_test_executable (assert assert.cpp)
