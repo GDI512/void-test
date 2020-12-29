@@ -3,15 +3,15 @@
 
 namespace void_test::core::format {
 
-    constexpr auto space = "\040\040\040\040";
-    constexpr auto scope = "(unit\040%s)\n";
-    constexpr auto error = "(error\040%s)\n";
-    constexpr auto success = "(ok\040%s)\n";
-    constexpr auto exception = "(unhandled exception\040%s)\n";
-    constexpr auto registry_error = "(unit\040-\040error\040[%i/%i])\n";
-    constexpr auto registry_success = "(unit\040-\040ok\040[%i/%i])\n";
-    constexpr auto verifier_error = "(verifier\040-\040error\040[%i/%i]\040[%i/%i/%i])\n";
-    constexpr auto verifier_success = "(verifier\040-\040ok\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto space = "\040\040";
+    constexpr auto scope = "(\033[93munit\033[0m\040%s)\n";
+    constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
+    constexpr auto success = "(\033[32mok\033[0m\040%s)\n";
+    constexpr auto exception = "(\033[31munhandled exception\033[0m\040%s)\n";
+    constexpr auto registry_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
+    constexpr auto registry_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
+    constexpr auto verifier_error = "(\033[31mverifier\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto verifier_success = "(\033[32mverifier\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
 
 }
 

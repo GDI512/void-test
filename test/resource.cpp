@@ -10,6 +10,7 @@
 //      5. Check if copy assignment from a destroyed object reports an error
 //      6. Check if move constructing from a destroyed object reports an error
 //      7. Check if move assignment from a destroyed object reports an error
+//      8. Check if constructing over an existing object reports an error
 // -----------------------------------------------------------------------------
 
 #include <void_test.hpp>
@@ -100,5 +101,15 @@ int main() {
         assert(state.data().destructor_errors == 0);
         assert(state.data().constructor_errors == 0);
         assert(state.data().operator_errors == 1);
+    }
+    { // 8.
+        verifier state;
+        resource object;
+        new (&object) resource();
+        assert(state.data().destroyed == 0);
+        assert(state.data().constructed == 2);
+        assert(state.data().destructor_errors == 0);
+        assert(state.data().constructor_errors == 1);
+        assert(state.data().operator_errors == 0);
     }
 }
