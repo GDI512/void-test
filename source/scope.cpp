@@ -8,7 +8,7 @@ namespace void_test::core {
     }
 
     auto scope::data() noexcept -> string {
-        return name;
+        return current().name;
     }
 
 }

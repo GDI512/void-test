@@ -15,37 +15,39 @@ namespace void_test::core {
 
     verifier::verifier() noexcept : count() {}
 
-    auto verifier::data() const noexcept -> state {
-        return count;
+    auto verifier::data() noexcept -> state {
+        return current().count;
     }
 
-    auto verifier::empty() const noexcept -> bool {
-        return count.destroyed == 0 && count.constructed == 0;
+    auto verifier::empty() noexcept -> bool {
+        return current().count.destroyed == 0 && current().count.constructed == 0;
     }
 
-    auto verifier::status() const noexcept -> bool {
-        return count.destroyed == count.constructed && count.destructor_errors == 0 && count.constructor_errors == 0 &&
-               count.operator_errors == 0;
+    auto verifier::status() noexcept -> bool {
+        auto& ref = current();
+        const auto is_even = ref.count.destroyed == ref.count.constructed;
+        const auto is_error_free = ref.count.dtor_errors == 0 && ref.count.ctor_errors == 0 && ref.count.op_errors == 0;
+        return is_even && is_error_free;
     }
 
     auto verifier::on_destruction() noexcept -> size_type {
-        return count.destroyed++;
+        return current().count.destroyed++;
     }
 
     auto verifier::on_construction() noexcept -> size_type {
-        return count.constructed++;
+        return current().count.constructed++;
     }
 
     auto verifier::on_destructor_error() noexcept -> size_type {
-        return count.destructor_errors++;
+        return current().count.dtor_errors++;
     }
 
     auto verifier::on_constructor_error() noexcept -> size_type {
-        return count.constructor_errors++;
+        return current().count.ctor_errors++;
     }
 
     auto verifier::on_operator_error() noexcept -> size_type {
-        return count.operator_errors++;
+        return current().count.op_errors++;
     }
 
 }

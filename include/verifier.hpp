@@ -10,9 +10,9 @@ namespace void_test::core {
         struct state {
             size_type destroyed;
             size_type constructed;
-            size_type destructor_errors;
-            size_type constructor_errors;
-            size_type operator_errors;
+            size_type dtor_errors;
+            size_type ctor_errors;
+            size_type op_errors;
         };
 
       private:
@@ -29,14 +29,14 @@ namespace void_test::core {
         auto operator=(const verifier& other) -> verifier& = delete;
 
       public:
-        auto data() const noexcept -> state;
-        auto empty() const noexcept -> bool;
-        auto status() const noexcept -> bool;
-        auto on_destruction() noexcept -> size_type;
-        auto on_construction() noexcept -> size_type;
-        auto on_destructor_error() noexcept -> size_type;
-        auto on_constructor_error() noexcept -> size_type;
-        auto on_operator_error() noexcept -> size_type;
+        static auto data() noexcept -> state;
+        static auto empty() noexcept -> bool;
+        static auto status() noexcept -> bool;
+        static auto on_destruction() noexcept -> size_type;
+        static auto on_construction() noexcept -> size_type;
+        static auto on_destructor_error() noexcept -> size_type;
+        static auto on_constructor_error() noexcept -> size_type;
+        static auto on_operator_error() noexcept -> size_type;
     };
 
     extern template class static_list<verifier>;

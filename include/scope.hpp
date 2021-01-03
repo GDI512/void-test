@@ -20,7 +20,7 @@ namespace void_test::core {
         auto operator=(const scope& other) -> scope& = delete;
 
       public:
-        auto data() noexcept -> string;
+        static auto data() noexcept -> string;
     };
 
     extern template class static_list<scope>;

@@ -27,27 +27,27 @@ int main() {
     }
     { // 2.
         registry object;
-        assert(object.empty());
-        assert(object.status());
-        assert(object.data().passed == 0);
-        assert(object.data().failed == 0);
+        assert(registry::empty());
+        assert(registry::status());
+        assert(registry::data().passed == 0);
+        assert(registry::data().failed == 0);
     }
     { // 3.
         registry object;
-        assert(object.on_error() == 0);
-        assert(object.on_error() == 1);
-        assert(!object.empty());
-        assert(!object.status());
-        assert(object.data().passed == 0);
-        assert(object.data().failed == 2);
+        assert(registry::on_error() == 0);
+        assert(registry::on_error() == 1);
+        assert(!registry::empty());
+        assert(!registry::status());
+        assert(registry::data().passed == 0);
+        assert(registry::data().failed == 2);
     }
     { // 4.
         registry object;
-        assert(object.on_success() == 0);
-        assert(object.on_success() == 1);
-        assert(!object.empty());
-        assert(object.status());
-        assert(object.data().passed == 2);
-        assert(object.data().failed == 0);
+        assert(registry::on_success() == 0);
+        assert(registry::on_success() == 1);
+        assert(!registry::empty());
+        assert(registry::status());
+        assert(registry::data().passed == 2);
+        assert(registry::data().failed == 0);
     }
 }

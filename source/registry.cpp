@@ -15,24 +15,24 @@ namespace void_test::core {
 
     registry::registry() noexcept : count() {}
 
-    auto registry::data() const noexcept -> state {
-        return count;
+    auto registry::data() noexcept -> state {
+        return current().count;
     }
 
-    auto registry::empty() const noexcept -> bool {
-        return count.passed == 0 && count.failed == 0;
+    auto registry::empty() noexcept -> bool {
+        return current().count.passed == 0 && current().count.failed == 0;
     }
 
-    auto registry::status() const noexcept -> bool {
-        return count.failed == 0;
+    auto registry::status() noexcept -> bool {
+        return current().count.failed == 0;
     }
 
     auto registry::on_error() noexcept -> size_type {
-        return count.failed++;
+        return current().count.failed++;
     }
 
     auto registry::on_success() noexcept -> size_type {
-        return count.passed++;
+        return current().count.passed++;
     }
 
 }

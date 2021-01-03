@@ -22,14 +22,14 @@ int main() {
     { // 1.
         {
             registry object;
-            object.on_success();
+            registry::on_success();
         }
         assert(void_test::exit_status() == void_test::exit_success);
     }
     { // 2.
         {
             registry object;
-            object.on_error();
+            registry::on_error();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
     }

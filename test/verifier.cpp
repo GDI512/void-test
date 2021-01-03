@@ -39,62 +39,62 @@ int main() {
     }
     { // 2.
         verifier object;
-        assert(object.empty());
-        assert(object.status());
-        assert(object.data().destroyed == 0);
-        assert(object.data().constructed == 0);
-        assert(object.data().destructor_errors == 0);
-        assert(object.data().constructor_errors == 0);
-        assert(object.data().operator_errors == 0);
+        assert(verifier::empty());
+        assert(verifier::status());
+        assert(verifier::data().destroyed == 0);
+        assert(verifier::data().constructed == 0);
+        assert(verifier::data().dtor_errors == 0);
+        assert(verifier::data().ctor_errors == 0);
+        assert(verifier::data().op_errors == 0);
     }
     { // 3.
         verifier object;
-        assert(object.on_construction() == 0);
-        assert(object.on_construction() == 1);
-        assert(!object.empty());
-        assert(!object.status());
-        assert(object.data().constructed == 2);
+        assert(verifier::on_construction() == 0);
+        assert(verifier::on_construction() == 1);
+        assert(!verifier::empty());
+        assert(!verifier::status());
+        assert(verifier::data().constructed == 2);
     }
     { // 4.
         verifier object;
-        assert(object.on_destruction() == 0);
-        assert(object.on_destruction() == 1);
-        assert(!object.empty());
-        assert(!object.status());
-        assert(object.data().destroyed == 2);
+        assert(verifier::on_destruction() == 0);
+        assert(verifier::on_destruction() == 1);
+        assert(!verifier::empty());
+        assert(!verifier::status());
+        assert(verifier::data().destroyed == 2);
     }
     { // 5.
         verifier object;
-        assert(object.on_destructor_error() == 0);
-        assert(object.on_destructor_error() == 1);
-        assert(!object.status());
-        assert(object.data().destructor_errors == 2);
+        assert(verifier::on_destructor_error() == 0);
+        assert(verifier::on_destructor_error() == 1);
+        assert(!verifier::status());
+        assert(verifier::data().dtor_errors == 2);
     }
     { // 6.
         verifier object;
-        assert(object.on_constructor_error() == 0);
-        assert(object.on_constructor_error() == 1);
-        assert(!object.status());
-        assert(object.data().constructor_errors == 2);
+        assert(verifier::on_constructor_error() == 0);
+        assert(verifier::on_constructor_error() == 1);
+        assert(!verifier::status());
+        assert(verifier::data().ctor_errors == 2);
     }
     { // 7.
         verifier object;
-        assert(object.on_operator_error() == 0);
-        assert(object.on_operator_error() == 1);
-        assert(!object.status());
-        assert(object.data().operator_errors == 2);
+        assert(verifier::on_operator_error() == 0);
+        assert(verifier::on_operator_error() == 1);
+        assert(!verifier::status());
+        assert(verifier::data().op_errors == 2);
     }
     { // 8.
         verifier object;
-        assert(object.on_construction() == 0);
-        assert(object.on_destruction() == 0);
-        assert(object.status());
+        assert(verifier::on_construction() == 0);
+        assert(verifier::on_destruction() == 0);
+        assert(verifier::status());
     }
     { // 9.
         verifier object;
-        assert(object.on_construction() == 0);
-        assert(object.on_destruction() == 0);
-        assert(object.on_destructor_error() == 0);
-        assert(!object.status());
+        assert(verifier::on_construction() == 0);
+        assert(verifier::on_destruction() == 0);
+        assert(verifier::on_destructor_error() == 0);
+        assert(!verifier::status());
     }
 }

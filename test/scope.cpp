@@ -26,6 +26,6 @@ int main() {
     }
     { // 2.
         scope object("scope");
-        assert(strcmp(object.data(), "scope") == 0);
+        assert(strcmp(scope::data(), "scope") == 0);
     }
 }

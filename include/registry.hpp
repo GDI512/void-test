@@ -26,11 +26,11 @@ namespace void_test::core {
         auto operator=(const registry& other) -> registry& = delete;
 
       public:
-        auto data() const noexcept -> state;
-        auto empty() const noexcept -> bool;
-        auto status() const noexcept -> bool;
-        auto on_error() noexcept -> size_type;
-        auto on_success() noexcept -> size_type;
+        static auto data() noexcept -> state;
+        static auto empty() noexcept -> bool;
+        static auto status() noexcept -> bool;
+        static auto on_error() noexcept -> size_type;
+        static auto on_success() noexcept -> size_type;
     };
 
     extern template class static_list<registry>;
