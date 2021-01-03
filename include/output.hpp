@@ -14,6 +14,12 @@ namespace void_test::core {
       public:
         ~output() noexcept;
         output() noexcept;
+        output(output&& other) = delete;
+        output(const output& other) = delete;
+
+      public:
+        auto operator=(output&& other) = delete;
+        auto operator=(const output& other) = delete;
 
       public:
         static auto on_scope(string name) noexcept -> void;

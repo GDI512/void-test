@@ -1,6 +1,7 @@
 # =============================================================================
-#   Main CMakeLists.txt file. Command line for clang-tidy, global compiler
-#   options, CMake modules and cache variables should be put here.
+#   Top-level CMakeLists.txt file.
+#   Command line for clang-tidy, global compiler options, CMake modules and
+#   cache variables should be put here.
 # =============================================================================
 
 cmake_minimum_required (VERSION 3.17)

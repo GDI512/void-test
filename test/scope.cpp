@@ -1,9 +1,12 @@
-// -----------------------------------------------------------------------------
-//  Test file for the scope class (used to remember what scope objects of its
-//  type were defined in).
-//      1. Check if a scope object is appended to a static_list correctly
+// ============================================================================
+//  Content:
+//      Test file for the scope class.
+//      Objects of this class are used to remember the 'name' of the scope
+//      they were constructed in.
+//  Tests:
+//      1. Check if a scope object is appended to a static list correctly
 //      2. Check if the string scope was constructed with is still there
-// -----------------------------------------------------------------------------
+// ============================================================================
 
 #include <void_test.hpp>
 

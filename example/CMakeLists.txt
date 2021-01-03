@@ -1,6 +1,7 @@
 # =============================================================================
-#   Example directory CMakeLists.txt file. Working code examples, sandbox
-#   code for debugging and other stuff should go here.
+#   Example directory CMakeLists.txt file.
+#   Working code examples, sandbox code for debugging and other stuff
+#   should go here.
 # =============================================================================
 
 cmake_minimum_required (VERSION 3.17)

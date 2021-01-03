@@ -1,17 +1,18 @@
-// -----------------------------------------------------------------------------
-//  Test file for all basic assertion functions.
-//      1. Test the check() assertion
-//      2. Test the check() assertion for functions with return values
-//         convertible to bool
-//      3. Test the check_equal() assertion
-//      4. Test the check_not_equal() assertion
-//      5. Test the check_less() assertion
-//      6. Test the check_not_less() assertion
-//      7. Test the check_greater() assertion
-//      8. Test the check_not_greater() assertion
-//      9. Test the check_throws() assertion
-//     10. Test the check_nothrows() assertion
-// -----------------------------------------------------------------------------
+// ============================================================================
+//  Content:
+//      Test file for basic assertion functions.
+//  Tests:
+//      1. Check the bool value assertion
+//      2. Check the assertion for functions with bool-convertible return values
+//      3. Check the equality assertion
+//      4. Check the inequality assertion
+//      5. Check the less-than assertion
+//      6. Check the not-less-than assertion
+//      7. Check the greater-than assertion
+//      8. Check the not-greater-than assertion
+//      9. Check the throw assertion
+//     10. Check the nothrow assertion
+// ============================================================================
 
 #include <void_test.hpp>
 

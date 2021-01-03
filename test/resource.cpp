@@ -1,17 +1,19 @@
-// -----------------------------------------------------------------------------
-//  Test file for the resource class, which is used to report RAII errors
-//  within container classes and similar.
-//      1. Check if constructing a resource reports a new object to the
-//         verifier
-//      2. Check if destroying a resource reports object destruction to the
-//         verifier
+// ============================================================================
+//  Content:
+//      Test file for the resource class.
+//      This class is used to report RAII errors within container classes
+//      and similar. Its special member functions call the appropriate
+//      functions of the active verifier object.
+//  Tests:
+//      1. Check if constructing a resource reports a new object
+//      2. Check if destroying a resource reports object destruction
 //      3. Check if destroying the same object twice reports an error
 //      4. Check if copy constructing from a destroyed object reports an error
 //      5. Check if copy assignment from a destroyed object reports an error
 //      6. Check if move constructing from a destroyed object reports an error
 //      7. Check if move assignment from a destroyed object reports an error
 //      8. Check if constructing over an existing object reports an error
-// -----------------------------------------------------------------------------
+// ============================================================================
 
 #include <void_test.hpp>
 

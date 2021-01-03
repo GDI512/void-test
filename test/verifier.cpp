@@ -1,7 +1,10 @@
-// -----------------------------------------------------------------------------
-//  Test file for the verifier class. It's there to keep track of special
-//  objects used for testing containers and other RAII classes.
-//      1. Check if a verifier object appends itself to a static_list correctly
+// ============================================================================
+//  Content:
+//      Test file for the verifier class.
+//      It's there to keep track of special resource objects used for testing
+//      containers and other RAII classes.
+//  Tests:
+//      1. Check if a verifier object appends itself to a static list correctly
 //      2. Check if a verifier object is properly initialized
 //      3. Check if the on_construction() function modifies verifier's state
 //         properly
@@ -17,7 +20,7 @@
 //         of objects was constructed and destroyed
 //      9. Check if a call to status() returns `false` regardless of the amount
 //         of constructed / destroyed objects if there was an error
-// -----------------------------------------------------------------------------
+// ============================================================================
 
 #include <void_test.hpp>
 

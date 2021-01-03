@@ -1,7 +1,7 @@
 # =============================================================================
-#   Source directory CMakeLists.txt file. The void-test library target and
-#   everything related to its use outside this project (installing, packaging
-#   etc.) should be put here.
+#   Source directory CMakeLists.txt file.
+#   The void-test library target and everything related to its use outside
+#   this project (installing, packaging etc.) should be put here.
 # =============================================================================
 
 cmake_minimum_required (VERSION 3.17)

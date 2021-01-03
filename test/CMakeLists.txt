@@ -1,6 +1,6 @@
 # =============================================================================
-#   Test directory CMakeLists.txt file. All test-related configuration and
-#   test targets should go here.
+#   Test directory CMakeLists.txt file.
+#   All test-related configuration and test targets should go here.
 # =============================================================================
 
 cmake_minimum_required (VERSION 3.17)

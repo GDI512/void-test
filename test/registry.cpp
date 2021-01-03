@@ -1,11 +1,14 @@
-// -----------------------------------------------------------------------------
-//  Test file for the test registry - a class used to keep track of failed
-//  and passed assertions within its scope.
-//      1. Check if the registry appends itself to a static_list correctly
+// ============================================================================
+//  Content:
+//      Test file for the test registry class.
+//      This class is used to keep track of failed and passed assertions
+//      within its scope. Used within the unit function.
+//  Tests:
+//      1. Check if the registry appends itself to a static list correctly
 //      2. Check if the registry is properly initialized
 //      3. Check if calling on_error() modifies registry's state accordingly
 //      3. Check if calling on_success() modifies registry's state accordingly
-// -----------------------------------------------------------------------------
+// ============================================================================
 
 #include <void_test.hpp>
 
