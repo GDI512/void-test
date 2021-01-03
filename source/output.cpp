@@ -65,14 +65,14 @@ namespace void_test::core {
 
     auto output::on_verifier_error(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::verifier_error, data.destroyed, data.constructed, data.dtor_errors, data.ctor_errors,
-               data.op_errors);
+        printf(format::verifier_error, data.destroyed, data.constructed, data.destructor_errrors,
+               data.constructor_errors, data.operator_errors);
     }
 
     auto output::on_verifier_success(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::verifier_success, data.destroyed, data.constructed, data.dtor_errors, data.ctor_errors,
-               data.op_errors);
+        printf(format::verifier_success, data.destroyed, data.constructed, data.destructor_errrors,
+               data.constructor_errors, data.operator_errors);
     }
 
 }

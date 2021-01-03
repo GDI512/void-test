@@ -24,10 +24,8 @@ namespace void_test::core {
     }
 
     auto verifier::status() noexcept -> bool {
-        auto& ref = current();
-        const auto is_even = ref.count.destroyed == ref.count.constructed;
-        const auto is_error_free = ref.count.dtor_errors == 0 && ref.count.ctor_errors == 0 && ref.count.op_errors == 0;
-        return is_even && is_error_free;
+        return current().count.destroyed == current().count.constructed && current().count.destructor_errrors == 0 &&
+               current().count.constructor_errors == 0 && current().count.operator_errors == 0;
     }
 
     auto verifier::on_destruction() noexcept -> size_type {
@@ -39,15 +37,15 @@ namespace void_test::core {
     }
 
     auto verifier::on_destructor_error() noexcept -> size_type {
-        return current().count.dtor_errors++;
+        return current().count.destructor_errrors++;
     }
 
     auto verifier::on_constructor_error() noexcept -> size_type {
-        return current().count.ctor_errors++;
+        return current().count.constructor_errors++;
     }
 
     auto verifier::on_operator_error() noexcept -> size_type {
-        return current().count.op_errors++;
+        return current().count.operator_errors++;
     }
 
 }

@@ -43,9 +43,9 @@ int main() {
         assert(verifier::status());
         assert(verifier::data().destroyed == 0);
         assert(verifier::data().constructed == 0);
-        assert(verifier::data().dtor_errors == 0);
-        assert(verifier::data().ctor_errors == 0);
-        assert(verifier::data().op_errors == 0);
+        assert(verifier::data().destructor_errrors == 0);
+        assert(verifier::data().constructor_errors == 0);
+        assert(verifier::data().operator_errors == 0);
     }
     { // 3.
         verifier object;
@@ -68,21 +68,21 @@ int main() {
         assert(verifier::on_destructor_error() == 0);
         assert(verifier::on_destructor_error() == 1);
         assert(!verifier::status());
-        assert(verifier::data().dtor_errors == 2);
+        assert(verifier::data().destructor_errrors == 2);
     }
     { // 6.
         verifier object;
         assert(verifier::on_constructor_error() == 0);
         assert(verifier::on_constructor_error() == 1);
         assert(!verifier::status());
-        assert(verifier::data().ctor_errors == 2);
+        assert(verifier::data().constructor_errors == 2);
     }
     { // 7.
         verifier object;
         assert(verifier::on_operator_error() == 0);
         assert(verifier::on_operator_error() == 1);
         assert(!verifier::status());
-        assert(verifier::data().op_errors == 2);
+        assert(verifier::data().operator_errors == 2);
     }
     { // 8.
         verifier object;

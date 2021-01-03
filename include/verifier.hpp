@@ -10,9 +10,9 @@ namespace void_test::core {
         struct state {
             size_type destroyed;
             size_type constructed;
-            size_type dtor_errors;
-            size_type ctor_errors;
-            size_type op_errors;
+            size_type destructor_errrors;
+            size_type constructor_errors;
+            size_type operator_errors;
         };
 
       private:
