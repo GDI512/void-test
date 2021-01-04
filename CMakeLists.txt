@@ -6,22 +6,36 @@
 
 cmake_minimum_required (VERSION 3.17)
 
-project (void-test LANGUAGES CXX)
+project (void_test LANGUAGES CXX)
+
+list (APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include (CTest)
+include (GNUInstallDirs)
 
-set (VOID_TEST_TARGET void-test)
-set (VOID_TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set (CMAKE_CXX_CLANG_TIDY clang-tidy)
+option (CLANG_TIDY "Run clang-tidy on build")
+option (BUILD_EXAMPLES "Build example executables")
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-    add_compile_options (-Wall -Wextra)
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-    add_compile_options (-Wall -Wextra)
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
+if (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
     add_compile_options (/W4)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
+    add_compile_options (-Wall -Wextra -march=native)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+    add_compile_options (-Wall -Wextra -pedantic -march=native)
+endif ()
+
+if (CLANG_TIDY)
+    set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
 
 add_subdirectory (source)
-add_subdirectory (test)
-add_subdirectory (example)
+
+if (BUILD_TESTING)
+    add_subdirectory (test)
+endif ()
+
+if (BUILD_EXAMPLES)
+    add_subdirectory (example)
+endif ()
+
+unset (CMAKE_CXX_CLANG_TIDY)

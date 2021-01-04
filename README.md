@@ -23,7 +23,7 @@ Make sure `void_test.hpp` is in your include path and you are linking your execu
     #include <void_test.hpp>
     #include <vector>
 
-    VOID_TEST_BEGIN
+    VOIDTEST_BEGIN
 
     void_test::unit("a test unit", [](){
 
@@ -48,7 +48,7 @@ Make sure `void_test.hpp` is in your include path and you are linking your execu
 
     });
 
-    VOID_TEST_END
+    VOIDTEST_END
 
 # Notes
 
