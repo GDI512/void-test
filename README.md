@@ -1,56 +1,78 @@
 # About
+
 This is a C++ testing framework / library designed to have as little impact on compile times as possible. It makes extensive use of RAII both internally and externally to manage its state and provide some neat C++-oriented functionality (work in progress).
 
 # Features and design goals
+
 * Macro-free (API)
 * Does not include any external or standard library headers in its own header files
 * Supports most common assertions
 * Supports checking RAII classes through `void_test::resource` class
-* 
 
-# How to
+# How to use (CMake projects)
 
-## Build
-Run the following commands:
+This library can be used either as a subdirectory or as an installed CMake package. To install, run the following commands:
 
     git clone https://github.com/GDI512/void-test
     cd void-test
     cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
     cmake --build build --config Release
+    cmake --install build (You may need to run this one with root privileges)
 
-## Use
-Make sure `void_test.hpp` is in your include path and you are linking your executable against the library.
+The `find_package (void-test)` command can be then used to access the exported target.
+
+To add it to an existing CMake project without installing, just clone the repository into your source tree and use `add_subdirectory (void-test)`.
+
+In both cases you will be able to link against it through the `void-test::voidtest` target.
+
+# How to use (Other projects)
+
+Run the following commands:
+
+        git clone https://github.com/GDI512/void-test
+        cd void-test
+        cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+        cmake --build build --config Release
+
+Then copy the include folder and the static library which should be somewhere in the build directory. It should work just fine.
+
+# Example
 
     #include <void_test.hpp>
     #include <vector>
 
-    VOIDTEST_BEGIN
+    namespace test = void_test;
 
-    void_test::unit("a test unit", [](){
+    int main() {
 
-        void_test::unit("a nested unit", [](){
+        test::unit("a test case", [](){
 
-            auto vector = std::vector<int>();
-            void_test::assert_equal(vector.size(), 0u);
-            void_test::assert_equal(vector.capacity(), 0u);
+            test::unit("a nested test case", [](){
+
+                auto vector = std::vector<int>();
+                test::check_equal(vector.size(), 0u);
+                test::check_equal(vector.capacity(), 0u);
+
+            });
+
+            test::unit("some other test case", [](){
+
+                auto vector = std::vector<int>(256);
+                test::check_equal(vector.size(), 256u);
+                test::check_equal(vector.capacity(), 256u);
+                vector.push_back(0);
+                test::check_equal(vector.size(), 257u);
+                test::check_greater(vector.capacity(), 257u);
+
+            });
 
         });
 
-        void_test::unit("some other unit", [](){
+        return test::exit_status();
 
-            auto vector = std::vector<int>(256);
-            void_test::assert_equal(vector.size(), 256u);
-            void_test::assert_equal(vector.capacity(), 256u);
-            vector.push_back(0);
-            void_test::assert_equal(vector.size(), 257u);
-            void_test::assert_greater(vector.capacity(), 257u);
-
-        });
-
-    });
-
-    VOIDTEST_END
+    }
 
 # Notes
 
-This library probably should not be used in its current state as it lacks a proper documentation and it may go through some API-breaking changes in the near future. Proceed with caution!
+* This library may go through some API-breaking changes before its first version is released. Proceed with caution!
+* The documentation is ComingSoon™.
