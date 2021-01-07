@@ -34,7 +34,7 @@ Run the following commands:
         cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
         cmake --build build --config Release
 
-Then copy the include folder and the static library which should be somewhere in the build directory. It should work just fine.
+Then copy the include folder and the static library which should be somewhere in the build directory.
 
 # Example
 
