@@ -15,17 +15,18 @@ include (CMakePackageConfigHelpers)
 include (Cache)
 include (Compiler)
 
-set (LIB_OUTDIR ${PROJECT_BINARY_DIR}/lib)
 set (TEST_OUTDIR ${PROJECT_BINARY_DIR}/bin/test)
+set (SOURCE_OUTDIR ${PROJECT_BINARY_DIR}/lib)
 
 if (CLANG_TIDY)
     set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
 
-add_subdirectory (src ${LIB_OUTDIR})
-
-if (BUILD_TESTING)
+if (${CMAKE_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
+    add_subdirectory (src ${SOURCE_OUTDIR})
     add_subdirectory (test ${TEST_OUTDIR})
+else ()
+    add_subdirectory (src ${SOURCE_OUTDIR})
 endif ()
 
 unset (CMAKE_CXX_CLANG_TIDY)

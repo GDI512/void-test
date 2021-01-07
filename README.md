@@ -2,10 +2,11 @@
 This is a C++ testing framework / library designed to have as little impact on compile times as possible. It makes extensive use of RAII both internally and externally to manage its state and provide some neat C++-oriented functionality (work in progress).
 
 # Features and design goals
-* Macro-free (mostly)
+* Macro-free (API)
 * Does not include any external or standard library headers in its own header files
 * Supports most common assertions
 * Supports checking RAII classes through `void_test::resource` class
+* 
 
 # How to
 
