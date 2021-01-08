@@ -21,12 +21,6 @@ namespace void_test::core {
       public:
         ~verifier() noexcept;
         verifier() noexcept;
-        verifier(verifier&& other) = delete;
-        verifier(const verifier& other) = delete;
-
-      public:
-        auto operator=(verifier&& other) -> verifier& = delete;
-        auto operator=(const verifier& other) -> verifier& = delete;
 
       public:
         static auto data() noexcept -> state;

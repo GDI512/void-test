@@ -18,12 +18,6 @@ namespace void_test::core {
       public:
         ~registry() noexcept;
         registry() noexcept;
-        registry(registry&& other) = delete;
-        registry(const registry& other) = delete;
-
-      public:
-        auto operator=(registry&& other) -> registry& = delete;
-        auto operator=(const registry& other) -> registry& = delete;
 
       public:
         static auto data() noexcept -> state;
