@@ -23,10 +23,10 @@ if (CLANG_TIDY)
 endif ()
 
 if (${CMAKE_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
-    add_subdirectory (src ${SOURCE_OUTDIR})
+    add_subdirectory (source ${SOURCE_OUTDIR})
     add_subdirectory (test ${TEST_OUTDIR})
 else ()
-    add_subdirectory (src ${SOURCE_OUTDIR})
+    add_subdirectory (source ${SOURCE_OUTDIR})
 endif ()
 
 unset (CMAKE_CXX_CLANG_TIDY)
