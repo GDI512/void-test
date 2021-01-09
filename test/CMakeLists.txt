@@ -8,7 +8,7 @@ cmake_minimum_required (VERSION 3.17)
 function (add_test_executable target source)
   add_executable (${target})
   target_sources (${target} PRIVATE ${source})
-  target_link_libraries (${target} PRIVATE voidtest)
+  target_link_libraries (${target} PRIVATE void-test)
   add_test (NAME ${target}_test COMMAND ${target})
 endfunction ()
 
