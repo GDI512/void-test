@@ -18,10 +18,10 @@ namespace void_test {
         try {
             content();
         } catch (...) {
-            core::registry::current().on_error();
+            core::registry::on_error();
             core::output::on_exception(name);
         }
-        return registry.status() && verifier.status();
+        return core::registry::status() && core::verifier::status();
     }
 
 }

@@ -12,12 +12,6 @@ namespace void_test::core {
       public:
         ~scope() = default;
         scope(string name) noexcept;
-        scope(scope&& other) = delete;
-        scope(const scope& other) = delete;
-
-      public:
-        auto operator=(scope&& other) -> scope& = delete;
-        auto operator=(const scope& other) -> scope& = delete;
 
       public:
         static auto data() noexcept -> string;

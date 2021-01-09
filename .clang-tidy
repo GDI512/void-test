@@ -30,5 +30,5 @@ CheckOptions:
     value: 1
 UseColor: true
 WarningsAsErrors: '*'
-HeaderFilterRegex: '*.h, *.hpp, *.hh, *.hxx'
+HeaderFilterRegex: '.*'
 ...
