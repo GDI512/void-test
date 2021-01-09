@@ -29,46 +29,48 @@ For more information, see [wiki](https://github.com/GDI512/void-test/wiki).
 
 # Example
 
-    #include <void_test.hpp>
-    #include <stdexcept>
-    #include <vector>
+```C++
+#include <void_test.hpp>
+#include <stdexcept>
+#include <vector>
 
-    namespace test = void_test;
+namespace test = void_test;
 
-    int main() {
+int main() {
 
-        test::unit("main-unit", [](){
+    test::unit("main-unit", [](){
 
-            test::unit("nested-unit", [](){
-                auto vec = std::vector<int>();
-                test::check_equal(vec.size(), 0u);
-                test::check_equal(vec.capacity(), 0u);
-            });
-
-            test::unit("some-other-unit", [](){
-                auto vec = std::vector<int>(256);
-                test::check_equal(vec.size(), 256u);
-                test::check_equal(vec.capacity(), 256u);
-                vec.push_back(0);
-                test::check_equal(vec.size(), 257u);
-                test::check_greater(vec.capacity(), 257u);
-            });
-
-            test::unit("failing-unit", [](){
-                test::check(false);
-                test::check_not_less(32, 64);
-                test::check_throws([](){ return 0; });
-            });
-
-            test::unit("unhandled-exception-unit", [](){
-                throw std::exception();
-            });
-
+        test::unit("nested-unit", [](){
+            auto vec = std::vector<int>();
+            test::check_equal(vec.size(), 0u);
+            test::check_equal(vec.capacity(), 0u);
         });
 
-        return test::exit_status();
+        test::unit("some-other-unit", [](){
+            auto vec = std::vector<int>(256);
+            test::check_equal(vec.size(), 256u);
+            test::check_equal(vec.capacity(), 256u);
+            vec.push_back(0);
+            test::check_equal(vec.size(), 257u);
+            test::check_greater(vec.capacity(), 257u);
+        });
 
-    }
+        test::unit("failing-unit", [](){
+            test::check(false);
+            test::check_not_less(32, 64);
+            test::check_throws([](){ return 0; });
+        });
+
+        test::unit("unhandled-exception-unit", [](){
+            throw std::exception();
+        });
+
+    });
+
+    return test::exit_status();
+
+}
+```
 
 The code above will produce the following output (in color):
 
