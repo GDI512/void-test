@@ -29,10 +29,10 @@ In both cases you will be able to link against it through the `void-test::voidte
 
 Run the following commands:
 
-        git clone https://github.com/GDI512/void-test
-        cd void-test
-        cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
-        cmake --build build --config Release
+    git clone https://github.com/GDI512/void-test
+    cd void-test
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
+    cmake --build build --config Release
 
 Then copy the include folder and the static library which should be somewhere in the build directory.
 
