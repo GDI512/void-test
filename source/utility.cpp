@@ -1,7 +1,7 @@
 #include <utility.hpp>
 #include <scope.hpp>
+#include <output.hpp>
 #include <registry.hpp>
-#include <verifier.hpp>
 
 namespace void_test::core {
 
@@ -27,5 +27,17 @@ namespace void_test::core {
     template class static_list<scope>;
     template class static_list<registry>;
     template class static_list<verifier>;
+
+    auto on_success(string source) noexcept -> bool {
+        core::registry::on_success();
+        core::output::on_success(source);
+        return true;
+    }
+
+    auto on_error(string source) noexcept -> bool {
+        core::registry::on_error();
+        core::output::on_error(source);
+        return false;
+    }
 
 }

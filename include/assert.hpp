@@ -5,14 +5,6 @@
 #include "utility.hpp"
 #include "registry.hpp"
 
-namespace void_test::core {
-
-    auto on_success(string source) noexcept -> bool;
-
-    auto on_error(string source) noexcept -> bool;
-
-}
-
 namespace void_test {
 
     auto check(bool value) noexcept -> bool;
