@@ -7,11 +7,11 @@ namespace void_test::core::format {
     constexpr auto scope = "(\033[93munit\033[0m\040%s)\n";
     constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
     constexpr auto success = "(\033[32mok\033[0m\040%s)\n";
-    constexpr auto exception = "(\033[31munhandled exception\033[0m\040%s)\n";
+    constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
     constexpr auto registry_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
     constexpr auto registry_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
-    constexpr auto verifier_error = "(\033[31mverifier\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-    constexpr auto verifier_success = "(\033[32mverifier\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto verifier_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto verifier_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
 
 }
 

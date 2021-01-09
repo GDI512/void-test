@@ -55,4 +55,16 @@ namespace void_test {
         return *this;
     }
 
+    auto operator==(const resource& left, const resource& right) noexcept -> bool {
+        static_cast<void>(left);
+        static_cast<void>(right);
+        return true;
+    }
+
+    auto operator!=(const resource& left, const resource& right) noexcept -> bool {
+        static_cast<void>(left);
+        static_cast<void>(right);
+        return false;
+    }
+
 }

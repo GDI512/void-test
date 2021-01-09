@@ -80,6 +80,10 @@ namespace void_test::core {
         static auto current() noexcept -> reference;
     };
 
+    auto on_success(string source) noexcept -> bool;
+
+    auto on_error(string source) noexcept -> bool;
+
 }
 
 #endif
