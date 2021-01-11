@@ -6,33 +6,35 @@ namespace void_test::core {
 
     registry::~registry() noexcept {
         if (status() && !empty()) {
-            output::on_registry_success(count);
+            output::on_test_success(test);
         } else if (!status()) {
-            exit_status = exit_failure;
-            output::on_registry_error(count);
+            exit_code = exit_failure;
+            output::on_test_error(test);
         }
     }
 
-    registry::registry() noexcept : count() {}
+    registry::registry() noexcept : test() {}
 
     auto registry::data() noexcept -> state {
-        return current().count;
+        return current().test;
     }
 
     auto registry::empty() noexcept -> bool {
-        return current().count.passed == 0 && current().count.failed == 0;
+        return current().test.success_count == 0 && current().test.error_count == 0;
     }
 
     auto registry::status() noexcept -> bool {
-        return current().count.failed == 0;
+        return current().test.error_count == 0;
     }
 
-    auto registry::on_error() noexcept -> size_type {
-        return current().count.failed++;
+    auto registry::on_error(string source) noexcept -> size_type {
+        output::on_error(source);
+        return current().test.error_count++;
     }
 
-    auto registry::on_success() noexcept -> size_type {
-        return current().count.passed++;
+    auto registry::on_success(string source) noexcept -> size_type {
+        output::on_success(source);
+        return current().test.success_count++;
     }
 
 }

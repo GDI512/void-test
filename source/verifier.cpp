@@ -6,46 +6,47 @@ namespace void_test::core {
 
     verifier::~verifier() noexcept {
         if (status() && !empty()) {
-            output::on_verifier_success(count);
+            output::on_resource_success(test);
         } else if (!status()) {
-            exit_status = exit_failure;
-            output::on_verifier_error(count);
+            exit_code = exit_failure;
+            output::on_resource_error(test);
         }
     }
 
-    verifier::verifier() noexcept : count() {}
+    verifier::verifier() noexcept : test() {}
 
     auto verifier::data() noexcept -> state {
-        return current().count;
+        return current().test;
     }
 
     auto verifier::empty() noexcept -> bool {
-        return current().count.destroyed == 0 && current().count.constructed == 0;
+        return current().test.destroyed_count == 0 && current().test.constructed_count == 0;
     }
 
     auto verifier::status() noexcept -> bool {
-        return current().count.destroyed == current().count.constructed && current().count.destructor_errrors == 0 &&
-               current().count.constructor_errors == 0 && current().count.operator_errors == 0;
+        return current().test.destroyed_count == current().test.constructed_count &&
+               current().test.destructor_error_count == 0 && current().test.constructor_error_count == 0 &&
+               current().test.operator_error_count == 0;
     }
 
     auto verifier::on_destruction() noexcept -> size_type {
-        return current().count.destroyed++;
+        return current().test.destroyed_count++;
     }
 
     auto verifier::on_construction() noexcept -> size_type {
-        return current().count.constructed++;
+        return current().test.constructed_count++;
     }
 
     auto verifier::on_destructor_error() noexcept -> size_type {
-        return current().count.destructor_errrors++;
+        return current().test.destructor_error_count++;
     }
 
     auto verifier::on_constructor_error() noexcept -> size_type {
-        return current().count.constructor_errors++;
+        return current().test.constructor_error_count++;
     }
 
     auto verifier::on_operator_error() noexcept -> size_type {
-        return current().count.operator_errors++;
+        return current().test.operator_error_count++;
     }
 
 }

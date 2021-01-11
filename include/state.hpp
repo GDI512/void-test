@@ -14,7 +14,23 @@ namespace void_test {
 
 namespace void_test::core {
 
-    extern int exit_status;
+    extern int exit_code;
+
+    template <typename T>
+    class static_list {
+      private:
+        static static_list* active_node;
+
+      private:
+        static_list* previous_node;
+
+      public:
+        ~static_list() noexcept;
+        static_list() noexcept;
+
+      public:
+        static auto current() noexcept -> T&;
+    };
 
 }
 

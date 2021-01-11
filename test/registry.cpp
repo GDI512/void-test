@@ -29,8 +29,8 @@ int main() {
         registry object;
         assert(registry::empty());
         assert(registry::status());
-        assert(registry::data().passed == 0);
-        assert(registry::data().failed == 0);
+        assert(registry::data().success_count == 0);
+        assert(registry::data().error_count == 0);
     }
     { // 3.
         registry object;
@@ -38,8 +38,8 @@ int main() {
         assert(registry::on_error() == 1);
         assert(!registry::empty());
         assert(!registry::status());
-        assert(registry::data().passed == 0);
-        assert(registry::data().failed == 2);
+        assert(registry::data().success_count == 0);
+        assert(registry::data().error_count == 2);
     }
     { // 4.
         registry object;
@@ -47,7 +47,7 @@ int main() {
         assert(registry::on_success() == 1);
         assert(!registry::empty());
         assert(registry::status());
-        assert(registry::data().passed == 2);
-        assert(registry::data().failed == 0);
+        assert(registry::data().success_count == 2);
+        assert(registry::data().error_count == 0);
     }
 }

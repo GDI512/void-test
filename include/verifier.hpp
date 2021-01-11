@@ -1,6 +1,7 @@
 #ifndef VOID_TEST_VERIFIER_HPP
 #define VOID_TEST_VERIFIER_HPP
 
+#include "state.hpp"
 #include "utility.hpp"
 
 namespace void_test::core {
@@ -8,15 +9,15 @@ namespace void_test::core {
     class verifier : public static_list<verifier> {
       public:
         struct state {
-            size_type destroyed;
-            size_type constructed;
-            size_type destructor_errrors;
-            size_type constructor_errors;
-            size_type operator_errors;
+            size_type destroyed_count;
+            size_type constructed_count;
+            size_type destructor_error_count;
+            size_type constructor_error_count;
+            size_type operator_error_count;
         };
 
       private:
-        state count;
+        state test;
 
       public:
         ~verifier() noexcept;

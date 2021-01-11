@@ -31,43 +31,43 @@ int main() {
     { // 1.
         verifier state;
         resource object;
-        assert(verifier::data().destroyed == 0);
-        assert(verifier::data().constructed == 1);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 0);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 0);
+        assert(verifier::data().constructed_count == 1);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 0);
+        assert(verifier::data().operator_error_count == 0);
     }
     { // 2.
         verifier state;
         resource object;
         object.~resource();
-        assert(verifier::data().destroyed == 1);
-        assert(verifier::data().constructed == 1);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 0);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 1);
+        assert(verifier::data().constructed_count == 1);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 0);
+        assert(verifier::data().operator_error_count == 0);
     }
     { // 3.
         verifier state;
         resource object;
         object.~resource();
         object.~resource();
-        assert(verifier::data().destroyed == 2);
-        assert(verifier::data().constructed == 1);
-        assert(verifier::data().destructor_errrors == 1);
-        assert(verifier::data().constructor_errors == 0);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 2);
+        assert(verifier::data().constructed_count == 1);
+        assert(verifier::data().destructor_error_count == 1);
+        assert(verifier::data().constructor_error_count == 0);
+        assert(verifier::data().operator_error_count == 0);
     }
     { // 4.
         verifier state;
         resource object;
         object.~resource();
         resource other(object);
-        assert(verifier::data().destroyed == 1);
-        assert(verifier::data().constructed == 2);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 1);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 1);
+        assert(verifier::data().constructed_count == 2);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 1);
+        assert(verifier::data().operator_error_count == 0);
     }
     { // 5.
         verifier state;
@@ -75,22 +75,22 @@ int main() {
         resource other;
         object.~resource();
         other = object;
-        assert(verifier::data().destroyed == 1);
-        assert(verifier::data().constructed == 2);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 0);
-        assert(verifier::data().operator_errors == 1);
+        assert(verifier::data().destroyed_count == 1);
+        assert(verifier::data().constructed_count == 2);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 0);
+        assert(verifier::data().operator_error_count == 1);
     }
     { // 6.
         verifier state;
         resource object;
         object.~resource();
         resource other(std::move(object));
-        assert(verifier::data().destroyed == 1);
-        assert(verifier::data().constructed == 2);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 1);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 1);
+        assert(verifier::data().constructed_count == 2);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 1);
+        assert(verifier::data().operator_error_count == 0);
     }
     { // 7.
         verifier state;
@@ -98,20 +98,20 @@ int main() {
         resource other;
         object.~resource();
         other = std::move(object);
-        assert(verifier::data().destroyed == 1);
-        assert(verifier::data().constructed == 2);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 0);
-        assert(verifier::data().operator_errors == 1);
+        assert(verifier::data().destroyed_count == 1);
+        assert(verifier::data().constructed_count == 2);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 0);
+        assert(verifier::data().operator_error_count == 1);
     }
     { // 8.
         verifier state;
         resource object;
         new (&object) resource();
-        assert(verifier::data().destroyed == 0);
-        assert(verifier::data().constructed == 2);
-        assert(verifier::data().destructor_errrors == 0);
-        assert(verifier::data().constructor_errors == 1);
-        assert(verifier::data().operator_errors == 0);
+        assert(verifier::data().destroyed_count == 0);
+        assert(verifier::data().constructed_count == 2);
+        assert(verifier::data().destructor_error_count == 0);
+        assert(verifier::data().constructor_error_count == 1);
+        assert(verifier::data().operator_error_count == 0);
     }
 }

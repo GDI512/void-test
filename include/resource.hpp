@@ -20,7 +20,6 @@ namespace void_test {
     };
 
     auto operator==(const resource& left, const resource& right) noexcept -> bool;
-
     auto operator!=(const resource& left, const resource& right) noexcept -> bool;
 
 }

@@ -1,6 +1,7 @@
 #ifndef VOID_TEST_SCOPE_HPP
 #define VOID_TEST_SCOPE_HPP
 
+#include "state.hpp"
 #include "utility.hpp"
 
 namespace void_test::core {

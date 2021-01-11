@@ -33,14 +33,12 @@ int main() {
             registry::on_success();
         }
         assert(void_test::exit_status() == void_test::exit_success);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 2.
-        {
-            verifier object;
-        }
+        { verifier object; }
         assert(void_test::exit_status() == void_test::exit_success);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 3.
         {
@@ -48,7 +46,7 @@ int main() {
             registry::on_error();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 4.
         {
@@ -56,7 +54,7 @@ int main() {
             verifier::on_destructor_error();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 5.
         {
@@ -64,7 +62,7 @@ int main() {
             verifier::on_constructor_error();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 6.
         {
@@ -72,7 +70,7 @@ int main() {
             verifier::on_operator_error();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
     { // 7.
         {
@@ -82,6 +80,6 @@ int main() {
             verifier::on_destruction();
         }
         assert(void_test::exit_status() == void_test::exit_failure);
-        void_test::core::exit_status = void_test::exit_success;
+        void_test::core::exit_code = void_test::exit_success;
     }
 }
