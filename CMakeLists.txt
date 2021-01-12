@@ -18,7 +18,7 @@ include (Compiler)
 set (TEST_OUTDIR ${PROJECT_BINARY_DIR}/bin/test)
 set (SOURCE_OUTDIR ${PROJECT_BINARY_DIR}/lib)
 
-if (CLANG_TIDY)
+if (VOID_TEST_CLANG_TIDY)
     set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
 

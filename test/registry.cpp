@@ -7,7 +7,10 @@
 //      1. Check if the registry appends itself to a static list correctly
 //      2. Check if the registry is properly initialized
 //      3. Check if calling on_error() modifies registry's state accordingly
-//      3. Check if calling on_success() modifies registry's state accordingly
+//      4. Check if calling on_success() modifies registry's state accordingly
+//      5. Check if calling on_success() modifies registry's state accordingly
+//      6. Check if calling on_exception() modifies registry's state
+//         accordingly
 // ============================================================================
 
 #include <void_test.hpp>
@@ -49,5 +52,14 @@ int main() {
         assert(registry::status());
         assert(registry::data().success_count == 2);
         assert(registry::data().error_count == 0);
+    }
+    { // 5.
+        registry object;
+        assert(registry::on_exception() == 0);
+        assert(registry::on_exception() == 1);
+        assert(!registry::empty());
+        assert(!registry::status());
+        assert(registry::data().success_count == 0);
+        assert(registry::data().error_count == 2);
     }
 }

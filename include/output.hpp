@@ -1,9 +1,8 @@
 #ifndef VOID_TEST_OUTPUT_HPP
 #define VOID_TEST_OUTPUT_HPP
 
+#include "state.hpp"
 #include "utility.hpp"
-#include "verifier.hpp"
-#include "registry.hpp"
 
 namespace void_test::core {
 

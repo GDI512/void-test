@@ -1,5 +1,5 @@
-#include <resource.hpp>
-#include <verifier.hpp>
+#include <type.hpp>
+#include <state.hpp>
 #include <cstdint>
 
 namespace void_test {

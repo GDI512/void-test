@@ -1,9 +1,8 @@
-#ifndef VOID_TEST_CHECK_HPP
-#define VOID_TEST_CHECK_HPP
+#ifndef VOID_TEST_ASSERT_HPP
+#define VOID_TEST_ASSERT_HPP
 
-#include "output.hpp"
+#include "state.hpp"
 #include "utility.hpp"
-#include "registry.hpp"
 
 namespace void_test {
 

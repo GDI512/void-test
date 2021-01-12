@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_RESOURCE_HPP
-#define VOID_TEST_RESOURCE_HPP
+#ifndef VOID_TEST_TYPE_HPP
+#define VOID_TEST_TYPE_HPP
 
 namespace void_test {
 

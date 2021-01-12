@@ -3,34 +3,101 @@
 
 #include "utility.hpp"
 
-namespace void_test {
+namespace void_test::core {
 
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
 
-    auto exit_status() noexcept -> int;
-
-}
-
-namespace void_test::core {
-
-    extern int exit_code;
-
-    template <typename T>
-    class static_list {
+    class scope : public static_list<scope> {
       private:
-        static static_list* active_node;
-
-      private:
-        static_list* previous_node;
+        string name;
 
       public:
-        ~static_list() noexcept;
-        static_list() noexcept;
+        ~scope() = default;
+        scope(string name) noexcept;
 
       public:
-        static auto current() noexcept -> T&;
+        static auto data() noexcept -> string;
     };
+
+    class registry : public static_list<registry> {
+      public:
+        struct state {
+            size_type error_count;
+            size_type success_count;
+        };
+
+      private:
+        state info;
+
+      public:
+        ~registry() noexcept;
+        registry() noexcept;
+
+      public:
+        static auto data() noexcept -> state;
+        static auto empty() noexcept -> bool;
+        static auto status() noexcept -> bool;
+        static auto on_error(string source = "") noexcept -> size_type;
+        static auto on_success(string source = "") noexcept -> size_type;
+        static auto on_exception(string source = "") noexcept -> size_type;
+    };
+
+    class verifier : public static_list<verifier> {
+      public:
+        struct state {
+            size_type destroyed_count;
+            size_type constructed_count;
+            size_type destructor_error_count;
+            size_type constructor_error_count;
+            size_type operator_error_count;
+        };
+
+      private:
+        state info;
+
+      public:
+        ~verifier() noexcept;
+        verifier() noexcept;
+
+      public:
+        static auto data() noexcept -> state;
+        static auto empty() noexcept -> bool;
+        static auto status() noexcept -> bool;
+        static auto on_destruction() noexcept -> size_type;
+        static auto on_construction() noexcept -> size_type;
+        static auto on_destructor_error() noexcept -> size_type;
+        static auto on_constructor_error() noexcept -> size_type;
+        static auto on_operator_error() noexcept -> size_type;
+    };
+
+    class global {
+      public:
+        struct state {
+            size_type error_count;
+            size_type success_count;
+        };
+
+      private:
+        static int exit_code;
+        static size_type assert_error_count;
+        static size_type assert_success_count;
+
+      public:
+        ~global() noexcept;
+        global() noexcept;
+
+      public:
+        static auto status() noexcept -> bool;
+        static auto exit_status() noexcept -> int;
+        static auto exit_status(int code) noexcept -> void;
+        static auto test_state() noexcept -> state;
+        static auto add_test_state(registry::state info) noexcept -> void;
+    };
+
+    extern template class static_list<scope>;
+    extern template class static_list<registry>;
+    extern template class static_list<verifier>;
 
 }
 

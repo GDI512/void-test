@@ -1,41 +1,130 @@
 #include <state.hpp>
-#include <scope.hpp>
-#include <registry.hpp>
-#include <verifier.hpp>
-
-namespace void_test {
-
-    auto exit_status() noexcept -> int {
-        return core::exit_code;
-    }
-
-}
+#include <output.hpp>
 
 namespace void_test::core {
 
-    int exit_code = exit_success;
-
-    template <typename T>
-    static_list<T>* static_list<T>::active_node = nullptr;
-
-    template <typename T>
-    static_list<T>::~static_list() noexcept {
-        active_node = previous_node;
+    scope::scope(string name) noexcept : name(name) {
+        output::on_scope(name);
     }
 
-    template <typename T>
-    static_list<T>::static_list() noexcept {
-        previous_node = active_node;
-        active_node = this;
+    auto scope::data() noexcept -> string {
+        return current().name;
     }
 
-    template <typename T>
-    auto static_list<T>::current() noexcept -> T& {
-        return static_cast<T&>(*active_node);
+    registry::~registry() noexcept {
+        if (status() && !empty()) {
+            output::on_test_success(info);
+        } else if (!status()) {
+            global::exit_status(exit_failure);
+            output::on_test_error(info);
+        }
     }
 
-    template class static_list<scope>;
-    template class static_list<registry>;
-    template class static_list<verifier>;
+    registry::registry() noexcept : info() {}
+
+    auto registry::data() noexcept -> state {
+        return current().info;
+    }
+
+    auto registry::empty() noexcept -> bool {
+        return current().info.success_count == 0 && current().info.error_count == 0;
+    }
+
+    auto registry::status() noexcept -> bool {
+        return current().info.error_count == 0;
+    }
+
+    auto registry::on_error(string source) noexcept -> size_type {
+        output::on_error(source);
+        return current().info.error_count++;
+    }
+
+    auto registry::on_success(string source) noexcept -> size_type {
+        output::on_success(source);
+        return current().info.success_count++;
+    }
+
+    auto registry::on_exception(string source) noexcept -> size_type {
+        output::on_exception(source);
+        return current().info.error_count++;
+    }
+
+    verifier::~verifier() noexcept {
+        if (status() && !empty()) {
+            output::on_resource_success(info);
+        } else if (!status()) {
+            global::exit_status(exit_failure);
+            output::on_resource_error(info);
+        }
+    }
+
+    verifier::verifier() noexcept : info() {}
+
+    auto verifier::data() noexcept -> state {
+        return current().info;
+    }
+
+    auto verifier::empty() noexcept -> bool {
+        return current().info.destroyed_count == 0 && current().info.constructed_count == 0;
+    }
+
+    auto verifier::status() noexcept -> bool {
+        return current().info.destroyed_count == current().info.constructed_count &&
+               current().info.destructor_error_count == 0 && current().info.constructor_error_count == 0 &&
+               current().info.operator_error_count == 0;
+    }
+
+    auto verifier::on_destruction() noexcept -> size_type {
+        return current().info.destroyed_count++;
+    }
+
+    auto verifier::on_construction() noexcept -> size_type {
+        return current().info.constructed_count++;
+    }
+
+    auto verifier::on_destructor_error() noexcept -> size_type {
+        return current().info.destructor_error_count++;
+    }
+
+    auto verifier::on_constructor_error() noexcept -> size_type {
+        return current().info.constructor_error_count++;
+    }
+
+    auto verifier::on_operator_error() noexcept -> size_type {
+        return current().info.operator_error_count++;
+    }
+
+    auto global::exit_code = exit_success;
+    auto global::assert_error_count = static_cast<size_type>(0);
+    auto global::assert_success_count = static_cast<size_type>(0);
+
+    global::~global() noexcept {}
+
+    global::global() noexcept {
+        exit_code = exit_success;
+        assert_error_count = 0;
+        assert_success_count = 0;
+    }
+
+    auto global::status() noexcept -> bool {
+        return assert_error_count == 0;
+    }
+
+    auto global::exit_status() noexcept -> int {
+        return exit_code;
+    }
+
+    auto global::exit_status(int code) noexcept -> void {
+        exit_code = code;
+    }
+
+    auto global::test_state() noexcept -> state {
+        return {assert_error_count, assert_success_count};
+    }
+
+    auto global::add_test_state(registry::state info) noexcept -> void {
+        assert_error_count += info.error_count;
+        assert_success_count += info.success_count;
+    }
 
 }

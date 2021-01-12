@@ -1,9 +1,7 @@
 #ifndef VOID_TEST_UNIT_HPP
 #define VOID_TEST_UNIT_HPP
 
-#include "scope.hpp"
-#include "verifier.hpp"
-#include "registry.hpp"
+#include "state.hpp"
 #include "output.hpp"
 #include "utility.hpp"
 
@@ -18,8 +16,7 @@ namespace void_test {
         try {
             content();
         } catch (...) {
-            core::registry::on_error();
-            core::output::on_exception(name);
+            core::registry::on_exception(name);
         }
         return core::registry::status() && core::verifier::status();
     }

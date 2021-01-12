@@ -50,6 +50,23 @@ namespace void_test::core {
         return static_cast<T&&>(value);
     }
 
+    template <typename T>
+    class static_list {
+      private:
+        static static_list* active_node;
+
+      private:
+        static_list* previous_node;
+
+      public:
+        ~static_list() noexcept;
+        static_list() noexcept;
+
+      public:
+        static auto current() noexcept -> T&;
+        static auto is_linked() noexcept -> bool;
+    };
+
 }
 
 #endif
