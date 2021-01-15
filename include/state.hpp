@@ -5,6 +5,7 @@
 
 namespace void_test::core {
 
+    constexpr auto max_groups = 64;
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
 
