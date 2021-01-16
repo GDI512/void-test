@@ -61,7 +61,7 @@ add_subdirectory (void-test)
 
 namespace vt = void_test;
 
-auto vector = vt::group([](){
+auto test = vt::unit("vector-test", [](){
 
     vt::unit("constructor-test", [](){
 

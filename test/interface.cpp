@@ -14,7 +14,7 @@
 
 namespace test = void_test;
 
-auto assertions = test::group([]() {
+auto assertions = test::unit("main", []() {
 
     assert(test::core::global::exit_status() == test::core::exit_success);
 
@@ -54,7 +54,7 @@ auto assertions = test::group([]() {
 
 });
 
-auto types = test::group([](){
+auto types = test::unit("main", [](){
 
     assert(test::core::global::exit_status() == test::core::exit_success);
 

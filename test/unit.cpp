@@ -32,7 +32,7 @@ int main() {
     }
     {
         global::exit_status(exit_success);
-        auto test = group([]() {
+        auto test = unit("unit-main", []() {
             unit("unit-one", []() {
                 check_equal(0, 0);
                 check_not_equal(0, 1);
