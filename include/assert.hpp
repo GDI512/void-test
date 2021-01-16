@@ -16,9 +16,9 @@ namespace void_test {
         }
     }
 
-    template <typename F, typename... A>
-    auto check(F&& function, A&&... arguments) noexcept -> bool {
-        if (function(core::forward<A>(arguments)...)) {
+    template <typename callable, typename... args>
+    auto check(callable&& function, args&&... arguments) noexcept -> bool {
+        if (function(core::forward<args>(arguments)...)) {
             core::registry::on_success(__func__);
             return true;
         } else {
@@ -27,8 +27,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_equal(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_equal(const type& left, const other& right) noexcept -> bool {
         if (left == right) {
             core::registry::on_success(__func__);
             return true;
@@ -38,8 +38,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_equal(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_equal(const type& left, const other& right) noexcept -> bool {
         if (left != right) {
             core::registry::on_success(__func__);
             return true;
@@ -49,8 +49,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_less(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_less(const type& left, const other& right) noexcept -> bool {
         if (left < right) {
             core::registry::on_success(__func__);
             return true;
@@ -60,8 +60,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_less(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_less(const type& left, const other& right) noexcept -> bool {
         if (left >= right) {
             core::registry::on_success(__func__);
             return true;
@@ -71,8 +71,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_greater(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_greater(const type& left, const other& right) noexcept -> bool {
         if (left > right) {
             core::registry::on_success(__func__);
             return true;
@@ -82,8 +82,8 @@ namespace void_test {
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_greater(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_greater(const type& left, const other& right) noexcept -> bool {
         if (left <= right) {
             core::registry::on_success(__func__);
             return true;
@@ -93,10 +93,10 @@ namespace void_test {
         }
     }
 
-    template <typename F, typename... A>
-    auto check_throws(F&& function, A&&... arguments) noexcept -> bool {
+    template <typename callable, typename... args>
+    auto check_throws(callable&& function, args&&... arguments) noexcept -> bool {
         try {
-            function(core::forward<A>(arguments)...);
+            function(core::forward<args>(arguments)...);
             core::registry::on_error(__func__);
             return false;
         } catch (...) {
@@ -105,10 +105,10 @@ namespace void_test {
         }
     }
 
-    template <typename F, typename... A>
-    auto check_nothrows(F&& function, A&&... arguments) noexcept -> bool {
+    template <typename callable, typename... args>
+    auto check_nothrows(callable&& function, args&&... arguments) noexcept -> bool {
         try {
-            function(core::forward<A>(arguments)...);
+            function(core::forward<args>(arguments)...);
             core::registry::on_success(__func__);
             return true;
         } catch (...) {

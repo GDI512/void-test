@@ -7,8 +7,16 @@
 
 namespace void_test {
 
-    template <typename F>
-    auto unit(string name, F&& content) noexcept -> bool {
+    template <typename callable>
+    class group {
+      public:
+        group(callable&& content) noexcept {
+            content();
+        }
+    };
+
+    template <typename callable>
+    auto unit(string name, callable&& content) noexcept -> bool {
         auto scope = core::scope(name);
         auto output = core::output();
         auto registry = core::registry();

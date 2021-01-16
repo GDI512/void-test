@@ -106,25 +106,12 @@ namespace void_test::core {
         assert_success_count = 0;
     }
 
-    auto global::status() noexcept -> bool {
-        return assert_error_count == 0;
-    }
-
     auto global::exit_status() noexcept -> int {
         return exit_code;
     }
 
     auto global::exit_status(int code) noexcept -> void {
         exit_code = code;
-    }
-
-    auto global::test_state() noexcept -> state {
-        return {assert_error_count, assert_success_count};
-    }
-
-    auto global::add_test_state(registry::state info) noexcept -> void {
-        assert_error_count += info.error_count;
-        assert_success_count += info.success_count;
     }
 
 }

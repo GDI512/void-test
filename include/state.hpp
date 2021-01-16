@@ -5,9 +5,9 @@
 
 namespace void_test::core {
 
-    constexpr auto max_groups = 64;
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
+    constexpr auto test_capacity = 64;
 
     class scope : public static_list<scope> {
       private:
@@ -89,11 +89,8 @@ namespace void_test::core {
         global() noexcept;
 
       public:
-        static auto status() noexcept -> bool;
         static auto exit_status() noexcept -> int;
         static auto exit_status(int code) noexcept -> void;
-        static auto test_state() noexcept -> state;
-        static auto add_test_state(registry::state info) noexcept -> void;
     };
 
     extern template class static_list<scope>;
