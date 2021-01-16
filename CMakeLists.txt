@@ -10,7 +10,6 @@ project (void-test VERSION 0.1.0 LANGUAGES CXX)
 list (APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include (CTest)
-include (GNUInstallDirs)
 include (CMakePackageConfigHelpers)
 include (Cache)
 include (Compiler)

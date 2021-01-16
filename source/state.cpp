@@ -95,16 +95,6 @@ namespace void_test::core {
     }
 
     auto global::exit_code = exit_success;
-    auto global::assert_error_count = static_cast<size_type>(0);
-    auto global::assert_success_count = static_cast<size_type>(0);
-
-    global::~global() noexcept {}
-
-    global::global() noexcept {
-        exit_code = exit_success;
-        assert_error_count = 0;
-        assert_success_count = 0;
-    }
 
     auto global::exit_status() noexcept -> int {
         return exit_code;

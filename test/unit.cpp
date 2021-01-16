@@ -30,4 +30,19 @@ int main() {
     {
         unit("unit-name", []() { assert(strcmp(scope::data(), "unit-name") == 0); });
     }
+    {
+        global::exit_status(exit_success);
+        auto test = group([]() {
+            unit("unit-one", []() {
+                check_equal(0, 0);
+                check_not_equal(0, 1);
+            });
+            unit("unit-two", []() {
+                check_equal(0, 1);
+                check_not_equal(0, 0);
+            });
+        });
+        assert(global::exit_status() == exit_failure);
+        static_cast<void>(test);
+    }
 }

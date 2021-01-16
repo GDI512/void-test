@@ -7,7 +7,6 @@ namespace void_test::core {
 
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
-    constexpr auto test_capacity = 64;
 
     class scope : public static_list<scope> {
       private:
@@ -73,20 +72,8 @@ namespace void_test::core {
     };
 
     class global {
-      public:
-        struct state {
-            size_type error_count;
-            size_type success_count;
-        };
-
       private:
         static int exit_code;
-        static size_type assert_error_count;
-        static size_type assert_success_count;
-
-      public:
-        ~global() noexcept;
-        global() noexcept;
 
       public:
         static auto exit_status() noexcept -> int;
