@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_RESOURCE_HPP
-#define VOID_TEST_RESOURCE_HPP
+#ifndef VOID_TEST_TYPE_HPP
+#define VOID_TEST_TYPE_HPP
 
 namespace void_test {
 
@@ -20,7 +20,6 @@ namespace void_test {
     };
 
     auto operator==(const resource& left, const resource& right) noexcept -> bool;
-
     auto operator!=(const resource& left, const resource& right) noexcept -> bool;
 
 }

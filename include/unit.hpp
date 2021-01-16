@@ -1,16 +1,22 @@
 #ifndef VOID_TEST_UNIT_HPP
 #define VOID_TEST_UNIT_HPP
 
-#include "scope.hpp"
-#include "verifier.hpp"
-#include "registry.hpp"
+#include "state.hpp"
 #include "output.hpp"
 #include "utility.hpp"
 
 namespace void_test {
 
-    template <typename F>
-    auto unit(string name, F&& content) noexcept -> bool {
+    template <typename callable>
+    class group {
+      public:
+        group(callable&& content) noexcept {
+            content();
+        }
+    };
+
+    template <typename callable>
+    auto unit(string name, callable&& content) noexcept -> bool {
         auto scope = core::scope(name);
         auto output = core::output();
         auto registry = core::registry();
@@ -18,8 +24,7 @@ namespace void_test {
         try {
             content();
         } catch (...) {
-            core::registry::on_error();
-            core::output::on_exception(name);
+            core::registry::on_exception(name);
         }
         return core::registry::status() && core::verifier::status();
     }

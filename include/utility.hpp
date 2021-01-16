@@ -3,6 +3,7 @@
 
 namespace void_test {
 
+    using byte = unsigned char;
     using string = const char*;
     using size_type = unsigned int;
 
@@ -10,79 +11,68 @@ namespace void_test {
 
 namespace void_test::core {
 
-    namespace impl {
+    struct true_type {
+        static constexpr auto value = true;
+    };
 
-        struct true_type {
-            static constexpr auto value = true;
-        };
+    struct false_type {
+        static constexpr auto value = false;
+    };
 
-        struct false_type {
-            static constexpr auto value = false;
-        };
+    template <typename object_type>
+    struct remove_reference {
+        using type = object_type;
+    };
 
-        template <typename T>
-        struct remove_reference {
-            using type = T;
-        };
+    template <typename object_type>
+    struct remove_reference<object_type&> {
+        using type = object_type;
+    };
 
-        template <typename T>
-        struct remove_reference<T&> {
-            using type = T;
-        };
+    template <typename object_type>
+    struct remove_reference<object_type&&> {
+        using type = object_type;
+    };
 
-        template <typename T>
-        struct remove_reference<T&&> {
-            using type = T;
-        };
+    template <typename object_type>
+    struct is_lvalue_reference : false_type {};
 
-        template <typename T>
-        struct is_lvalue_reference : false_type {};
+    template <typename object_type>
+    struct is_lvalue_reference<object_type&> : true_type {};
 
-        template <typename T>
-        struct is_lvalue_reference<T&> : true_type {};
-
+    template <typename type>
+    constexpr auto forward(typename remove_reference<type>::type& value) noexcept -> type&& {
+        return static_cast<type&&>(value);
     }
 
-    template <typename T>
-    using remove_reference = typename impl::remove_reference<T>::type;
-
-    template <typename T>
-    constexpr auto is_lvalue_reference = impl::is_lvalue_reference<T>::value;
-
-    template <typename T>
-    constexpr auto forward(remove_reference<T>& value) noexcept -> T&& {
-        return static_cast<T&&>(value);
-    }
-
-    template <typename T>
-    constexpr auto forward(remove_reference<T>&& value) noexcept -> T&& {
-        static_assert(!is_lvalue_reference<T>);
-        return static_cast<T&&>(value);
+    template <typename type>
+    constexpr auto forward(typename remove_reference<type>::type&& value) noexcept -> type&& {
+        static_assert(!is_lvalue_reference<type>::value);
+        return static_cast<type&&>(value);
     }
 
     template <typename T>
     class static_list {
-      public:
-        using pointer = static_list*;
-        using reference = T&;
+      private:
+        inline static static_list* active_node = nullptr;
 
       private:
-        static pointer active_node;
-
-      private:
-        pointer previous_node;
+        static_list* previous_node;
 
       public:
-        ~static_list() noexcept;
-        static_list() noexcept;
+        ~static_list() noexcept {
+            active_node = previous_node;
+        }
+        static_list() noexcept {
+            previous_node = active_node;
+            active_node = this;
+        }
 
       public:
-        static auto current() noexcept -> reference;
+        static auto current() noexcept -> T& {
+            return static_cast<T&>(*active_node);
+        }
     };
-
-    auto on_success(string source) noexcept -> bool;
-
-    auto on_error(string source) noexcept -> bool;
 
 }
 

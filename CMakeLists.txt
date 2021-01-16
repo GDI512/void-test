@@ -10,7 +10,6 @@ project (void-test VERSION 0.1.0 LANGUAGES CXX)
 list (APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 include (CTest)
-include (GNUInstallDirs)
 include (CMakePackageConfigHelpers)
 include (Cache)
 include (Compiler)
@@ -18,7 +17,7 @@ include (Compiler)
 set (TEST_OUTDIR ${PROJECT_BINARY_DIR}/bin/test)
 set (SOURCE_OUTDIR ${PROJECT_BINARY_DIR}/lib)
 
-if (CLANG_TIDY)
+if (VOID_TEST_CLANG_TIDY)
     set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
 

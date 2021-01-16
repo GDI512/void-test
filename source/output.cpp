@@ -1,21 +1,19 @@
 #include <output.hpp>
 #include <cstdio>
 
-namespace void_test::core::format {
-
-    constexpr auto space = "\040\040";
-    constexpr auto scope = "(\033[93munit\033[0m\040%s)\n";
-    constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
-    constexpr auto success = "(\033[32mok\033[0m\040%s)\n";
-    constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
-    constexpr auto registry_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
-    constexpr auto registry_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
-    constexpr auto verifier_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-    constexpr auto verifier_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-
-}
-
 namespace void_test::core {
+
+    struct format {
+        static constexpr auto space = "\040\040";
+        static constexpr auto scope = "(\033[93munit\033[0m\040%s)\n";
+        static constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
+        static constexpr auto success = "(\033[32mok\033[0m\040%s)\n";
+        static constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
+        static constexpr auto test_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
+        static constexpr auto test_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
+        static constexpr auto resource_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+        static constexpr auto resource_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    };
 
     size_type output::indent_level = 0;
 
@@ -53,26 +51,26 @@ namespace void_test::core {
         printf(format::exception, source);
     }
 
-    auto output::on_registry_error(registry::state data) noexcept -> void {
+    auto output::on_test_error(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::registry_error, data.failed, data.passed + data.failed);
+        printf(format::test_error, data.error_count, data.success_count + data.error_count);
     }
 
-    auto output::on_registry_success(registry::state data) noexcept -> void {
+    auto output::on_test_success(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::registry_success, data.failed, data.passed + data.failed);
+        printf(format::test_success, data.error_count, data.success_count + data.error_count);
     }
 
-    auto output::on_verifier_error(verifier::state data) noexcept -> void {
+    auto output::on_resource_error(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::verifier_error, data.destroyed, data.constructed, data.destructor_errrors,
-               data.constructor_errors, data.operator_errors);
+        printf(format::resource_error, data.destroyed_count, data.constructed_count, data.destructor_error_count,
+               data.constructor_error_count, data.operator_error_count);
     }
 
-    auto output::on_verifier_success(verifier::state data) noexcept -> void {
+    auto output::on_resource_success(verifier::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::verifier_success, data.destroyed, data.constructed, data.destructor_errrors,
-               data.constructor_errors, data.operator_errors);
+        printf(format::resource_success, data.destroyed_count, data.constructed_count, data.destructor_error_count,
+               data.constructor_error_count, data.operator_error_count);
     }
 
 }

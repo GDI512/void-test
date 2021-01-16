@@ -14,6 +14,8 @@ file (GLOB SOURCE_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
 add_library (void-test STATIC)
 
+set_target_properties (void-test PROPERTIES OUTPUT_NAME voidtest)
+
 if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
     add_library (void-test::void-test ALIAS void-test)
 endif ()

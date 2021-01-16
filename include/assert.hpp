@@ -1,94 +1,119 @@
-#ifndef VOID_TEST_CHECK_HPP
-#define VOID_TEST_CHECK_HPP
+#ifndef VOID_TEST_ASSERT_HPP
+#define VOID_TEST_ASSERT_HPP
 
-#include "output.hpp"
+#include "state.hpp"
 #include "utility.hpp"
-#include "registry.hpp"
 
 namespace void_test {
 
-    auto check(bool value) noexcept -> bool;
-
-    template <typename F, typename... A>
-    auto check(F&& function, A&&... arguments) noexcept -> bool {
-        if (function(core::forward<A>(arguments)...)) {
-            return core::on_success(__func__);
+    inline auto check(bool value) noexcept -> bool {
+        if (value) {
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_equal(const T& left, const U& right) noexcept -> bool {
+    template <typename callable, typename... args>
+    auto check(callable&& function, args&&... arguments) noexcept -> bool {
+        if (function(core::forward<args>(arguments)...)) {
+            core::registry::on_success(__func__);
+            return true;
+        } else {
+            core::registry::on_error(__func__);
+            return false;
+        }
+    }
+
+    template <typename type, typename other>
+    auto check_equal(const type& left, const other& right) noexcept -> bool {
         if (left == right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_equal(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_equal(const type& left, const other& right) noexcept -> bool {
         if (left != right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_less(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_less(const type& left, const other& right) noexcept -> bool {
         if (left < right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_less(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_less(const type& left, const other& right) noexcept -> bool {
         if (left >= right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_greater(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_greater(const type& left, const other& right) noexcept -> bool {
         if (left > right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_greater(const T& left, const U& right) noexcept -> bool {
+    template <typename type, typename other>
+    auto check_not_greater(const type& left, const other& right) noexcept -> bool {
         if (left <= right) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         } else {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
-    template <typename F, typename... A>
-    auto check_throws(F&& function, A&&... arguments) noexcept -> bool {
+    template <typename callable, typename... args>
+    auto check_throws(callable&& function, args&&... arguments) noexcept -> bool {
         try {
-            function(core::forward<A>(arguments)...);
-            return core::on_error(__func__);
+            function(core::forward<args>(arguments)...);
+            core::registry::on_error(__func__);
+            return false;
         } catch (...) {
-            return core::on_success(__func__);
+            core::registry::on_success(__func__);
+            return true;
         }
     }
 
-    template <typename F, typename... A>
-    auto check_nothrows(F&& function, A&&... arguments) noexcept -> bool {
+    template <typename callable, typename... args>
+    auto check_nothrows(callable&& function, args&&... arguments) noexcept -> bool {
         try {
-            function(core::forward<A>(arguments)...);
-            return core::on_success(__func__);
+            function(core::forward<args>(arguments)...);
+            core::registry::on_success(__func__);
+            return true;
         } catch (...) {
-            return core::on_error(__func__);
+            core::registry::on_error(__func__);
+            return false;
         }
     }
 
