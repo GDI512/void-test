@@ -4,7 +4,7 @@ This is a lightweight C++ testing framework designed to have minimal impact on c
 # Features
 * **Macro-free** - There are no assertion or test case macros, instead, this framework makes extensive use of C++11 lambdas and templates to achieve similar functionality.
 * **Fast** - The header files do not include any system headers or other external dependencies to minimize impact on compile times. All code which can and should be precompiled is compiled into a static library.
-* **Easy to use** - Everything from building to writing tests is as straightforward as it gets. At least by C++ standards.
+* **Easy to use** - Everything from building to writing tests is as straightforward as possible. At least by C++ standards.
 
 # Building
 Run the following commands:
@@ -32,7 +32,7 @@ find_package (void-test REQUIRED)
 ```
 
 # Building as a subdirectory
-If installing is not an option, simply clone the repository and move it somewhere into the project's source tree. This library defines an alias target (called `void-test::void-test` too) when built as a subdirectory. Given this hypothetical project structure:
+If installing is not an option simply clone the repository and move it somewhere into the project's source tree. This library defines an alias target (called `void-test::void-test` too) when built as a subdirectory. Given this hypothetical project structure:
 
     external/
     |-void-test/
