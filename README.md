@@ -7,12 +7,12 @@ This is a lightweight C++ testing framework designed to have minimal impact on c
 * **Easy to use** - Everything from building to writing tests is as straightforward as possible. At least by C++ standards.
 
 # Building
-Run the following commands:
+To build for use outside CMake, run the following commands:
 
     git clone https://github.com/GDI512/void-test.git
     cd void-test
-    cmake -S . -B build -D CMAKE_BUILD_TYPE=Release
-    cmake --build build --config Release
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
+    cmake --build build --config RelWithDebInfo
 
 It is highly recommended to run the tests too:
 
@@ -20,19 +20,8 @@ It is highly recommended to run the tests too:
     ctest
     cd ..
 
-# Installing
-The easiest way of adding `void-test` to a project is to just install it. Run the following command as an administrator / root after going through the previous section:
-
-    cmake --install build
-
-Then add the following line to a top-level *CMakeLists.txt* file to make the exported `void-test::void-test` target available:
-
-```cmake
-find_package (void-test REQUIRED)
-```
-
-# Building as a subdirectory
-If installing is not an option simply clone the repository and move it somewhere into the project's source tree. This library defines an alias target (called `void-test::void-test` too) when built as a subdirectory. Given this hypothetical project structure:
+# Adding to a CMake project
+The easiest way of using *void-test* is to add it as a git submodule or just clone it into project's source tree, for example:
 
     external/
     |-void-test/
@@ -46,11 +35,21 @@ If installing is not an option simply clone the repository and move it somewhere
     |- CMakeLists.txt
     CMakeLists.txt
 
-Adding the following line to *external/CMakeLists.txt* will make it accessible:
+Assuming *external* was added as a subdirectory itself, adding the following line to *external/CMakeLists.txt* will make the alias target `void-test::void-test` accessible:
 
 ```cmake
 add_subdirectory (void-test)
 ```
+
+Afterwards all you need to do is just add it as a dependency like you would do with any other CMake library:
+
+```cmake
+add_executable (<test-target>)
+target_sources (<test-target> PRIVATE <source-file>)
+target_link_libraries (<test-target> PRIVATE void-test::void-test)
+```
+
+Keep in mind that tests are disabled for subdirectory builds like this one. If you would like to test *void-test* on your machine, follow the procedure from previous section.
 
 # Example
 > Disclaimer: I have not checked if this is actually how an `std::vector` is supposed to behave.

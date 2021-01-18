@@ -51,7 +51,7 @@ namespace void_test::core {
         return static_cast<type&&>(value);
     }
 
-    template <typename T>
+    template <typename type>
     class static_list {
       private:
         inline static static_list* active_node = nullptr;
@@ -69,8 +69,8 @@ namespace void_test::core {
         }
 
       public:
-        static auto current() noexcept -> T& {
-            return static_cast<T&>(*active_node);
+        static auto current() noexcept -> type& {
+            return static_cast<type&>(*active_node);
         }
     };
 

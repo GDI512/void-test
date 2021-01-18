@@ -1,8 +1,8 @@
 # =============================================================================
-#   CMake module for global compiler flags
+#   CMake module for compiler flags
 # =============================================================================
 
-set (GCC_WARNINGS
+set (GNU_FLAGS
     -Werror
     -Wall
     -Wextra
@@ -27,7 +27,7 @@ set (GCC_WARNINGS
     -pedantic
 )
 
-set (CLANG_WARNINGS
+set (CLANG_FLAGS
     -Werror
     -Wall
     -Wextra
@@ -49,9 +49,6 @@ set (CLANG_WARNINGS
 
 set (MSVC_FLAGS
     /permissive-
-)
-
-set (MSVC_WARNINGS
     /WX
     /W4
     /w14242
@@ -74,11 +71,3 @@ set (MSVC_WARNINGS
     /w14906
     /w14928
 )
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options (${MSVC_FLAGS} ${MSVC_WARNINGS})
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    add_compile_options (${CLANG_WARNINGS})
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_compile_options (${GCC_WARNINGS})
-endif ()

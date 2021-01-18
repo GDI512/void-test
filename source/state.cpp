@@ -94,7 +94,7 @@ namespace void_test::core {
         return current().info.operator_error_count++;
     }
 
-    auto global::exit_code = exit_success;
+    int global::exit_code = exit_success;
 
     auto global::exit_status() noexcept -> int {
         return exit_code;
