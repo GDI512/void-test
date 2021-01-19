@@ -15,129 +15,120 @@
 //         already initialized memory area
 // ============================================================================
 
+// clang-format off
+
 #include <void_test.hpp>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
 #include <new>
+#include <memory>
 #include <utility>
-#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+
+#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using namespace void_test;
 using namespace void_test::core;
 
 int main() {
     { // 1.
-        byte* objbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        assert(verifier::data().destroyed_count == 0);
-        assert(verifier::data().constructed_count == 1);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
+        new (objbuf.get()) resource();
+        cassert(verifier::data().destroyed_count == 0);
+        cassert(verifier::data().constructed_count == 1);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 2.
-        byte* objbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        assert(verifier::data().destroyed_count == 1);
-        assert(verifier::data().constructed_count == 1);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
+        new (objbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        cassert(verifier::data().destroyed_count == 1);
+        cassert(verifier::data().constructed_count == 1);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 3.
-        byte* objbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        assert(verifier::data().destroyed_count == 2);
-        assert(verifier::data().constructed_count == 1);
-        assert(verifier::data().destructor_error_count == 1);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
+        new (objbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        cassert(verifier::data().destroyed_count == 2);
+        cassert(verifier::data().constructed_count == 1);
+        cassert(verifier::data().destructor_error_count == 1);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 4.
-        byte* objbuf = new byte[64];
-        byte* othbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
+        auto othbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        new (othbuf) resource(reinterpret_cast<resource&>(*objbuf));
-        assert(verifier::data().destroyed_count == 1);
-        assert(verifier::data().constructed_count == 2);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 1);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
-        delete[] othbuf;
+        new (objbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        new (othbuf.get()) resource(reinterpret_cast<resource&>(*objbuf.get()));
+        cassert(verifier::data().destroyed_count == 1);
+        cassert(verifier::data().constructed_count == 2);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 1);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 5.
-        byte* objbuf = new byte[64];
-        byte* othbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
+        auto othbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        new (othbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        reinterpret_cast<resource&>(*othbuf) = reinterpret_cast<resource&>(*objbuf);
-        assert(verifier::data().destroyed_count == 1);
-        assert(verifier::data().constructed_count == 2);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 1);
-        delete[] objbuf;
-        delete[] othbuf;
+        new (objbuf.get()) resource();
+        new (othbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        reinterpret_cast<resource&>(*othbuf.get()) = reinterpret_cast<resource&>(*objbuf.get());
+        cassert(verifier::data().destroyed_count == 1);
+        cassert(verifier::data().constructed_count == 2);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 1);
     }
     { // 6.
-        byte* objbuf = new byte[64];
-        byte* othbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
+        auto othbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        // resource other(std::move(object));
-        new (othbuf) resource(std::move(reinterpret_cast<resource&>(*objbuf)));
-        assert(verifier::data().destroyed_count == 1);
-        assert(verifier::data().constructed_count == 2);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 1);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
-        delete[] othbuf;
+        new (objbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        new (othbuf.get()) resource(std::move(reinterpret_cast<resource&>(*objbuf.get())));
+        cassert(verifier::data().destroyed_count == 1);
+        cassert(verifier::data().constructed_count == 2);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 1);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 7.
-        byte* objbuf = new byte[64];
-        byte* othbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
+        auto othbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        new (othbuf) resource();
-        reinterpret_cast<resource*>(objbuf)->~resource();
-        reinterpret_cast<resource&>(*othbuf) = std::move(reinterpret_cast<resource&>(*objbuf));
-        assert(verifier::data().destroyed_count == 1);
-        assert(verifier::data().constructed_count == 2);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 1);
-        delete[] objbuf;
-        delete[] othbuf;
+        new (objbuf.get()) resource();
+        new (othbuf.get()) resource();
+        reinterpret_cast<resource*>(objbuf.get())->~resource();
+        reinterpret_cast<resource&>(*othbuf.get()) = std::move(reinterpret_cast<resource&>(*objbuf.get()));
+        cassert(verifier::data().destroyed_count == 1);
+        cassert(verifier::data().constructed_count == 2);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 1);
     }
     { // 8.
-        byte* objbuf = new byte[64];
+        auto objbuf = std::make_unique<byte[]>(64);
         verifier state;
-        new (objbuf) resource();
-        new (objbuf) resource();
-        assert(verifier::data().destroyed_count == 0);
-        assert(verifier::data().constructed_count == 2);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 1);
-        assert(verifier::data().operator_error_count == 0);
-        delete[] objbuf;
+        new (objbuf.get()) resource();
+        new (objbuf.get()) resource();
+        cassert(verifier::data().destroyed_count == 0);
+        cassert(verifier::data().constructed_count == 2);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 1);
+        cassert(verifier::data().operator_error_count == 0);
     }
 }
+
+// clang-format on

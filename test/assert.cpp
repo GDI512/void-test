@@ -12,13 +12,14 @@
 //     10. Test the nothrow assertion
 // ============================================================================
 
+// clang-format off
+
 #include <void_test.hpp>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
+#include <cstdio>
+#include <cstdlib>
 
-#include <cassert>
+#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using void_test::core::registry;
 using namespace void_test;
@@ -26,56 +27,58 @@ using namespace void_test;
 int main() {
     { // 1.
         registry state;
-        assert(check(true));
-        assert(!check(false));
+        cassert(check(true));
+        cassert(!check(false));
     }
     { // 2.
         registry state;
-        assert(check([](auto x) { return x; }, true));
-        assert(!check([](auto x) { return x; }, false));
+        cassert(check([](auto x) { return x; }, true));
+        cassert(!check([](auto x) { return x; }, false));
     }
     { // 3.
         registry state;
-        assert(check_equal(2, 2));
-        assert(!check_equal(2, 4));
+        cassert(check_equal(2, 2));
+        cassert(!check_equal(2, 4));
     }
     { // 4.
         registry state;
-        assert(check_not_equal(2, 4));
-        assert(!check_not_equal(2, 2));
+        cassert(check_not_equal(2, 4));
+        cassert(!check_not_equal(2, 2));
     }
     { // 5.
         registry state;
-        assert(check_less(2, 4));
-        assert(!check_less(2, 2));
-        assert(!check_less(2, 1));
+        cassert(check_less(2, 4));
+        cassert(!check_less(2, 2));
+        cassert(!check_less(2, 1));
     }
     { // 6.
         registry state;
-        assert(check_not_less(2, 2));
-        assert(check_not_less(4, 2));
-        assert(!check_not_less(1, 2));
+        cassert(check_not_less(2, 2));
+        cassert(check_not_less(4, 2));
+        cassert(!check_not_less(1, 2));
     }
     { // 7.
         registry state;
-        assert(check_greater(4, 2));
-        assert(!check_greater(2, 2));
-        assert(!check_greater(1, 2));
+        cassert(check_greater(4, 2));
+        cassert(!check_greater(2, 2));
+        cassert(!check_greater(1, 2));
     }
     { // 8.
         registry state;
-        assert(check_not_greater(2, 2));
-        assert(check_not_greater(2, 4));
-        assert(!check_not_greater(2, 1));
+        cassert(check_not_greater(2, 2));
+        cassert(check_not_greater(2, 4));
+        cassert(!check_not_greater(2, 1));
     }
     { // 9.
         registry state;
-        assert(check_throws([]() { throw 0; })); // NOLINT
-        assert(!check_throws([]() { return 0; }));
+        cassert(check_throws([]() { throw 0; })); // NOLINT
+        cassert(!check_throws([]() { return 0; }));
     }
     { // 10.
         registry state;
-        assert(check_nothrows([]() { return 0; }));
-        assert(!check_nothrows([]() { throw 0; })); // NOLINT
+        cassert(check_nothrows([]() { return 0; }));
+        cassert(!check_nothrows([]() { throw 0; })); // NOLINT
     }
 }
+
+// clang-format on

@@ -6,15 +6,16 @@
 //      4. Ensure static list works like a proper stack
 // ============================================================================
 
+// clang-format off
+
 #include <void_test.hpp>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
-#include <cassert>
 #include <utility>
 #include <type_traits>
+#include <cstdio>
+#include <cstdlib>
+
+#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using namespace void_test::core;
 
@@ -39,13 +40,15 @@ int main() {
     { // 4.
         struct type : static_list<type> {};
         auto object = type();
-        assert(&type::current() == &object);
+        cassert(&type::current() == &object);
         auto other = type();
-        assert(&type::current() == &other);
+        cassert(&type::current() == &other);
         {
             auto nested = type();
-            assert(&type::current() == &nested);
+            cassert(&type::current() == &nested);
         }
-        assert(&type::current() == &other);
+        cassert(&type::current() == &other);
     }
 }
+
+// clang-format on

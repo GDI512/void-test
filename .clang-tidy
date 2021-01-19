@@ -1,17 +1,10 @@
 ---
 Checks: '-*,
          cert-*,
-         bugprone-*,
          performance-*,
-         readability-*,
          clang-analyzer-*,
          clang-diagnostic-*,
-         -cert-err58-cpp,
-         -bugprone-assert-side-effect,
-         -readability-redundant-access-specifiers,
-         -readability-else-after-return,
-         -readability-magic-numbers,
-         -readability-uppercase-literal-suffix'
+         readability-identifier-naming'
 CheckOptions:
   - key: readability-identifier-naming.ClassCase
     value: lower_case
@@ -27,8 +20,6 @@ CheckOptions:
     value: lower_case
   - key: readability-identifier-naming.VariableCase
     value: lower_case
-  - key: readability-identifier-naming.MacroDefinitionCase
-    value: UPPER_CASE
   - key: readability-identifier-naming.IgnoreMainLikeFunctions
     value: 1
 UseColor: true

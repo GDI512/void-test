@@ -11,48 +11,51 @@
 //         failing assertions
 // ============================================================================
 
+// clang-format off
+
 #include <void_test.hpp>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
-#include <cassert>
 #include <cstring>
+#include <cstdlib>
+#include <cstdio>
+
+#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using namespace void_test;
 using namespace void_test::core;
 
 int main() {
     { // 1.
-        assert(unit("unit-name", []() {}) == true);
-        assert(global::exit_status() == exit_success);
+        cassert(unit("unit-name", []() {}) == true);
+        cassert(global::exit_status() == exit_success);
     }
     { // 2.
-        assert(unit("unit-name", []() { check(true); }) == true);
-        assert(global::exit_status() == exit_success);
+        cassert(unit("unit-name", []() { check(true); }) == true);
+        cassert(global::exit_status() == exit_success);
     }
     { // 3.
-        assert(unit("unit-name", []() { check(false); }) == false);
-        assert(global::exit_status() == exit_failure);
+        cassert(unit("unit-name", []() { check(false); }) == false);
+        cassert(global::exit_status() == exit_failure);
     }
     { // 4.
-        unit("unit-name", []() { assert(strcmp(scope::data(), "unit-name") == 0); });
+        unit("unit-name", []() { cassert(strcmp(scope::data(), "unit-name") == 0); });
     }
     { // 5.
         global::exit_status(exit_success);
         auto test = unit("unit-main", []() {
-            assert(unit("unit-one", []() {
+            cassert(unit("unit-one", []() {
                 check_equal(0, 0);
                 check_not_equal(0, 1);
             }));
-            assert(!unit("unit-two", []() {
+            cassert(!unit("unit-two", []() {
                 check_equal(0, 1);
                 check_not_equal(0, 0);
             }));
         });
-        assert(test);
-        assert(global::exit_status() == exit_failure);
+        cassert(test);
+        cassert(global::exit_status() == exit_failure);
         static_cast<void>(test);
     }
 }
+
+// clang-format on

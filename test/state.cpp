@@ -27,26 +27,27 @@
 //      25. Ensure scope object contains the c-string it was constructed with
 // ============================================================================
 
+// clang-format off
+
 #include <void_test.hpp>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-
-#include <cassert>
+#include <cstdio>
 #include <cstring>
+#include <cstdlib>
+
+#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using namespace void_test;
 using namespace void_test::core;
 
 int main() {
     { // 1.
-        assert(global::exit_status() == exit_success);
+        cassert(global::exit_status() == exit_success);
     }
     { // 2.
         {
             global::exit_status(64);
-            assert(global::exit_status() == 64);
+            cassert(global::exit_status() == 64);
         }
         global::exit_status(exit_success);
     }
@@ -55,12 +56,12 @@ int main() {
             registry object;
             registry::on_success();
         }
-        assert(global::exit_status() == exit_success);
+        cassert(global::exit_status() == exit_success);
         global::exit_status(exit_success);
     }
     { // 4.
         { verifier object; }
-        assert(global::exit_status() == exit_success);
+        cassert(global::exit_status() == exit_success);
         global::exit_status(exit_success);
     }
     { // 5.
@@ -68,7 +69,7 @@ int main() {
             registry object;
             registry::on_error();
         }
-        assert(global::exit_status() == exit_failure);
+        cassert(global::exit_status() == exit_failure);
         global::exit_status(exit_success);
     }
     { // 6.
@@ -76,7 +77,7 @@ int main() {
             verifier object;
             verifier::on_destructor_error();
         }
-        assert(global::exit_status() == exit_failure);
+        cassert(global::exit_status() == exit_failure);
         global::exit_status(exit_success);
     }
     { // 7.
@@ -84,7 +85,7 @@ int main() {
             verifier object;
             verifier::on_constructor_error();
         }
-        assert(global::exit_status() == exit_failure);
+        cassert(global::exit_status() == exit_failure);
         global::exit_status(exit_success);
     }
     { // 8.
@@ -92,7 +93,7 @@ int main() {
             verifier object;
             verifier::on_operator_error();
         }
-        assert(global::exit_status() == exit_failure);
+        cassert(global::exit_status() == exit_failure);
         global::exit_status(exit_success);
     }
     { // 9.
@@ -102,117 +103,119 @@ int main() {
             verifier::on_construction();
             verifier::on_destruction();
         }
-        assert(global::exit_status() == exit_failure);
+        cassert(global::exit_status() == exit_failure);
         global::exit_status(exit_success);
     }
     { // 10.
         registry object;
-        assert(&registry::current() == &object);
+        cassert(&registry::current() == &object);
     }
     { // 11.
         registry object;
-        assert(registry::empty());
-        assert(registry::status());
-        assert(registry::data().success_count == 0);
-        assert(registry::data().error_count == 0);
+        cassert(registry::empty());
+        cassert(registry::status());
+        cassert(registry::data().success_count == 0);
+        cassert(registry::data().error_count == 0);
     }
     { // 12.
         registry object;
-        assert(registry::on_error() == 0);
-        assert(registry::on_error() == 1);
-        assert(!registry::empty());
-        assert(!registry::status());
-        assert(registry::data().success_count == 0);
-        assert(registry::data().error_count == 2);
+        cassert(registry::on_error() == 0);
+        cassert(registry::on_error() == 1);
+        cassert(!registry::empty());
+        cassert(!registry::status());
+        cassert(registry::data().success_count == 0);
+        cassert(registry::data().error_count == 2);
     }
     { // 13.
         registry object;
-        assert(registry::on_success() == 0);
-        assert(registry::on_success() == 1);
-        assert(!registry::empty());
-        assert(registry::status());
-        assert(registry::data().success_count == 2);
-        assert(registry::data().error_count == 0);
+        cassert(registry::on_success() == 0);
+        cassert(registry::on_success() == 1);
+        cassert(!registry::empty());
+        cassert(registry::status());
+        cassert(registry::data().success_count == 2);
+        cassert(registry::data().error_count == 0);
     }
     { // 14.
         registry object;
-        assert(registry::on_exception() == 0);
-        assert(registry::on_exception() == 1);
-        assert(!registry::empty());
-        assert(!registry::status());
-        assert(registry::data().success_count == 0);
-        assert(registry::data().error_count == 2);
+        cassert(registry::on_exception() == 0);
+        cassert(registry::on_exception() == 1);
+        cassert(!registry::empty());
+        cassert(!registry::status());
+        cassert(registry::data().success_count == 0);
+        cassert(registry::data().error_count == 2);
     }
     { // 15.
         verifier object;
-        assert(&verifier::current() == &object);
+        cassert(&verifier::current() == &object);
     }
     { // 16.
         verifier object;
-        assert(verifier::empty());
-        assert(verifier::status());
-        assert(verifier::data().destroyed_count == 0);
-        assert(verifier::data().constructed_count == 0);
-        assert(verifier::data().destructor_error_count == 0);
-        assert(verifier::data().constructor_error_count == 0);
-        assert(verifier::data().operator_error_count == 0);
+        cassert(verifier::empty());
+        cassert(verifier::status());
+        cassert(verifier::data().destroyed_count == 0);
+        cassert(verifier::data().constructed_count == 0);
+        cassert(verifier::data().destructor_error_count == 0);
+        cassert(verifier::data().constructor_error_count == 0);
+        cassert(verifier::data().operator_error_count == 0);
     }
     { // 17.
         verifier object;
-        assert(verifier::on_construction() == 0);
-        assert(verifier::on_construction() == 1);
-        assert(!verifier::empty());
-        assert(!verifier::status());
-        assert(verifier::data().constructed_count == 2);
+        cassert(verifier::on_construction() == 0);
+        cassert(verifier::on_construction() == 1);
+        cassert(!verifier::empty());
+        cassert(!verifier::status());
+        cassert(verifier::data().constructed_count == 2);
     }
     { // 18.
         verifier object;
-        assert(verifier::on_destruction() == 0);
-        assert(verifier::on_destruction() == 1);
-        assert(!verifier::empty());
-        assert(!verifier::status());
-        assert(verifier::data().destroyed_count == 2);
+        cassert(verifier::on_destruction() == 0);
+        cassert(verifier::on_destruction() == 1);
+        cassert(!verifier::empty());
+        cassert(!verifier::status());
+        cassert(verifier::data().destroyed_count == 2);
     }
     { // 19.
         verifier object;
-        assert(verifier::on_destructor_error() == 0);
-        assert(verifier::on_destructor_error() == 1);
-        assert(!verifier::status());
-        assert(verifier::data().destructor_error_count == 2);
+        cassert(verifier::on_destructor_error() == 0);
+        cassert(verifier::on_destructor_error() == 1);
+        cassert(!verifier::status());
+        cassert(verifier::data().destructor_error_count == 2);
     }
     { // 20.
         verifier object;
-        assert(verifier::on_constructor_error() == 0);
-        assert(verifier::on_constructor_error() == 1);
-        assert(!verifier::status());
-        assert(verifier::data().constructor_error_count == 2);
+        cassert(verifier::on_constructor_error() == 0);
+        cassert(verifier::on_constructor_error() == 1);
+        cassert(!verifier::status());
+        cassert(verifier::data().constructor_error_count == 2);
     }
     { // 21.
         verifier object;
-        assert(verifier::on_operator_error() == 0);
-        assert(verifier::on_operator_error() == 1);
-        assert(!verifier::status());
-        assert(verifier::data().operator_error_count == 2);
+        cassert(verifier::on_operator_error() == 0);
+        cassert(verifier::on_operator_error() == 1);
+        cassert(!verifier::status());
+        cassert(verifier::data().operator_error_count == 2);
     }
     { // 22.
         verifier object;
-        assert(verifier::on_construction() == 0);
-        assert(verifier::on_destruction() == 0);
-        assert(verifier::status());
+        cassert(verifier::on_construction() == 0);
+        cassert(verifier::on_destruction() == 0);
+        cassert(verifier::status());
     }
     { // 23.
         verifier object;
-        assert(verifier::on_construction() == 0);
-        assert(verifier::on_destruction() == 0);
-        assert(verifier::on_destruction() == 1);
-        assert(!verifier::status());
+        cassert(verifier::on_construction() == 0);
+        cassert(verifier::on_destruction() == 0);
+        cassert(verifier::on_destruction() == 1);
+        cassert(!verifier::status());
     }
     { // 24.
         scope object("scope");
-        assert(&scope::current() == &object);
+        cassert(&scope::current() == &object);
     }
     { // 25.
         scope object("scope");
-        assert(strcmp(scope::data(), "scope") == 0);
+        cassert(strcmp(scope::data(), "scope") == 0);
     }
 }
+
+// clang-format on
