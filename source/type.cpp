@@ -27,7 +27,7 @@ namespace void_test {
 
     resource::resource(resource&& other) noexcept : self(this) {
         core::verifier::on_construction();
-        if (other.self != &other || value == initialized_memory_value) {
+        if (other.self != &other || value == initialized_memory_value || other.value == uninitialized_memory_value) {
             core::verifier::on_constructor_error();
         }
         value = initialized_memory_value;
@@ -35,7 +35,7 @@ namespace void_test {
 
     resource::resource(const resource& other) noexcept : self(this) {
         core::verifier::on_construction();
-        if (other.self != &other || value == initialized_memory_value) {
+        if (other.self != &other || value == initialized_memory_value || other.value == uninitialized_memory_value) {
             core::verifier::on_constructor_error();
         }
         value = initialized_memory_value;
