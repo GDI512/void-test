@@ -11,15 +11,7 @@
 //         failing assertions
 // ============================================================================
 
-// clang-format off
-
-#include <void_test.hpp>
-
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-
-#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
+#include "common.hpp"
 
 using namespace void_test;
 using namespace void_test::core;
@@ -38,7 +30,7 @@ int main() {
         cassert(global::exit_status() == exit_failure);
     }
     { // 4.
-        unit("unit-name", []() { cassert(strcmp(scope::data(), "unit-name") == 0); });
+        unit("unit-name", []() { cassert(cmpstr(scope::data(), "unit-name") == 0); });
     }
     { // 5.
         global::exit_status(exit_success);
@@ -57,5 +49,3 @@ int main() {
         static_cast<void>(test);
     }
 }
-
-// clang-format on

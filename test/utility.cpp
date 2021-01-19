@@ -8,14 +8,10 @@
 
 // clang-format off
 
-#include <void_test.hpp>
+#include "common.hpp"
 
 #include <utility>
 #include <type_traits>
-#include <cstdio>
-#include <cstdlib>
-
-#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
 
 using namespace void_test::core;
 
@@ -50,5 +46,3 @@ int main() {
         cassert(&type::current() == &other);
     }
 }
-
-// clang-format on

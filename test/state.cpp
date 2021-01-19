@@ -27,15 +27,7 @@
 //      25. Ensure scope object contains the c-string it was constructed with
 // ============================================================================
 
-// clang-format off
-
-#include <void_test.hpp>
-
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
-
-#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
+#include "common.hpp"
 
 using namespace void_test;
 using namespace void_test::core;
@@ -214,8 +206,6 @@ int main() {
     }
     { // 25.
         scope object("scope");
-        cassert(strcmp(scope::data(), "scope") == 0);
+        cassert(cmpstr(scope::data(), "scope") == 0);
     }
 }
-
-// clang-format on

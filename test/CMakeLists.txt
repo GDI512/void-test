@@ -5,10 +5,14 @@
 
 cmake_minimum_required (VERSION 3.17)
 
+add_library (common OBJECT)
+target_sources (common PRIVATE common.cpp)
+target_link_libraries (common PUBLIC void-test)
+
 function (add_test_executable target source)
   add_executable (${target})
   target_sources (${target} PRIVATE ${source})
-  target_link_libraries (${target} PRIVATE void-test)
+  target_link_libraries (${target} PRIVATE common)
   add_test (NAME ${target}_test COMMAND ${target})
 endfunction ()
 

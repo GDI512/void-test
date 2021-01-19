@@ -12,17 +12,10 @@
 //     10. Test the nothrow assertion
 // ============================================================================
 
-// clang-format off
+#include "common.hpp"
 
-#include <void_test.hpp>
-
-#include <cstdio>
-#include <cstdlib>
-
-#define cassert(x) if (!(x)) { printf("Line: %i %s\n", __LINE__, #x); exit(1); }
-
-using void_test::core::registry;
 using namespace void_test;
+using namespace void_test::core;
 
 int main() {
     { // 1.
@@ -71,14 +64,12 @@ int main() {
     }
     { // 9.
         registry state;
-        cassert(check_throws([]() { throw 0; })); // NOLINT
+        cassert(check_throws([]() { throw 0; }));
         cassert(!check_throws([]() { return 0; }));
     }
     { // 10.
         registry state;
         cassert(check_nothrows([]() { return 0; }));
-        cassert(!check_nothrows([]() { throw 0; })); // NOLINT
+        cassert(!check_nothrows([]() { throw 0; }));
     }
 }
-
-// clang-format on
