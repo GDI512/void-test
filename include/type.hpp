@@ -17,6 +17,11 @@ namespace void_test {
       public:
         auto operator=(resource&& other) noexcept -> resource&;
         auto operator=(const resource& other) noexcept -> resource&;
+
+      private:
+        auto is_self() const noexcept -> bool;
+        auto is_initialized() const noexcept -> bool;
+        auto is_uninitialized() const noexcept -> bool;
     };
 
     auto operator==(const resource& left, const resource& right) noexcept -> bool;

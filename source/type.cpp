@@ -10,7 +10,7 @@ namespace void_test {
 
     resource::~resource() noexcept {
         core::verifier::on_destruction();
-        if (value != initialized_memory_value || self != this) {
+        if (!is_initialized() || !is_self()) {
             core::verifier::on_destructor_error();
         }
         self = reinterpret_cast<resource*>(invalid_pointer_value);
@@ -19,7 +19,7 @@ namespace void_test {
 
     resource::resource() noexcept : self(this) {
         core::verifier::on_construction();
-        if (value == initialized_memory_value) {
+        if (is_initialized()) {
             core::verifier::on_constructor_error();
         }
         value = initialized_memory_value;
@@ -27,7 +27,7 @@ namespace void_test {
 
     resource::resource(resource&& other) noexcept : self(this) {
         core::verifier::on_construction();
-        if (other.self != &other || value == initialized_memory_value || other.value == uninitialized_memory_value) {
+        if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             core::verifier::on_constructor_error();
         }
         value = initialized_memory_value;
@@ -35,24 +35,36 @@ namespace void_test {
 
     resource::resource(const resource& other) noexcept : self(this) {
         core::verifier::on_construction();
-        if (other.self != &other || value == initialized_memory_value || other.value == uninitialized_memory_value) {
+        if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             core::verifier::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     auto resource::operator=(resource&& other) noexcept -> resource& {
-        if (self != this || other.self != &other) {
+        if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
             core::verifier::on_operator_error();
         }
         return *this;
     }
 
     auto resource::operator=(const resource& other) noexcept -> resource& {
-        if (self != this || other.self != &other) {
+        if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
             core::verifier::on_operator_error();
         }
         return *this;
+    }
+
+    auto resource::is_self() const noexcept -> bool {
+        return self == this;
+    }
+
+    auto resource::is_initialized() const noexcept -> bool {
+        return value == initialized_memory_value;
+    }
+
+    auto resource::is_uninitialized() const noexcept -> bool {
+        return value == uninitialized_memory_value;
     }
 
     auto operator==(const resource& left, const resource& right) noexcept -> bool {
