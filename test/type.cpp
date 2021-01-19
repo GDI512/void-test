@@ -21,6 +21,7 @@
 #undef NDEBUG
 #endif
 
+#include <new>
 #include <utility>
 #include <cassert>
 
