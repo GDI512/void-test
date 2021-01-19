@@ -11,7 +11,7 @@ auto cmpstr(const char* string, const char* other) noexcept -> int;
 
 #define cassert(x)                                                                                                     \
     if (!(x)) {                                                                                                        \
-        print(__LINE__, __FILE__);                                                                                     \
+        print(__LINE__, #x);                                                                                           \
         stop(1);                                                                                                       \
     }
 

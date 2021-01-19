@@ -10,7 +10,7 @@ namespace void_test {
 
     resource::~resource() noexcept {
         core::verifier::on_destruction();
-        if (value != initialized_memory_value) {
+        if (value != initialized_memory_value || self != this) {
             core::verifier::on_destructor_error();
         }
         self = reinterpret_cast<resource*>(invalid_pointer_value);
