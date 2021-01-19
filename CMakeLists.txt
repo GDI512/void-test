@@ -3,7 +3,7 @@
 #   Subdirectories and modules should be included only in this file
 # =============================================================================
 
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.15)
 
 project (void-test VERSION 0.1.0 LANGUAGES CXX)
 

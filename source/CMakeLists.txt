@@ -4,7 +4,7 @@
 #   this project (installing, packaging, exports etc.) should be put here
 # =============================================================================
 
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.15)
 
 set (INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 

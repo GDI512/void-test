@@ -3,7 +3,7 @@
 #   All test-related configuration and test targets should go here
 # =============================================================================
 
-cmake_minimum_required (VERSION 3.17)
+cmake_minimum_required (VERSION 3.15)
 
 add_library (common OBJECT)
 target_sources (common PRIVATE common.cpp)
