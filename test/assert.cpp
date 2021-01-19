@@ -14,12 +14,6 @@
 
 #include "common.hpp"
 
-#define cassert(x)                                                                                                     \
-    if (!(x)) {                                                                                                        \
-        print(__LINE__, #x);                                                                                           \
-        stop(1);                                                                                                       \
-    }
-
 using namespace void_test;
 using namespace void_test::core;
 
@@ -31,7 +25,7 @@ int main() {
     }
     { // 2.
         registry state;
-        cassert(check([](auto x) { return x; }, true));
+        cassert(check([](auto x) { return x; }, false));
         cassert(!check([](auto x) { return x; }, false));
     }
     { // 3.
