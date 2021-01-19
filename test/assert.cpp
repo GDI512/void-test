@@ -25,7 +25,7 @@ int main() {
     }
     { // 2.
         registry state;
-        cassert(check([](auto x) { return x; }, false));
+        cassert(check([](auto x) { return x; }, true));
         cassert(!check([](auto x) { return x; }, false));
     }
     { // 3.
