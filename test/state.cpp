@@ -29,6 +29,12 @@
 
 #include "common.hpp"
 
+#define cassert(x)                                                                                                     \
+    if (!(x)) {                                                                                                        \
+        print(__LINE__, #x);                                                                                           \
+        stop(1);                                                                                                       \
+    }
+
 using namespace void_test;
 using namespace void_test::core;
 

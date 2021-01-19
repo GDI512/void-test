@@ -10,6 +10,12 @@
 
 #include "common.hpp"
 
+#define cassert(x)                                                                                                     \
+    if (!(x)) {                                                                                                        \
+        print(__LINE__, #x);                                                                                           \
+        stop(1);                                                                                                       \
+    }
+
 #include <utility>
 #include <type_traits>
 
