@@ -4,9 +4,9 @@
 
 namespace void_test {
 
-    constexpr auto invalid_pointer_value = static_cast<intptr_t>(0xBEEF);
-    constexpr auto initialized_memory_value = static_cast<int>(0xFFFF);
-    constexpr auto uninitialized_memory_value = static_cast<int>(0x0000);
+    constexpr auto invalid_pointer_value = static_cast<intptr_t>(0x7FFFFFFF);
+    constexpr auto initialized_memory_value = static_cast<int>(0x7FFFFFFF);
+    constexpr auto uninitialized_memory_value = static_cast<int>(0x00000000);
 
     resource::~resource() noexcept {
         core::verifier::on_destruction();
