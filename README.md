@@ -20,7 +20,7 @@ It is highly recommended to run the tests too:
     ctest
     cd ..
 
-# Adding to a CMake project
+# Adding to CMake projects
 The easiest way of using *void-test* is to add it as a git submodule or just clone it into project's source tree, for example:
 
     external/
