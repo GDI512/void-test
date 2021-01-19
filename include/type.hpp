@@ -5,8 +5,8 @@ namespace void_test {
 
     class resource {
       private:
-        int value;
-        resource* self;
+        volatile int value;
+        volatile resource* self;
 
       public:
         ~resource() noexcept;
