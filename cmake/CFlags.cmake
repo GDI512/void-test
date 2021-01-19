@@ -23,7 +23,6 @@ set (GNU_FLAGS
     -Wuseless-cast
     -Wdouble-promotion
     -Wformat=2
-    -Wlifetime
     -pedantic
 )
 
@@ -40,7 +39,6 @@ set (CLANG_FLAGS
     -Wpedantic
     -Wconversion
     -Wsign-conversion
-    -Wmisleading-indentation
     -Wnull-dereference
     -Wdouble-promotion
     -Wformat=2
