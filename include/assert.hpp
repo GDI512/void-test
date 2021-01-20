@@ -4,7 +4,7 @@
 #include "state.hpp"
 #include "utility.hpp"
 
-namespace void_test {
+namespace test {
 
     inline auto check(bool value) noexcept -> bool {
         if (value) {

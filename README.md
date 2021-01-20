@@ -58,8 +58,6 @@ Keep in mind that tests are disabled for subdirectory builds like this one. If y
 #include <void_test.hpp>
 #include <vector>
 
-namespace test = void_test;
-
 auto group = test::unit("vector-test", [](){
 
     test::unit("constructor-test", [](){

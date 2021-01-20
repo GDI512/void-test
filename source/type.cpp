@@ -2,7 +2,7 @@
 #include <state.hpp>
 #include <cstdint>
 
-namespace void_test {
+namespace test {
 
     constexpr auto invalid_pointer_value = static_cast<intptr_t>(0x7FFFFFFF);
     constexpr auto initialized_memory_value = static_cast<int>(0x7FFFFFFF);

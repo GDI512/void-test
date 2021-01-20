@@ -1,7 +1,7 @@
 #include <state.hpp>
 #include <output.hpp>
 
-namespace void_test::core {
+namespace test::core {
 
     scope::scope(string name) noexcept : name(name) {
         output::on_scope(name);
@@ -13,85 +13,87 @@ namespace void_test::core {
 
     registry::~registry() noexcept {
         if (status() && !empty()) {
-            output::on_test_success(info);
+            output::on_test_success({error_count, success_count});
         } else if (!status()) {
             global::exit_status(exit_failure);
-            output::on_test_error(info);
+            output::on_test_error({error_count, success_count});
         }
     }
 
-    registry::registry() noexcept : info() {}
+    registry::registry() noexcept {}
 
-    auto registry::data() noexcept -> state {
-        return current().info;
+    auto registry::data() noexcept -> registry_state {
+        return {current().error_count, current().success_count};
     }
 
     auto registry::empty() noexcept -> bool {
-        return current().info.success_count == 0 && current().info.error_count == 0;
+        return current().success_count == 0 && current().error_count == 0;
     }
 
     auto registry::status() noexcept -> bool {
-        return current().info.error_count == 0;
+        return current().error_count == 0;
     }
 
     auto registry::on_error(string source) noexcept -> size_type {
         output::on_error(source);
-        return current().info.error_count++;
+        return current().error_count++;
     }
 
     auto registry::on_success(string source) noexcept -> size_type {
         output::on_success(source);
-        return current().info.success_count++;
+        return current().success_count++;
     }
 
     auto registry::on_exception(string source) noexcept -> size_type {
         output::on_exception(source);
-        return current().info.error_count++;
+        return current().error_count++;
     }
 
     verifier::~verifier() noexcept {
         if (status() && !empty()) {
-            output::on_resource_success(info);
+            output::on_resource_success({destroyed_count, constructed_count, destructor_error_count,
+                                         constructor_error_count, operator_error_count});
         } else if (!status()) {
             global::exit_status(exit_failure);
-            output::on_resource_error(info);
+            output::on_resource_error({destroyed_count, constructed_count, destructor_error_count,
+                                       constructor_error_count, operator_error_count});
         }
     }
 
-    verifier::verifier() noexcept : info() {}
+    verifier::verifier() noexcept {}
 
-    auto verifier::data() noexcept -> const state& {
-        return current().info;
+    auto verifier::data() noexcept -> verifier_state {
+        return {current().destroyed_count, current().constructed_count, current().destructor_error_count,
+                current().constructor_error_count, current().operator_error_count};
     }
 
     auto verifier::empty() noexcept -> bool {
-        return current().info.destroyed_count == 0 && current().info.constructed_count == 0;
+        return current().destroyed_count == 0 && current().constructed_count == 0;
     }
 
     auto verifier::status() noexcept -> bool {
-        return current().info.destroyed_count == current().info.constructed_count &&
-               current().info.destructor_error_count == 0 && current().info.constructor_error_count == 0 &&
-               current().info.operator_error_count == 0;
+        return current().destroyed_count == current().constructed_count && current().destructor_error_count == 0 &&
+               current().constructor_error_count == 0 && current().operator_error_count == 0;
     }
 
     auto verifier::on_destruction() noexcept -> size_type {
-        return current().info.destroyed_count++;
+        return current().destroyed_count++;
     }
 
     auto verifier::on_construction() noexcept -> size_type {
-        return current().info.constructed_count++;
+        return current().constructed_count++;
     }
 
     auto verifier::on_destructor_error() noexcept -> size_type {
-        return current().info.destructor_error_count++;
+        return current().destructor_error_count++;
     }
 
     auto verifier::on_constructor_error() noexcept -> size_type {
-        return current().info.constructor_error_count++;
+        return current().constructor_error_count++;
     }
 
     auto verifier::on_operator_error() noexcept -> size_type {
-        return current().info.operator_error_count++;
+        return current().operator_error_count++;
     }
 
     int global::exit_code = exit_success;

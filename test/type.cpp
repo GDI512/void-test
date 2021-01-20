@@ -33,8 +33,8 @@
 #include <new>
 #include <memory>
 
-using namespace void_test;
-using namespace void_test::core;
+using namespace test;
+using namespace test::core;
 
 int main() {
     { // 1.

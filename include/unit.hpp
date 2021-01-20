@@ -5,7 +5,7 @@
 #include "output.hpp"
 #include "utility.hpp"
 
-namespace void_test {
+namespace test {
 
     template <typename callable>
     auto unit(string name, callable&& content) noexcept -> bool {

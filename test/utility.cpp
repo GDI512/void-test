@@ -13,7 +13,7 @@
 #include <utility>
 #include <type_traits>
 
-using namespace void_test::core;
+using namespace test::core;
 
 int main() {
     { // 1.

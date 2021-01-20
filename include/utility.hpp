@@ -1,7 +1,7 @@
 #ifndef VOID_TEST_UTILITY_HPP
 #define VOID_TEST_UTILITY_HPP
 
-namespace void_test {
+namespace test {
 
     using byte = unsigned char;
     using string = const char*;
@@ -9,7 +9,7 @@ namespace void_test {
 
 }
 
-namespace void_test::core {
+namespace test::core {
 
     struct true_type {
         static constexpr auto value = true;
@@ -80,7 +80,7 @@ namespace void_test::core {
 
       public:
         ~atomic_counter();
-        atomic_counter();
+        atomic_counter(int value = 0);
         atomic_counter(atomic_counter&& other) = delete;
         atomic_counter(const atomic_counter& other) = delete;
 

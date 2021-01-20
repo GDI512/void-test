@@ -2,7 +2,7 @@
 #include <state.hpp>
 #include <atomic>
 
-namespace void_test::core {
+namespace test::core {
 
     template <typename type>
     static_list<type>* static_list<type>::active = nullptr;
@@ -31,8 +31,9 @@ namespace void_test::core {
         delete pimpl;
     }
 
-    atomic_counter::atomic_counter() {
+    atomic_counter::atomic_counter(int value) {
         pimpl = new impl();
+        pimpl->count = value;
     }
 
     atomic_counter::operator int() const noexcept {

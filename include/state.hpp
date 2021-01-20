@@ -3,10 +3,23 @@
 
 #include "utility.hpp"
 
-namespace void_test::core {
+namespace test::core {
 
     constexpr auto exit_success = 0;
     constexpr auto exit_failure = 1;
+
+    struct registry_state {
+        size_type error_count;
+        size_type success_count;
+    };
+
+    struct verifier_state {
+        size_type destroyed_count;
+        size_type constructed_count;
+        size_type destructor_error_count;
+        size_type constructor_error_count;
+        size_type operator_error_count;
+    };
 
     class scope : public static_list<scope> {
       private:
@@ -15,27 +28,34 @@ namespace void_test::core {
       public:
         ~scope() = default;
         scope(string name) noexcept;
+        scope(scope&& other) = delete;
+        scope(const scope& other) = delete;
+
+      public:
+        auto operator=(scope&& other) -> scope& = delete;
+        auto operator=(const scope& other) -> scope& = delete;
 
       public:
         static auto data() noexcept -> string;
     };
 
     class registry : public static_list<registry> {
-      public:
-        struct state {
-            size_type error_count;
-            size_type success_count;
-        };
-
       private:
-        state info;
+        size_type error_count = 0;
+        size_type success_count = 0;
 
       public:
         ~registry() noexcept;
         registry() noexcept;
+        registry(registry&& other) = delete;
+        registry(const registry& other) = delete;
 
       public:
-        static auto data() noexcept -> state;
+        auto operator=(registry&& other) -> registry& = delete;
+        auto operator=(const registry& other) -> registry& = delete;
+
+      public:
+        static auto data() noexcept -> registry_state;
         static auto empty() noexcept -> bool;
         static auto status() noexcept -> bool;
         static auto on_error(string source = "") noexcept -> size_type;
@@ -44,24 +64,25 @@ namespace void_test::core {
     };
 
     class verifier : public static_list<verifier> {
-      public:
-        struct state {
-            atomic_counter destroyed_count;
-            atomic_counter constructed_count;
-            atomic_counter destructor_error_count;
-            atomic_counter constructor_error_count;
-            atomic_counter operator_error_count;
-        };
-
       private:
-        state info;
+        atomic_counter destroyed_count = 0;
+        atomic_counter constructed_count = 0;
+        atomic_counter destructor_error_count = 0;
+        atomic_counter constructor_error_count = 0;
+        atomic_counter operator_error_count = 0;
 
       public:
         ~verifier() noexcept;
         verifier() noexcept;
+        verifier(verifier&& other) = delete;
+        verifier(const verifier& other) = delete;
 
       public:
-        static auto data() noexcept -> const state&;
+        auto operator=(verifier&& other) -> verifier& = delete;
+        auto operator=(const verifier& other) -> verifier& = delete;
+
+      public:
+        static auto data() noexcept -> verifier_state;
         static auto empty() noexcept -> bool;
         static auto status() noexcept -> bool;
         static auto on_destruction() noexcept -> size_type;

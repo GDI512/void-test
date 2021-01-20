@@ -1,7 +1,7 @@
 #include <output.hpp>
 #include <cstdio>
 
-namespace void_test::core::format {
+namespace test::core::format {
 
     constexpr auto space = "\040\040";
     constexpr auto ok = "(\033[32mok\033[0m\040%s)\n";
@@ -15,7 +15,7 @@ namespace void_test::core::format {
 
 }
 
-namespace void_test::core {
+namespace test::core {
 
     size_type output::indent_level = 0;
 
@@ -53,28 +53,26 @@ namespace void_test::core {
         printf(format::exception, source);
     }
 
-    auto output::on_test_error(registry::state data) noexcept -> void {
+    auto output::on_test_error(registry_state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::unit_error, data.error_count, data.success_count + data.error_count);
     }
 
-    auto output::on_test_success(registry::state data) noexcept -> void {
+    auto output::on_test_success(registry_state data) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::unit_success, data.error_count, data.success_count + data.error_count);
     }
 
-    auto output::on_resource_error(const verifier::state& data) noexcept -> void {
+    auto output::on_resource_error(verifier_state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_error, static_cast<int>(data.destroyed_count), static_cast<int>(data.constructed_count),
-               static_cast<int>(data.destructor_error_count), static_cast<int>(data.constructor_error_count),
-               static_cast<int>(data.operator_error_count));
+        printf(format::resource_error, data.destroyed_count, data.constructed_count, data.destructor_error_count,
+               data.constructor_error_count, data.operator_error_count);
     }
 
-    auto output::on_resource_success(const verifier::state& data) noexcept -> void {
+    auto output::on_resource_success(verifier_state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_success, static_cast<int>(data.destroyed_count),
-               static_cast<int>(data.constructed_count), static_cast<int>(data.destructor_error_count),
-               static_cast<int>(data.constructor_error_count), static_cast<int>(data.operator_error_count));
+        printf(format::resource_success, data.destroyed_count, data.constructed_count, data.destructor_error_count,
+               data.constructor_error_count, data.operator_error_count);
     }
 
 }
