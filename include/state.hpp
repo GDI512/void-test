@@ -46,11 +46,11 @@ namespace void_test::core {
     class verifier : public static_list<verifier> {
       public:
         struct state {
-            size_type destroyed_count;
-            size_type constructed_count;
-            size_type destructor_error_count;
-            size_type constructor_error_count;
-            size_type operator_error_count;
+            atomic_counter destroyed_count;
+            atomic_counter constructed_count;
+            atomic_counter destructor_error_count;
+            atomic_counter constructor_error_count;
+            atomic_counter operator_error_count;
         };
 
       private:
@@ -61,7 +61,7 @@ namespace void_test::core {
         verifier() noexcept;
 
       public:
-        static auto data() noexcept -> state;
+        static auto data() noexcept -> const state&;
         static auto empty() noexcept -> bool;
         static auto status() noexcept -> bool;
         static auto on_destruction() noexcept -> size_type;

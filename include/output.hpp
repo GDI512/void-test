@@ -21,8 +21,8 @@ namespace void_test::core {
         static auto on_exception(string source) noexcept -> void;
         static auto on_test_error(registry::state data) noexcept -> void;
         static auto on_test_success(registry::state data) noexcept -> void;
-        static auto on_resource_error(verifier::state data) noexcept -> void;
-        static auto on_resource_success(verifier::state data) noexcept -> void;
+        static auto on_resource_error(const verifier::state& data) noexcept -> void;
+        static auto on_resource_success(const verifier::state& data) noexcept -> void;
     };
 
 }

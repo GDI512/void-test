@@ -3,7 +3,7 @@
 //      1. Check if remove_reference really removes references
 //      2. Check if is_value_reference detects lvalue references
 //      3. Ensure forward does proper type casting
-//      4. Ensure static list works like a proper stack
+//      3. Test the atomic counter class
 // ============================================================================
 
 // clang-format off
@@ -34,15 +34,13 @@ int main() {
         static_assert(std::is_same_v<int&&, decltype(std::forward<int>(rvalue(value)))>);
     }
     { // 4.
-        struct type : static_list<type> {};
-        auto object = type();
-        cassert(&type::current() == &object);
-        auto other = type();
-        cassert(&type::current() == &other);
-        {
-            auto nested = type();
-            cassert(&type::current() == &nested);
-        }
-        cassert(&type::current() == &other);
+        auto counter = atomic_counter();
+        cassert(counter++ == 0);
+        cassert(counter++ == 1);
+        cassert(counter++ == 2);
+        cassert(counter-- == 3);
+        cassert(counter-- == 2);
+        cassert(counter-- == 1);
+        cassert(counter == 0);
     }
 }

@@ -60,7 +60,7 @@ namespace void_test::core {
 
     verifier::verifier() noexcept : info() {}
 
-    auto verifier::data() noexcept -> state {
+    auto verifier::data() noexcept -> const state& {
         return current().info;
     }
 

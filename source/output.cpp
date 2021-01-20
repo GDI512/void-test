@@ -61,16 +61,18 @@ namespace void_test::core {
         printf(format::test_success, data.error_count, data.success_count + data.error_count);
     }
 
-    auto output::on_resource_error(verifier::state data) noexcept -> void {
+    auto output::on_resource_error(const verifier::state& data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_error, data.destroyed_count, data.constructed_count, data.destructor_error_count,
-               data.constructor_error_count, data.operator_error_count);
+        printf(format::resource_error, static_cast<int>(data.destroyed_count), static_cast<int>(data.constructed_count),
+               static_cast<int>(data.destructor_error_count), static_cast<int>(data.constructor_error_count),
+               static_cast<int>(data.operator_error_count));
     }
 
-    auto output::on_resource_success(verifier::state data) noexcept -> void {
+    auto output::on_resource_success(const verifier::state& data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_success, data.destroyed_count, data.constructed_count, data.destructor_error_count,
-               data.constructor_error_count, data.operator_error_count);
+        printf(format::resource_success, static_cast<int>(data.destroyed_count),
+               static_cast<int>(data.constructed_count), static_cast<int>(data.destructor_error_count),
+               static_cast<int>(data.constructor_error_count), static_cast<int>(data.operator_error_count));
     }
 
 }
