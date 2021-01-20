@@ -5,7 +5,7 @@ namespace void_test {
 
     using byte = unsigned char;
     using string = const char*;
-    using size_type = unsigned int;
+    using size_type = int;
 
 }
 

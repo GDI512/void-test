@@ -23,10 +23,6 @@ namespace void_test::core {
         return static_cast<type&>(*active);
     }
 
-    template class static_list<scope>;
-    template class static_list<registry>;
-    template class static_list<verifier>;
-
     struct atomic_counter::impl {
         std::atomic_int count;
     };
@@ -50,5 +46,9 @@ namespace void_test::core {
     auto atomic_counter::operator--(int) noexcept -> int {
         return pimpl->count--;
     }
+
+    template class static_list<scope>;
+    template class static_list<registry>;
+    template class static_list<verifier>;
 
 }

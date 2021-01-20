@@ -1,19 +1,21 @@
 #include <output.hpp>
 #include <cstdio>
 
-namespace void_test::core {
+namespace void_test::core::format {
 
-    struct format {
-        static constexpr auto space = "\040\040";
-        static constexpr auto scope = "(\033[93munit\033[0m\040%s)\n";
-        static constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
-        static constexpr auto success = "(\033[32mok\033[0m\040%s)\n";
-        static constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
-        static constexpr auto test_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
-        static constexpr auto test_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
-        static constexpr auto resource_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-        static constexpr auto resource_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-    };
+    constexpr auto space = "\040\040";
+    constexpr auto ok = "(\033[32mok\033[0m\040%s)\n";
+    constexpr auto unit = "(\033[93munit\033[0m\040%s)\n";
+    constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
+    constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
+    constexpr auto unit_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
+    constexpr auto unit_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
+    constexpr auto resource_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto resource_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+
+}
+
+namespace void_test::core {
 
     size_type output::indent_level = 0;
 
@@ -33,7 +35,7 @@ namespace void_test::core {
 
     auto output::on_scope(string name) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::scope, name);
+        printf(format::unit, name);
     }
 
     auto output::on_error(string source) noexcept -> void {
@@ -43,7 +45,7 @@ namespace void_test::core {
 
     auto output::on_success(string source) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::success, source);
+        printf(format::ok, source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
@@ -53,12 +55,12 @@ namespace void_test::core {
 
     auto output::on_test_error(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::test_error, data.error_count, data.success_count + data.error_count);
+        printf(format::unit_error, data.error_count, data.success_count + data.error_count);
     }
 
     auto output::on_test_success(registry::state data) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::test_success, data.error_count, data.success_count + data.error_count);
+        printf(format::unit_success, data.error_count, data.success_count + data.error_count);
     }
 
     auto output::on_resource_error(const verifier::state& data) noexcept -> void {
