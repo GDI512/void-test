@@ -1,9 +1,9 @@
 # About
-This is a lightweight C++ testing framework designed to have minimal impact on compile times. It does not rely on macros and is very easy to integrate into other projects.
+This is a lightweight C++ testing framework designed to have minimal impact on compile times. It does not rely on macros and is very easy to integrate into other CMake projects.
 
 # Features
 * **Macro-free** - There are no assertion or test case macros, instead, this framework makes extensive use of C++11 lambdas and templates to achieve similar functionality.
-* **Fast** - The header files do not include any system headers or other external dependencies to minimize impact on compile times. All code which can and should be precompiled is compiled into a static library.
+* **Fast to compile** - The header files do not include any system headers or other external dependencies to minimize impact on compile times. All code which can and should be precompiled is compiled into a static library.
 * **Easy to use** - Everything from building to writing tests is as straightforward as possible. At least by C++ standards.
 
 # Building
@@ -58,48 +58,49 @@ Keep in mind that tests are disabled for subdirectory builds like this one. If y
 #include <void_test.hpp>
 #include <vector>
 
-namespace vt = void_test;
+namespace test = void_test;
 
-auto test = vt::unit("vector-test", [](){
+auto group = test::unit("vector-test", [](){
 
-    vt::unit("constructor-test", [](){
+    test::unit("constructor-test", [](){
 
-        vt::unit("default-constructor", [](){
+        test::unit("default-constructor", [](){
             auto vector = std::vector<int>();
-            vt::check(vector.empty());
-            vt::check_equal(vector.capacity(), 0);
+            test::check(vector.empty());
+            test::check_equal(vector.capacity(), 0);
         });
 
-        vt::unit("fill-constructor", [](){
+        test::unit("fill-constructor", [](){
             auto vector = std::vector<int>(32, 8);
-            vt::check(!vector.empty());
-            vt::check_equal(vector.size(), 32);
-            vt::check_not_less(vector.capacity(), 32);
+            test::check(!vector.empty());
+            test::check_equal(vector.size(), 32);
+            test::check_not_less(vector.capacity(), 32);
         });
 
     });
 
-    vt::unit("modifier-test", [](){
+    test::unit("modifier-test", [](){
 
-        vt::unit("emplace", [](){
+        test::unit("emplace", [](){
             auto vector = std::vector<int>(32, 8);
             vector.emplace(vector.begin() + 1, 4);
-            vt::check(vector[1] == 4);
-            vt::check_equal(vector.size(), 33);
-            vt::check_greater(vector.capacity(), 33);
+            test::check(vector[1] == 4);
+            test::check_equal(vector.size(), 33);
+            test::check_greater(vector.capacity(), 33);
         });
 
-        vt::unit("emplace_back", [](){
+        test::unit("emplace_back", [](){
             auto vector = std::vector<int>(32, 8);
             vector.emplace_back(4);
-            vt::check(vector.back() == 4);
-            vt::check_equal(vector.size(), 33);
-            vt::check_greater(vector.capacity(), 33);
+            test::check(vector.back() == 4);
+            test::check_equal(vector.size(), 33);
+            test::check_greater(vector.capacity(), 33);
         });
 
     });
 
 });
+
 ```
 
 The `void-test` library defines its own main function so the following code can be compiled to an executable as-is. Assuming everything went right except for the `emplace_back()` function which forgot to increase the capacity of the vector exponentially, the output will look like this (but in color):
