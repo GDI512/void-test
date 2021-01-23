@@ -3,7 +3,6 @@
 
 #include "type.hpp"
 #include "unit.hpp"
-#include "state.hpp"
 #include "assert.hpp"
 
 #endif

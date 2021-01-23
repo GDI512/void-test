@@ -5,15 +5,15 @@
 
 namespace test::core {
 
-    constexpr auto exit_success = 0;
-    constexpr auto exit_failure = 1;
+    constexpr int exit_success = 0;
+    constexpr int exit_failure = 1;
 
-    struct registry_state {
+    struct test_state {
+        size_type total_count;
         size_type error_count;
-        size_type success_count;
     };
 
-    struct verifier_state {
+    struct resource_state {
         size_type destroyed_count;
         size_type constructed_count;
         size_type destructor_error_count;
@@ -21,28 +21,13 @@ namespace test::core {
         size_type operator_error_count;
     };
 
-    class scope : public static_list<scope> {
+    extern int global_exit_code;
+    extern test_state global_test_state;
+    extern resource_state global_resource_state;
+
+    class registry {
       private:
-        string name;
-
-      public:
-        ~scope() = default;
-        scope(string name) noexcept;
-        scope(scope&& other) = delete;
-        scope(const scope& other) = delete;
-
-      public:
-        auto operator=(scope&& other) -> scope& = delete;
-        auto operator=(const scope& other) -> scope& = delete;
-
-      public:
-        static auto data() noexcept -> string;
-    };
-
-    class registry : public static_list<registry> {
-      private:
-        size_type error_count = 0;
-        size_type success_count = 0;
+        test_state snapshot;
 
       public:
         ~registry() noexcept;
@@ -53,23 +38,11 @@ namespace test::core {
       public:
         auto operator=(registry&& other) -> registry& = delete;
         auto operator=(const registry& other) -> registry& = delete;
-
-      public:
-        static auto data() noexcept -> registry_state;
-        static auto empty() noexcept -> bool;
-        static auto status() noexcept -> bool;
-        static auto on_error(string source = "") noexcept -> size_type;
-        static auto on_success(string source = "") noexcept -> size_type;
-        static auto on_exception(string source = "") noexcept -> size_type;
     };
 
-    class verifier : public static_list<verifier> {
+    class verifier {
       private:
-        atomic_counter destroyed_count = 0;
-        atomic_counter constructed_count = 0;
-        atomic_counter destructor_error_count = 0;
-        atomic_counter constructor_error_count = 0;
-        atomic_counter operator_error_count = 0;
+        resource_state snapshot;
 
       public:
         ~verifier() noexcept;
@@ -80,30 +53,41 @@ namespace test::core {
       public:
         auto operator=(verifier&& other) -> verifier& = delete;
         auto operator=(const verifier& other) -> verifier& = delete;
-
-      public:
-        static auto data() noexcept -> verifier_state;
-        static auto empty() noexcept -> bool;
-        static auto status() noexcept -> bool;
-        static auto on_destruction() noexcept -> size_type;
-        static auto on_construction() noexcept -> size_type;
-        static auto on_destructor_error() noexcept -> size_type;
-        static auto on_constructor_error() noexcept -> size_type;
-        static auto on_operator_error() noexcept -> size_type;
     };
 
-    class global {
-      private:
-        static int exit_code;
+    auto exit_code() noexcept -> int;
 
-      public:
-        static auto exit_status() noexcept -> int;
-        static auto exit_status(int code) noexcept -> void;
-    };
+    auto on_error(string source) noexcept -> bool;
 
-    extern template class static_list<scope>;
-    extern template class static_list<registry>;
-    extern template class static_list<verifier>;
+    auto on_success(string source) noexcept -> bool;
+
+    auto on_exception(string source) noexcept -> bool;
+
+    auto on_destruction() noexcept -> void;
+
+    auto on_construction() noexcept -> void;
+
+    auto on_destructor_error() noexcept -> void;
+
+    auto on_constructor_error() noexcept -> void;
+
+    auto on_operator_error() noexcept -> void;
+
+    auto operator+(test_state left, test_state right) noexcept -> test_state;
+
+    auto operator-(test_state left, test_state right) noexcept -> test_state;
+
+    auto operator+=(test_state& left, test_state right) noexcept -> test_state&;
+
+    auto operator-=(test_state& left, test_state right) noexcept -> test_state&;
+
+    auto operator+(resource_state left, resource_state right) noexcept -> resource_state;
+
+    auto operator-(resource_state left, resource_state right) noexcept -> resource_state;
+
+    auto operator+=(resource_state& left, resource_state right) noexcept -> resource_state&;
+
+    auto operator-=(resource_state& left, resource_state right) noexcept -> resource_state&;
 
 }
 

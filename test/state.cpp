@@ -1,211 +1,136 @@
-// ============================================================================
-//  Test file for classes managing the internal state of the library.
-//       1. Ensure global exit status is `exit_success` by default
-//       2. Ensure global exit status can be set properly
-//       3. Ensure reporting a success to test registry does not fail the test
-//       4. Ensure constructing an empty verifier does not fail the test
-//       5. Ensure reporting an error to test registry fails the test
-//       6. Ensure reporting a destructor error to verifier fails the test
-//       7. Ensure reporting a constructor error to verifier fails the test
-//       8. Ensure reporting an operator error to verifier fails the test
-//       9. Ensure uneven number of resource ctor and dtor calls fails the test
-//      10. Ensure registry gets appended to a static list on construction
-//      11. Ensure registry is properly initialized
-//      12. Ensure the on-error function modifies registry's state properly
-//      13. Ensure the on-success function modifies registry's state properly
-//      14. Ensure the on-exception function modifies registry's state properly
-//      15. Ensure verifier gets appended to a static list on construction
-//      16. Ensure verifier is properly initialized
-//      17. Test verifier's state change on resource construction
-//      18. Test verifier's state change on resource destruction
-//      19. Test verifier's state change on resource destructor errors
-//      20. Test verifier's state change on resource constructor errors
-//      21. Test verifier's state change on resource operator errors
-//      22. Ensure proper resource management does not change verifier's status
-//      23. Ensure bad resource management changes verifier's status
-//      24. Ensure scope object gets appended to a static list on construction
-//      25. Ensure scope object contains the c-string it was constructed with
-// ============================================================================
-
 #include "common.hpp"
 
 using namespace test;
-using namespace test::core;
 
 int main() {
-    { // 1.
-        cassert(global::exit_status() == exit_success);
+    { cassert(core::exit_code() == core::exit_success); }
+    {
+        cassert(core::global_test_state.total_count == 0);
+        cassert(core::global_test_state.error_count == 0);
     }
-    { // 2.
+    {
+        cassert(core::global_resource_state.destroyed_count == 0);
+        cassert(core::global_resource_state.constructed_count == 0);
+        cassert(core::global_resource_state.destructor_error_count == 0);
+        cassert(core::global_resource_state.constructor_error_count == 0);
+        cassert(core::global_resource_state.operator_error_count == 0);
+    }
+    {
+        cassert(core::on_error("") == false);
+        cassert(core::global_test_state.total_count == 1);
+        cassert(core::global_test_state.error_count == 1);
+        cassert(core::on_success("") == true);
+        cassert(core::global_test_state.total_count == 2);
+        cassert(core::global_test_state.error_count == 1);
+        cassert(core::on_exception("") == false);
+        cassert(core::global_test_state.total_count == 2);
+        cassert(core::global_test_state.error_count == 2);
+    }
+    {
+        core::on_destruction();
+        cassert(core::global_resource_state.destroyed_count == 1);
+        core::on_construction();
+        cassert(core::global_resource_state.constructed_count == 1);
+        core::on_destructor_error();
+        cassert(core::global_resource_state.destructor_error_count == 1);
+        core::on_constructor_error();
+        cassert(core::global_resource_state.constructor_error_count == 1);
+        core::on_operator_error();
+        cassert(core::global_resource_state.operator_error_count == 1);
+    }
+    {
+        const auto x = core::test_state{7, 7};
+        const auto y = core::test_state{5, 5};
+        const auto z = x - y;
+        cassert(z.total_count == 2);
+        cassert(z.error_count == 2);
+    }
+    {
+        const auto x = core::test_state{7, 7};
+        const auto y = core::test_state{5, 5};
+        const auto z = x + y;
+        cassert(z.total_count == 12);
+        cassert(z.error_count == 12);
+    }
+    {
+        auto x = core::test_state{7, 7};
+        const auto y = core::test_state{5, 5};
+        x -= y;
+        cassert(x.total_count == 2);
+        cassert(x.error_count == 2);
+    }
+    {
+        auto x = core::test_state{7, 7};
+        const auto y = core::test_state{5, 5};
+        x += y;
+        cassert(x.total_count == 12);
+        cassert(x.error_count == 12);
+    }
+    {
+        const auto x = core::resource_state{7, 7, 7, 7, 7};
+        const auto y = core::resource_state{5, 5, 5, 5, 5};
+        const auto z = x - y;
+        cassert(z.destroyed_count == 2);
+        cassert(z.constructed_count == 2);
+        cassert(z.destructor_error_count == 2);
+        cassert(z.constructor_error_count == 2);
+        cassert(z.operator_error_count == 2);
+    }
+    {
+        const auto x = core::resource_state{7, 7, 7, 7, 7};
+        const auto y = core::resource_state{5, 5, 5, 5, 5};
+        const auto z = x + y;
+        cassert(z.destroyed_count == 12);
+        cassert(z.constructed_count == 12);
+        cassert(z.destructor_error_count == 12);
+        cassert(z.constructor_error_count == 12);
+        cassert(z.operator_error_count == 12);
+    }
+    {
+        auto x = core::resource_state{7, 7, 7, 7, 7};
+        const auto y = core::resource_state{5, 5, 5, 5, 5};
+        x -= y;
+        cassert(x.destroyed_count == 2);
+        cassert(x.constructed_count == 2);
+        cassert(x.destructor_error_count == 2);
+        cassert(x.constructor_error_count == 2);
+        cassert(x.operator_error_count == 2);
+    }
+    {
+        auto x = core::resource_state{7, 7, 7, 7, 7};
+        const auto y = core::resource_state{5, 5, 5, 5, 5};
+        x += y;
+        cassert(x.destroyed_count == 12);
+        cassert(x.constructed_count == 12);
+        cassert(x.destructor_error_count == 12);
+        cassert(x.constructor_error_count == 12);
+        cassert(x.operator_error_count == 12);
+    }
+    {
+        core::global_test_state = {};
         {
-            global::exit_status(64);
-            cassert(global::exit_status() == 64);
+            auto tracker = core::registry();
+            core::on_error("");
+            core::on_success("");
+            core::on_exception("");
         }
-        global::exit_status(exit_success);
+        cassert(core::global_test_state.total_count == 0);
+        cassert(core::global_test_state.error_count == 0);
     }
-    { // 3.
+    {
+        core::global_resource_state = {};
         {
-            registry object;
-            registry::on_success();
+            auto tracker = core::verifier();
+            core::on_destruction();
+            core::on_construction();
+            core::on_destructor_error();
+            core::on_constructor_error();
+            core::on_operator_error();
         }
-        cassert(global::exit_status() == exit_success);
-        global::exit_status(exit_success);
-    }
-    { // 4.
-        { verifier object; }
-        cassert(global::exit_status() == exit_success);
-        global::exit_status(exit_success);
-    }
-    { // 5.
-        {
-            registry object;
-            registry::on_error();
-        }
-        cassert(global::exit_status() == exit_failure);
-        global::exit_status(exit_success);
-    }
-    { // 6.
-        {
-            verifier object;
-            verifier::on_destructor_error();
-        }
-        cassert(global::exit_status() == exit_failure);
-        global::exit_status(exit_success);
-    }
-    { // 7.
-        {
-            verifier object;
-            verifier::on_constructor_error();
-        }
-        cassert(global::exit_status() == exit_failure);
-        global::exit_status(exit_success);
-    }
-    { // 8.
-        {
-            verifier object;
-            verifier::on_operator_error();
-        }
-        cassert(global::exit_status() == exit_failure);
-        global::exit_status(exit_success);
-    }
-    { // 9.
-        {
-            verifier object;
-            verifier::on_construction();
-            verifier::on_construction();
-            verifier::on_destruction();
-        }
-        cassert(global::exit_status() == exit_failure);
-        global::exit_status(exit_success);
-    }
-    { // 10.
-        registry object;
-        cassert(&registry::current() == &object);
-    }
-    { // 11.
-        registry object;
-        cassert(registry::empty());
-        cassert(registry::status());
-        cassert(registry::data().success_count == 0);
-        cassert(registry::data().error_count == 0);
-    }
-    { // 12.
-        registry object;
-        cassert(registry::on_error() == 0);
-        cassert(registry::on_error() == 1);
-        cassert(!registry::empty());
-        cassert(!registry::status());
-        cassert(registry::data().success_count == 0);
-        cassert(registry::data().error_count == 2);
-    }
-    { // 13.
-        registry object;
-        cassert(registry::on_success() == 0);
-        cassert(registry::on_success() == 1);
-        cassert(!registry::empty());
-        cassert(registry::status());
-        cassert(registry::data().success_count == 2);
-        cassert(registry::data().error_count == 0);
-    }
-    { // 14.
-        registry object;
-        cassert(registry::on_exception() == 0);
-        cassert(registry::on_exception() == 1);
-        cassert(!registry::empty());
-        cassert(!registry::status());
-        cassert(registry::data().success_count == 0);
-        cassert(registry::data().error_count == 2);
-    }
-    { // 15.
-        verifier object;
-        cassert(&verifier::current() == &object);
-    }
-    { // 16.
-        verifier object;
-        cassert(verifier::empty());
-        cassert(verifier::status());
-        cassert(verifier::data().destroyed_count == 0);
-        cassert(verifier::data().constructed_count == 0);
-        cassert(verifier::data().destructor_error_count == 0);
-        cassert(verifier::data().constructor_error_count == 0);
-        cassert(verifier::data().operator_error_count == 0);
-    }
-    { // 17.
-        verifier object;
-        cassert(verifier::on_construction() == 0);
-        cassert(verifier::on_construction() == 1);
-        cassert(!verifier::empty());
-        cassert(!verifier::status());
-        cassert(verifier::data().constructed_count == 2);
-    }
-    { // 18.
-        verifier object;
-        cassert(verifier::on_destruction() == 0);
-        cassert(verifier::on_destruction() == 1);
-        cassert(!verifier::empty());
-        cassert(!verifier::status());
-        cassert(verifier::data().destroyed_count == 2);
-    }
-    { // 19.
-        verifier object;
-        cassert(verifier::on_destructor_error() == 0);
-        cassert(verifier::on_destructor_error() == 1);
-        cassert(!verifier::status());
-        cassert(verifier::data().destructor_error_count == 2);
-    }
-    { // 20.
-        verifier object;
-        cassert(verifier::on_constructor_error() == 0);
-        cassert(verifier::on_constructor_error() == 1);
-        cassert(!verifier::status());
-        cassert(verifier::data().constructor_error_count == 2);
-    }
-    { // 21.
-        verifier object;
-        cassert(verifier::on_operator_error() == 0);
-        cassert(verifier::on_operator_error() == 1);
-        cassert(!verifier::status());
-        cassert(verifier::data().operator_error_count == 2);
-    }
-    { // 22.
-        verifier object;
-        cassert(verifier::on_construction() == 0);
-        cassert(verifier::on_destruction() == 0);
-        cassert(verifier::status());
-    }
-    { // 23.
-        verifier object;
-        cassert(verifier::on_construction() == 0);
-        cassert(verifier::on_destruction() == 0);
-        cassert(verifier::on_destruction() == 1);
-        cassert(!verifier::status());
-    }
-    { // 24.
-        scope object("scope");
-        cassert(&scope::current() == &object);
-    }
-    { // 25.
-        scope object("scope");
-        cassert(cmpstr(scope::data(), "scope") == 0);
+        cassert(core::global_resource_state.destroyed_count == 0);
+        cassert(core::global_resource_state.constructed_count == 0);
+        cassert(core::global_resource_state.destructor_error_count == 0);
+        cassert(core::global_resource_state.constructor_error_count == 0);
+        cassert(core::global_resource_state.operator_error_count == 0);
     }
 }

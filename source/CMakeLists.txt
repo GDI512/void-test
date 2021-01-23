@@ -6,30 +6,19 @@
 
 cmake_minimum_required (VERSION 3.15)
 
-set (INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-
-set (SOURCE_FILES
-    main.cpp
-    output.cpp
-    state.cpp
-    type.cpp
-    utility.cpp
-)
-
-add_library (void-test STATIC)
-target_sources (void-test PRIVATE ${SOURCE_FILES})
-target_include_directories (void-test PUBLIC ${INCLUDE_DIR})
-target_compile_features (void-test PUBLIC cxx_std_17)
-set_target_properties (void-test PROPERTIES OUTPUT_NAME voidtest)
+add_library (voidtest STATIC)
+target_sources (voidtest PRIVATE main.cpp output.cpp state.cpp type.cpp)
+target_include_directories (voidtest PUBLIC ../include)
+target_compile_features (voidtest PUBLIC cxx_std_17)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    target_compile_options (void-test PRIVATE -Werror -Wall -Wextra)
+    target_compile_options (voidtest PRIVATE -Werror -Wall -Wextra)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    target_compile_options (void-test PRIVATE -Werror -Wall -Wextra)
+    target_compile_options (voidtest PRIVATE -Werror -Wall -Wextra)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-    target_compile_options (void-test PRIVATE /permissive- /WX /W4)
+    target_compile_options (voidtest PRIVATE /permissive- /WX /W4)
 endif ()
 
 if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${PROJECT_SOURCE_DIR})
-    add_library (void-test::void-test ALIAS void-test)
+    add_library (voidtest::voidtest ALIAS voidtest)
 endif ()

@@ -3,76 +3,81 @@
 
 namespace test::core::format {
 
-    constexpr auto space = "\040\040";
-    constexpr auto ok = "(\033[32mok\033[0m\040%s)\n";
-    constexpr auto unit = "(\033[93munit\033[0m\040%s)\n";
-    constexpr auto error = "(\033[31merror\033[0m\040%s)\n";
-    constexpr auto exception = "(\033[31munhandled\040exception\033[0m\040%s)\n";
-    constexpr auto unit_error = "(\033[31munit\040error\033[0m\040[%i/%i])\n";
-    constexpr auto unit_success = "(\033[32munit\040ok\033[0m\040[%i/%i])\n";
-    constexpr auto resource_error = "(\033[31mresource\040error\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
-    constexpr auto resource_success = "(\033[32mresource\040ok\033[0m\040[%i/%i]\040[%i/%i/%i])\n";
+    constexpr auto space = "  ";
+    constexpr auto scope = "(unit %s)\n";
+    constexpr auto error = "(error %s)\n";
+    constexpr auto success = "(ok %s)\n";
+    constexpr auto exception = "(exception %s)\n";
+    constexpr auto registry_error = "(test error [%zu/%zu])\n";
+    constexpr auto registry_success = "(test ok [%zu/%zu])\n";
+    constexpr auto verifier_error = "(resource error [%zu/%zu] [%zu/%zu/%zu])\n";
+    constexpr auto verifier_success = "(resource ok [%zu/%zu] [%zu/%zu/%zu])\n";
 
 }
 
 namespace test::core {
 
-    size_type output::indent_level = 0;
+    size_type indent_level = 0;
 
-    output::~output() noexcept {
-        indent_level--;
+    static auto indent() noexcept -> void {
+        ++indent_level;
     }
 
-    output::output() noexcept {
-        indent_level++;
+    static auto outdent() noexcept -> void {
+        --indent_level;
     }
 
-    static auto repeat(string text, size_type count) noexcept -> void {
+    static auto repeat(string text, size_type count) -> void {
         while (count-- > 0) {
-            fputs(text, stdout);
+            std::fputs(text, stdout);
         }
     }
 
-    auto output::on_scope(string name) noexcept -> void {
-        repeat(format::space, indent_level);
-        printf(format::unit, name);
+    scope::~scope() noexcept {
+        outdent();
     }
 
-    auto output::on_error(string source) noexcept -> void {
+    scope::scope(string name) noexcept {
+        repeat(format::space, indent_level);
+        printf(format::scope, name);
+        indent();
+    }
+
+    auto print_error(string source) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::error, source);
     }
 
-    auto output::on_success(string source) noexcept -> void {
+    auto print_success(string source) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::ok, source);
+        printf(format::success, source);
     }
 
-    auto output::on_exception(string source) noexcept -> void {
+    auto print_exception(string source) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::exception, source);
     }
 
-    auto output::on_test_error(registry_state data) noexcept -> void {
+    auto print_registry_error(test_state state) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::unit_error, data.error_count, data.success_count + data.error_count);
+        printf(format::registry_error, state.error_count, state.total_count);
     }
 
-    auto output::on_test_success(registry_state data) noexcept -> void {
+    auto print_registry_success(test_state state) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::unit_success, data.error_count, data.success_count + data.error_count);
+        printf(format::registry_success, state.error_count, state.total_count);
     }
 
-    auto output::on_resource_error(verifier_state data) noexcept -> void {
+    auto print_verifier_error(resource_state state) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_error, data.destroyed_count, data.constructed_count, data.destructor_error_count,
-               data.constructor_error_count, data.operator_error_count);
+        printf(format::verifier_error, state.destroyed_count, state.constructed_count, state.destructor_error_count,
+               state.constructor_error_count, state.operator_error_count);
     }
 
-    auto output::on_resource_success(verifier_state data) noexcept -> void {
+    auto print_verifier_success(resource_state state) noexcept -> void {
         repeat(format::space, indent_level);
-        printf(format::resource_success, data.destroyed_count, data.constructed_count, data.destructor_error_count,
-               data.constructor_error_count, data.operator_error_count);
+        printf(format::verifier_success, state.destroyed_count, state.constructed_count, state.destructor_error_count,
+               state.constructor_error_count, state.operator_error_count);
     }
 
 }

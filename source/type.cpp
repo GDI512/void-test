@@ -9,48 +9,48 @@ namespace test {
     constexpr auto uninitialized_memory_value = static_cast<int>(0x00000000);
 
     resource::~resource() noexcept {
-        core::verifier::on_destruction();
+        core::on_destruction();
         if (!is_initialized() || !is_self()) {
-            core::verifier::on_destructor_error();
+            core::on_destructor_error();
         }
         self = reinterpret_cast<resource*>(invalid_pointer_value);
         value = uninitialized_memory_value;
     }
 
     resource::resource() noexcept : self(this) {
-        core::verifier::on_construction();
+        core::on_construction();
         if (is_initialized()) {
-            core::verifier::on_constructor_error();
+            core::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     resource::resource(resource&& other) noexcept : self(this) {
-        core::verifier::on_construction();
+        core::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
-            core::verifier::on_constructor_error();
+            core::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     resource::resource(const resource& other) noexcept : self(this) {
-        core::verifier::on_construction();
+        core::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
-            core::verifier::on_constructor_error();
+            core::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     auto resource::operator=(resource&& other) noexcept -> resource& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            core::verifier::on_operator_error();
+            core::on_operator_error();
         }
         return *this;
     }
 
     auto resource::operator=(const resource& other) noexcept -> resource& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            core::verifier::on_operator_error();
+            core::on_operator_error();
         }
         return *this;
     }

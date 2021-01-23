@@ -11,7 +11,3 @@ auto stop(int code) noexcept -> void {
 auto print(int line, const char* macro) noexcept -> void {
     printf("Line: %i %s\n", line, macro);
 }
-
-auto cmpstr(const char* string, const char* other) noexcept -> int {
-    return strcmp(string, other);
-}

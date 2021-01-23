@@ -1,109 +1,191 @@
-#include <state.hpp>
 #include <output.hpp>
+#include <state.hpp>
 
 namespace test::core {
 
-    scope::scope(string name) noexcept : name(name) {
-        output::on_scope(name);
+    int global_exit_code = exit_success;
+    test_state global_test_state = {};
+    resource_state global_resource_state = {};
+
+    static auto is_ok(test_state state) noexcept -> bool {
+        return state.error_count == 0;
     }
 
-    auto scope::data() noexcept -> string {
-        return current().name;
+    static auto is_ok(resource_state state) noexcept -> bool {
+        return state.destroyed_count == state.constructed_count && state.destructor_error_count == 0 &&
+               state.constructor_error_count == 0 && state.operator_error_count == 0;
+    }
+
+    static auto is_empty(test_state state) noexcept -> bool {
+        return state.error_count == 0 && state.total_count == 0;
+    }
+
+    static auto is_empty(resource_state state) noexcept -> bool {
+        return state.destroyed_count == 0 && state.constructed_count == 0 && state.destructor_error_count == 0 &&
+               state.constructor_error_count == 0 && state.operator_error_count == 0;
+    }
+
+    static auto exit_code(int value) noexcept -> void {
+        global_exit_code = value;
+    }
+
+    static auto register_error() noexcept -> void {
+        ++global_test_state.total_count;
+        ++global_test_state.error_count;
+    }
+
+    static auto register_success() noexcept -> void {
+        ++global_test_state.total_count;
+    }
+
+    static auto register_exception() noexcept -> void {
+        ++global_test_state.error_count;
+    }
+
+    static auto register_destruction() noexcept -> void {
+        ++global_resource_state.destroyed_count;
+    }
+
+    static auto register_construction() noexcept -> void {
+        ++global_resource_state.constructed_count;
+    }
+
+    static auto register_destructor_error() noexcept -> void {
+        ++global_resource_state.destructor_error_count;
+    }
+
+    static auto register_constructor_error() noexcept -> void {
+        ++global_resource_state.constructor_error_count;
+    }
+
+    static auto register_operator_error() noexcept -> void {
+        ++global_resource_state.operator_error_count;
     }
 
     registry::~registry() noexcept {
-        if (status() && !empty()) {
-            output::on_test_success({error_count, success_count});
-        } else if (!status()) {
-            global::exit_status(exit_failure);
-            output::on_test_error({error_count, success_count});
+        const auto delta = global_test_state - snapshot;
+        if (is_ok(delta) && !is_empty(delta)) {
+            print_registry_success(delta);
+        } else if (!is_ok(delta)) {
+            exit_code(exit_failure);
+            print_registry_error(delta);
         }
+        global_test_state -= delta;
     }
 
-    registry::registry() noexcept {}
-
-    auto registry::data() noexcept -> registry_state {
-        return {current().error_count, current().success_count};
-    }
-
-    auto registry::empty() noexcept -> bool {
-        return current().success_count == 0 && current().error_count == 0;
-    }
-
-    auto registry::status() noexcept -> bool {
-        return current().error_count == 0;
-    }
-
-    auto registry::on_error(string source) noexcept -> size_type {
-        output::on_error(source);
-        return current().error_count++;
-    }
-
-    auto registry::on_success(string source) noexcept -> size_type {
-        output::on_success(source);
-        return current().success_count++;
-    }
-
-    auto registry::on_exception(string source) noexcept -> size_type {
-        output::on_exception(source);
-        return current().error_count++;
-    }
+    registry::registry() noexcept : snapshot(global_test_state) {}
 
     verifier::~verifier() noexcept {
-        if (status() && !empty()) {
-            output::on_resource_success({destroyed_count, constructed_count, destructor_error_count,
-                                         constructor_error_count, operator_error_count});
-        } else if (!status()) {
-            global::exit_status(exit_failure);
-            output::on_resource_error({destroyed_count, constructed_count, destructor_error_count,
-                                       constructor_error_count, operator_error_count});
+        const auto delta = global_resource_state - snapshot;
+        if (is_ok(delta) && !is_empty(delta)) {
+            print_verifier_success(delta);
+        } else if (!is_ok(delta)) {
+            exit_code(exit_failure);
+            print_verifier_error(delta);
         }
+        global_resource_state -= delta;
     }
 
-    verifier::verifier() noexcept {}
+    verifier::verifier() noexcept : snapshot(global_resource_state) {}
 
-    auto verifier::data() noexcept -> verifier_state {
-        return {current().destroyed_count, current().constructed_count, current().destructor_error_count,
-                current().constructor_error_count, current().operator_error_count};
+    auto exit_code() noexcept -> int {
+        return global_exit_code;
     }
 
-    auto verifier::empty() noexcept -> bool {
-        return current().destroyed_count == 0 && current().constructed_count == 0;
+    auto on_error(string source) noexcept -> bool {
+        register_error();
+        print_error(source);
+        return false;
     }
 
-    auto verifier::status() noexcept -> bool {
-        return current().destroyed_count == current().constructed_count && current().destructor_error_count == 0 &&
-               current().constructor_error_count == 0 && current().operator_error_count == 0;
+    auto on_success(string source) noexcept -> bool {
+        register_success();
+        print_success(source);
+        return true;
     }
 
-    auto verifier::on_destruction() noexcept -> size_type {
-        return current().destroyed_count++;
+    auto on_exception(string source) noexcept -> bool {
+        register_exception();
+        print_exception(source);
+        return false;
     }
 
-    auto verifier::on_construction() noexcept -> size_type {
-        return current().constructed_count++;
+    auto on_destruction() noexcept -> void {
+        register_destruction();
     }
 
-    auto verifier::on_destructor_error() noexcept -> size_type {
-        return current().destructor_error_count++;
+    auto on_construction() noexcept -> void {
+        register_construction();
     }
 
-    auto verifier::on_constructor_error() noexcept -> size_type {
-        return current().constructor_error_count++;
+    auto on_destructor_error() noexcept -> void {
+        register_destructor_error();
     }
 
-    auto verifier::on_operator_error() noexcept -> size_type {
-        return current().operator_error_count++;
+    auto on_constructor_error() noexcept -> void {
+        register_constructor_error();
     }
 
-    int global::exit_code = exit_success;
-
-    auto global::exit_status() noexcept -> int {
-        return exit_code;
+    auto on_operator_error() noexcept -> void {
+        register_operator_error();
     }
 
-    auto global::exit_status(int code) noexcept -> void {
-        exit_code = code;
+    auto operator+(test_state left, test_state right) noexcept -> test_state {
+        return {left.total_count + right.total_count, left.error_count + right.error_count};
+    }
+
+    auto operator-(test_state left, test_state right) noexcept -> test_state {
+        return {left.total_count - right.total_count, left.error_count - right.error_count};
+    }
+
+    auto operator+=(test_state& left, test_state right) noexcept -> test_state& {
+        left.total_count += right.total_count;
+        left.error_count += right.error_count;
+        return left;
+    }
+
+    auto operator-=(test_state& left, test_state right) noexcept -> test_state& {
+        left.total_count -= right.total_count;
+        left.error_count -= right.error_count;
+        return left;
+    }
+
+    auto operator+(resource_state left, resource_state right) noexcept -> resource_state {
+        return {
+            left.destroyed_count + right.destroyed_count,
+            left.constructed_count + right.constructed_count,
+            left.destructor_error_count + right.destructor_error_count,
+            left.constructor_error_count + right.constructor_error_count,
+            left.operator_error_count + right.operator_error_count,
+        };
+    }
+
+    auto operator-(resource_state left, resource_state right) noexcept -> resource_state {
+        return {
+            left.destroyed_count - right.destroyed_count,
+            left.constructed_count - right.constructed_count,
+            left.destructor_error_count - right.destructor_error_count,
+            left.constructor_error_count - right.constructor_error_count,
+            left.operator_error_count - right.operator_error_count,
+        };
+    }
+
+    auto operator+=(resource_state& left, resource_state right) noexcept -> resource_state& {
+        left.destroyed_count += right.destroyed_count;
+        left.constructed_count += right.constructed_count;
+        left.destructor_error_count += right.destructor_error_count;
+        left.constructor_error_count += right.constructor_error_count;
+        left.operator_error_count += right.operator_error_count;
+        return left;
+    }
+
+    auto operator-=(resource_state& left, resource_state right) noexcept -> resource_state& {
+        left.destroyed_count -= right.destroyed_count;
+        left.constructed_count -= right.constructed_count;
+        left.destructor_error_count -= right.destructor_error_count;
+        left.constructor_error_count -= right.constructor_error_count;
+        left.operator_error_count -= right.operator_error_count;
+        return left;
     }
 
 }

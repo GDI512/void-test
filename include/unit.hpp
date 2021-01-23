@@ -8,17 +8,16 @@
 namespace test {
 
     template <typename callable>
-    auto unit(string name, callable&& content) noexcept -> bool {
+    auto unit(string name, callable&& content) noexcept -> int {
         auto scope = core::scope(name);
-        auto output = core::output();
         auto registry = core::registry();
         auto verifier = core::verifier();
         try {
             content();
         } catch (...) {
-            core::registry::on_exception(name);
+            core::on_exception(name);
         }
-        return core::registry::status() && core::verifier::status();
+        return 0;
     }
 
 }
