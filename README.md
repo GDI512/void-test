@@ -9,8 +9,8 @@ This is a lightweight C++ testing framework designed to have minimal impact on c
 # Building
 To build for use outside CMake, run the following commands:
 
-    git clone https://github.com/GDI512/void-test.git
-    cd void-test
+    git clone https://github.com/GDI512/voidtest.git
+    cd voidtest
     cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
     cmake --build build --config RelWithDebInfo
 
@@ -21,10 +21,10 @@ It is highly recommended to run the tests too:
     cd ..
 
 # Adding to CMake projects
-The easiest way of using *void-test* is to add it as a git submodule or just clone it into project's source tree, for example:
+The easiest way of using *voidtest* is to add it as a git submodule or just clone it into project's source tree, for example:
 
     external/
-    |-void-test/
+    |-voidtest/
     |-CMakeLists.txt
     include/
     |- header.hpp
@@ -35,10 +35,10 @@ The easiest way of using *void-test* is to add it as a git submodule or just clo
     |- CMakeLists.txt
     CMakeLists.txt
 
-Assuming *external* was added as a subdirectory itself, adding the following line to *external/CMakeLists.txt* will make the alias target `void-test::void-test` accessible:
+Assuming *external* was added as a subdirectory itself, adding the following line to *external/CMakeLists.txt* will make the alias target `voidtest::voidtest` accessible:
 
 ```cmake
-add_subdirectory (void-test)
+add_subdirectory (voidtest)
 ```
 
 Afterwards all you need to do is just add it as a dependency like you would do with any other CMake library:
@@ -46,10 +46,10 @@ Afterwards all you need to do is just add it as a dependency like you would do w
 ```cmake
 add_executable (<test-target>)
 target_sources (<test-target> PRIVATE <source-file>)
-target_link_libraries (<test-target> PRIVATE void-test::void-test)
+target_link_libraries (<test-target> PRIVATE voidtest::voidtest)
 ```
 
-Keep in mind that tests are disabled for subdirectory builds like this one. If you would like to test *void-test* on your machine, follow the procedure from previous section.
+Keep in mind that tests are disabled for subdirectory builds like this one. If you would like to test *voidtest* on your machine, follow the procedure from previous section.
 
 # Example
 > Disclaimer: I have not checked if this is actually how an `std::vector` is supposed to behave.
@@ -101,7 +101,7 @@ auto group = test::unit("vector-test", [](){
 
 ```
 
-The `void-test` library defines its own main function so the following code can be compiled to an executable as-is. Assuming everything went right except for the `emplace_back()` function which forgot to increase the capacity of the vector exponentially, the output will look like this (but in color):
+The `voidtest` library defines its own main function so the following code can be compiled to an executable as-is. Assuming everything went right except for the `emplace_back()` function which forgot to increase the capacity of the vector exponentially, the output will look like this (but in color):
 
     (unit constructor-test)
       (unit default-constructor)
@@ -125,4 +125,4 @@ The `void-test` library defines its own main function so the following code can 
         (error check_greater)
         (unit ok [0/3])
 
-See [wiki](https://github.com/GDI512/void-test/wiki) for a tutorial and API reference.
+See [wiki](https://github.com/GDI512/voidtest/wiki) for a tutorial and API reference.

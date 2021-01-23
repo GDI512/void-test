@@ -4,7 +4,7 @@
 namespace test {
 
     using string = const char*;
-    using size_type = unsigned long long;
+    using size_type = unsigned int;
 
 }
 

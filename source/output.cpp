@@ -8,10 +8,10 @@ namespace test::core::format {
     constexpr auto error = "(error %s)\n";
     constexpr auto success = "(ok %s)\n";
     constexpr auto exception = "(exception %s)\n";
-    constexpr auto registry_error = "(test error [%zu/%zu])\n";
-    constexpr auto registry_success = "(test ok [%zu/%zu])\n";
-    constexpr auto verifier_error = "(resource error [%zu/%zu] [%zu/%zu/%zu])\n";
-    constexpr auto verifier_success = "(resource ok [%zu/%zu] [%zu/%zu/%zu])\n";
+    constexpr auto registry_error = "(test error [%iu/%iu])\n";
+    constexpr auto registry_success = "(test ok [%iu/%iu])\n";
+    constexpr auto verifier_error = "(resource error [%iu/%iu] [%iu/%iu/%iu])\n";
+    constexpr auto verifier_success = "(resource ok [%iu/%iu] [%iu/%iu/%iu])\n";
 
 }
 
