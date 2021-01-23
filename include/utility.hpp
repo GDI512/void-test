@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_UTILITY_HPP
-#define VOID_TEST_UTILITY_HPP
+#ifndef VOIDTEST_UTILITY_HPP
+#define VOIDTEST_UTILITY_HPP
 
 namespace test {
 

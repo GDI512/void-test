@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_UNIT_HPP
-#define VOID_TEST_UNIT_HPP
+#ifndef VOIDTEST_UNIT_HPP
+#define VOIDTEST_UNIT_HPP
 
 #include "state.hpp"
 #include "output.hpp"
