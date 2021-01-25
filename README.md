@@ -101,7 +101,7 @@ auto group = test::unit("vector-test", [](){
 
 ```
 
-The `voidtest` library defines its own main function so the following code can be compiled to an executable as-is. Assuming everything went right except for the `emplace_back()` function which forgot to increase the capacity of the vector exponentially, the output will look like this (but in color):
+The `voidtest` library defines its own main function so the following code can be compiled to an executable as-is. Assuming everything went right except for the `emplace_back()` function which forgot to increase the capacity of the vector exponentially, the output will look like this:
 
     (unit constructor-test)
       (unit default-constructor)
