@@ -8,30 +8,37 @@ namespace test::core {
     constexpr int exit_success = 0;
     constexpr int exit_failure = 1;
 
-    struct test_state {
-        size_type total_count;
-        size_type error_count;
+    struct info_struct {
+        int exit_code;
     };
 
-    struct resource_state {
-        size_type destroyed_count;
-        size_type constructed_count;
-        size_type destructor_error_count;
-        size_type constructor_error_count;
-        size_type operator_error_count;
+    struct test_struct {
+        uint total_count;
+        uint error_count;
     };
 
-    extern int global_exit_code;
-    extern test_state global_test_state;
-    extern resource_state global_resource_state;
+    struct object_struct {
+        uint destroyed_count;
+        uint constructed_count;
+        uint destructor_error_count;
+        uint constructor_error_count;
+        uint operator_error_count;
+    };
+
+    extern struct global_struct {
+        info_struct info;
+        test_struct test;
+        object_struct object;
+    } global;
 
     class registry {
       private:
-        test_state snapshot;
+        test_struct snapshot;
+        global_struct& state;
 
       public:
         ~registry() noexcept;
-        registry() noexcept;
+        registry(global_struct& state = global) noexcept;
         registry(registry&& other) = delete;
         registry(const registry& other) = delete;
 
@@ -42,11 +49,12 @@ namespace test::core {
 
     class verifier {
       private:
-        resource_state snapshot;
+        object_struct snapshot;
+        global_struct& state;
 
       public:
         ~verifier() noexcept;
-        verifier() noexcept;
+        verifier(global_struct& state = global) noexcept;
         verifier(verifier&& other) = delete;
         verifier(const verifier& other) = delete;
 
@@ -55,39 +63,61 @@ namespace test::core {
         auto operator=(const verifier& other) -> verifier& = delete;
     };
 
-    auto exit_code() noexcept -> int;
+    auto is_ok(test_struct state) noexcept -> bool;
 
-    auto on_error(string source) noexcept -> bool;
+    auto is_ok(object_struct state) noexcept -> bool;
 
-    auto on_success(string source) noexcept -> bool;
+    auto is_empty(test_struct state) noexcept -> bool;
 
-    auto on_exception(string source) noexcept -> bool;
+    auto is_empty(object_struct state) noexcept -> bool;
 
-    auto on_destruction() noexcept -> void;
+    auto exit_code(const global_struct& data = global) noexcept -> int;
 
-    auto on_construction() noexcept -> void;
+    auto exit_code(int code, global_struct& data = global) noexcept -> void;
 
-    auto on_destructor_error() noexcept -> void;
+    auto register_error(global_struct& data = global) noexcept -> void;
 
-    auto on_constructor_error() noexcept -> void;
+    auto register_success(global_struct& data = global) noexcept -> void;
 
-    auto on_operator_error() noexcept -> void;
+    auto register_exception(global_struct& data = global) noexcept -> void;
 
-    auto operator+(test_state left, test_state right) noexcept -> test_state;
+    auto register_destruction(global_struct& data = global) noexcept -> void;
 
-    auto operator-(test_state left, test_state right) noexcept -> test_state;
+    auto register_construction(global_struct& data = global) noexcept -> void;
 
-    auto operator+=(test_state& left, test_state right) noexcept -> test_state&;
+    auto register_destructor_error(global_struct& data = global) noexcept -> void;
 
-    auto operator-=(test_state& left, test_state right) noexcept -> test_state&;
+    auto register_constructor_error(global_struct& data = global) noexcept -> void;
 
-    auto operator+(resource_state left, resource_state right) noexcept -> resource_state;
+    auto register_operator_error(global_struct& data = global) noexcept -> void;
 
-    auto operator-(resource_state left, resource_state right) noexcept -> resource_state;
+    auto on_error(string source, global_struct& data = global) noexcept -> bool;
 
-    auto operator+=(resource_state& left, resource_state right) noexcept -> resource_state&;
+    auto on_success(string source, global_struct& data = global) noexcept -> bool;
 
-    auto operator-=(resource_state& left, resource_state right) noexcept -> resource_state&;
+    auto on_exception(string source, global_struct& data = global) noexcept -> bool;
+
+    auto on_destruction(global_struct& data = global) noexcept -> void;
+
+    auto on_construction(global_struct& data = global) noexcept -> void;
+
+    auto on_destructor_error(global_struct& data = global) noexcept -> void;
+
+    auto on_constructor_error(global_struct& data = global) noexcept -> void;
+
+    auto on_operator_error(global_struct& data = global) noexcept -> void;
+
+    auto operator+(test_struct left, test_struct right) noexcept -> test_struct;
+    auto operator-(test_struct left, test_struct right) noexcept -> test_struct;
+
+    auto operator+=(test_struct& left, test_struct right) noexcept -> test_struct&;
+    auto operator-=(test_struct& left, test_struct right) noexcept -> test_struct&;
+
+    auto operator+(object_struct left, object_struct right) noexcept -> object_struct;
+    auto operator-(object_struct left, object_struct right) noexcept -> object_struct;
+
+    auto operator+=(object_struct& left, object_struct right) noexcept -> object_struct&;
+    auto operator-=(object_struct& left, object_struct right) noexcept -> object_struct&;
 
 }
 

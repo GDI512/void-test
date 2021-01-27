@@ -13,22 +13,26 @@ int main() {
         unit("unit", [] { check_equal(0, 0); });
         cassert(core::exit_code() == core::exit_failure);
     }
-    { // clang-format off
+    {
         using namespace test::core;
-        unit("this", [] { cassert(global_test_state.error_count == 0 && global_test_state.total_count == 0);
-            unit("is", [] { cassert(global_test_state.error_count == 0 && global_test_state.total_count == 0);
+        unit("this", [] {
+            cassert(global.test.error_count == 0 && global.test.total_count == 0);
+            unit("is", [] {
+                cassert(global.test.error_count == 0 && global.test.total_count == 0);
                 check(true);
                 check(false);
             });
-            unit("unreadable", [] { cassert(global_test_state.error_count == 0 && global_test_state.total_count == 0);
+            unit("unreadable", [] {
+                cassert(global.test.error_count == 0 && global.test.total_count == 0);
                 check(true);
                 check(false);
-                unit("on", [] { cassert(global_test_state.error_count == 1 && global_test_state.total_count == 2);
+                unit("on", [] {
+                    cassert(global.test.error_count == 1 && global.test.total_count == 2);
                     check(true);
                     check(false);
-                    cassert(global_test_state.error_count == 2 && global_test_state.total_count == 4);
+                    cassert(global.test.error_count == 2 && global.test.total_count == 4);
                 });
-                cassert(global_test_state.error_count == 1 && global_test_state.total_count == 2);
+                cassert(global.test.error_count == 1 && global.test.total_count == 2);
             });
             unit("purpose", [] {
                 check(false);
@@ -36,22 +40,22 @@ int main() {
                 unit("do", [] {
                     check(true);
                     check(true);
-                    cassert(global_test_state.error_count == 2 && global_test_state.total_count == 4);
+                    cassert(global.test.error_count == 2 && global.test.total_count == 4);
                 });
-                cassert(global_test_state.error_count == 2 && global_test_state.total_count == 2);
+                cassert(global.test.error_count == 2 && global.test.total_count == 2);
                 unit("not", [] {
                     check(true);
                     check(true);
-                    cassert(global_test_state.error_count == 2 && global_test_state.total_count == 4);
+                    cassert(global.test.error_count == 2 && global.test.total_count == 4);
                     unit("modify", [] {
                         check(true);
                         check(false);
-                        cassert(global_test_state.error_count == 3 && global_test_state.total_count == 6);
+                        cassert(global.test.error_count == 3 && global.test.total_count == 6);
                     });
                 });
-                cassert(global_test_state.error_count == 2 && global_test_state.total_count == 2);
+                cassert(global.test.error_count == 2 && global.test.total_count == 2);
             });
-            cassert(global_test_state.error_count == 0 && global_test_state.total_count == 0);
+            cassert(global.test.error_count == 0 && global.test.total_count == 0);
         });
-    } // clang-format on
+    }
 }

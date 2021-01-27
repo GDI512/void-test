@@ -3,5 +3,5 @@
 using namespace test::core;
 
 int main() {
-    return exit_code();
+    return global.info.exit_code;
 }

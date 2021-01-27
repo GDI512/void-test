@@ -3,8 +3,8 @@
 
 namespace test {
 
+    using uint = unsigned int;
     using string = const char*;
-    using size_type = unsigned int;
 
 }
 

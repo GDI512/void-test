@@ -1,8 +1,3 @@
-# =============================================================================
-#   Test directory CMakeLists.txt file
-#   All test-related configuration and test targets should go here
-# =============================================================================
-
 cmake_minimum_required (VERSION 3.15)
 
 add_library (common OBJECT)

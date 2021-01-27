@@ -6,7 +6,7 @@
 
 namespace test::core {
 
-    extern size_type indent_level;
+    extern uint indent_level;
 
     class scope {
       public:
@@ -26,13 +26,13 @@ namespace test::core {
 
     auto print_exception(string source) noexcept -> void;
 
-    auto print_registry_error(test_state state) noexcept -> void;
+    auto print_registry_error(test_struct state) noexcept -> void;
 
-    auto print_registry_success(test_state state) noexcept -> void;
+    auto print_registry_success(test_struct state) noexcept -> void;
 
-    auto print_verifier_error(resource_state state) noexcept -> void;
+    auto print_verifier_error(object_struct state) noexcept -> void;
 
-    auto print_verifier_success(resource_state state) noexcept -> void;
+    auto print_verifier_success(object_struct state) noexcept -> void;
 
 }
 

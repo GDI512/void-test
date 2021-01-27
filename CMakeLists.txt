@@ -1,8 +1,3 @@
-# =============================================================================
-#   Top-level CMakeLists.txt file
-#   Subdirectories and modules should be included only in this file
-# =============================================================================
-
 cmake_minimum_required (VERSION 3.15)
 
 project (voidtest VERSION 0.1.0 LANGUAGES CXX)

@@ -8,16 +8,16 @@ namespace test {
     constexpr auto initialized_memory_value = static_cast<int>(0x7FFFFFFF);
     constexpr auto uninitialized_memory_value = static_cast<int>(0x00000000);
 
-    resource::~resource() noexcept {
+    object::~object() noexcept {
         core::on_destruction();
         if (!is_initialized() || !is_self()) {
             core::on_destructor_error();
         }
-        self = reinterpret_cast<resource*>(invalid_pointer_value);
+        self = reinterpret_cast<object*>(invalid_pointer_value);
         value = uninitialized_memory_value;
     }
 
-    resource::resource() noexcept : self(this) {
+    object::object() noexcept : self(this) {
         core::on_construction();
         if (is_initialized()) {
             core::on_constructor_error();
@@ -25,7 +25,7 @@ namespace test {
         value = initialized_memory_value;
     }
 
-    resource::resource(resource&& other) noexcept : self(this) {
+    object::object(object&& other) noexcept : self(this) {
         core::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             core::on_constructor_error();
@@ -33,7 +33,7 @@ namespace test {
         value = initialized_memory_value;
     }
 
-    resource::resource(const resource& other) noexcept : self(this) {
+    object::object(const object& other) noexcept : self(this) {
         core::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             core::on_constructor_error();
@@ -41,39 +41,39 @@ namespace test {
         value = initialized_memory_value;
     }
 
-    auto resource::operator=(resource&& other) noexcept -> resource& {
+    auto object::operator=(object&& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
             core::on_operator_error();
         }
         return *this;
     }
 
-    auto resource::operator=(const resource& other) noexcept -> resource& {
+    auto object::operator=(const object& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
             core::on_operator_error();
         }
         return *this;
     }
 
-    auto resource::is_self() const noexcept -> bool {
+    auto object::is_self() const noexcept -> bool {
         return self == this;
     }
 
-    auto resource::is_initialized() const noexcept -> bool {
+    auto object::is_initialized() const noexcept -> bool {
         return value == initialized_memory_value;
     }
 
-    auto resource::is_uninitialized() const noexcept -> bool {
+    auto object::is_uninitialized() const noexcept -> bool {
         return value == uninitialized_memory_value;
     }
 
-    auto operator==(const resource& left, const resource& right) noexcept -> bool {
+    auto operator==(const object& left, const object& right) noexcept -> bool {
         static_cast<void>(left);
         static_cast<void>(right);
         return true;
     }
 
-    auto operator!=(const resource& left, const resource& right) noexcept -> bool {
+    auto operator!=(const object& left, const object& right) noexcept -> bool {
         static_cast<void>(left);
         static_cast<void>(right);
         return false;

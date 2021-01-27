@@ -3,20 +3,20 @@
 
 namespace test {
 
-    class resource {
+    class object {
       private:
         volatile int value;
-        volatile resource* self;
+        volatile object* self;
 
       public:
-        ~resource() noexcept;
-        resource() noexcept;
-        resource(resource&& other) noexcept;
-        resource(const resource& other) noexcept;
+        ~object() noexcept;
+        object() noexcept;
+        object(object&& other) noexcept;
+        object(const object& other) noexcept;
 
       public:
-        auto operator=(resource&& other) noexcept -> resource&;
-        auto operator=(const resource& other) noexcept -> resource&;
+        auto operator=(object&& other) noexcept -> object&;
+        auto operator=(const object& other) noexcept -> object&;
 
       private:
         auto is_self() const noexcept -> bool;
@@ -24,8 +24,8 @@ namespace test {
         auto is_uninitialized() const noexcept -> bool;
     };
 
-    auto operator==(const resource& left, const resource& right) noexcept -> bool;
-    auto operator!=(const resource& left, const resource& right) noexcept -> bool;
+    auto operator==(const object& left, const object& right) noexcept -> bool;
+    auto operator!=(const object& left, const object& right) noexcept -> bool;
 
 }
 
