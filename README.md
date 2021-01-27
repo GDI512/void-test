@@ -55,7 +55,7 @@ Keep in mind that tests are disabled for subdirectory builds like this one. If y
 > Disclaimer: I have not checked if this is actually how an `std::vector` is supposed to behave.
 
 ```c++
-#include <void_test.hpp>
+#include <voidtest.hpp>
 #include <vector>
 
 auto group = test::unit("vector-test", [](){
