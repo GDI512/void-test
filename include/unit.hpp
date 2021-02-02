@@ -7,13 +7,13 @@
 
 namespace test {
 
-    template <typename callable>
-    auto unit(string name, callable&& content) noexcept -> int {
+    template <typename T>
+    auto unit(string name, T&& function) noexcept -> int {
         auto scope = core::scope(name);
         auto registry = core::registry();
         auto verifier = core::verifier();
         try {
-            content();
+            function();
         } catch (...) {
             core::on_exception(name);
         }

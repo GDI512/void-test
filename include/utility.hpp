@@ -18,42 +18,42 @@ namespace test::core {
         static constexpr auto value = false;
     };
 
-    template <typename object_type>
+    template <typename T>
     struct remove_reference {
-        using type = object_type;
+        using type = T;
     };
 
-    template <typename object_type>
-    struct remove_reference<object_type&> {
-        using type = object_type;
+    template <typename T>
+    struct remove_reference<T&> {
+        using type = T;
     };
 
-    template <typename object_type>
-    struct remove_reference<object_type&&> {
-        using type = object_type;
+    template <typename T>
+    struct remove_reference<T&&> {
+        using type = T;
     };
 
-    template <typename object_type>
+    template <typename T>
     struct is_lvalue_reference : false_type {};
 
-    template <typename object_type>
-    struct is_lvalue_reference<object_type&> : true_type {};
+    template <typename T>
+    struct is_lvalue_reference<T&> : true_type {};
 
-    template <typename type>
-    using remove_reference_t = typename remove_reference<type>::type;
+    template <typename T>
+    using remove_reference_t = typename remove_reference<T>::type;
 
-    template <typename type>
-    constexpr auto is_lvalue_reference_v = is_lvalue_reference<type>::value;
+    template <typename T>
+    constexpr auto is_lvalue_reference_v = is_lvalue_reference<T>::value;
 
-    template <typename type>
-    constexpr auto forward(remove_reference_t<type>& value) noexcept -> type&& {
-        return static_cast<type&&>(value);
+    template <typename T>
+    constexpr auto forward(remove_reference_t<T>& value) noexcept -> T&& {
+        return static_cast<T&&>(value);
     }
 
-    template <typename type>
-    constexpr auto forward(remove_reference_t<type>&& value) noexcept -> type&& {
-        static_assert(!is_lvalue_reference_v<type>);
-        return static_cast<type&&>(value);
+    template <typename T>
+    constexpr auto forward(remove_reference_t<T>&& value) noexcept -> T&& {
+        static_assert(!is_lvalue_reference_v<T>);
+        return static_cast<T&&>(value);
     }
 
 }

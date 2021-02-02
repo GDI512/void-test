@@ -8,6 +8,16 @@ using namespace test;
 int main() {
     {
         auto tracker = core::verifier();
+        const auto instance = object(16);
+        auto other = object(32);
+        cassert(instance == 16);
+        cassert(other == 32);
+        other = instance;
+        cassert(instance == 16);
+        cassert(other == 16);
+    }
+    {
+        auto tracker = core::verifier();
         auto instance = object();
         cassert(core::global.object.destroyed_count == 0);
         cassert(core::global.object.constructed_count == 1);

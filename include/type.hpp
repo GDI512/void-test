@@ -5,16 +5,18 @@ namespace test {
 
     class object {
       private:
+        volatile int number;
         volatile int value;
         volatile object* self;
 
       public:
         ~object() noexcept;
-        object() noexcept;
+        object(int number = 0) noexcept;
         object(object&& other) noexcept;
         object(const object& other) noexcept;
 
       public:
+        operator int() const noexcept;
         auto operator=(object&& other) noexcept -> object&;
         auto operator=(const object& other) noexcept -> object&;
 
@@ -23,9 +25,6 @@ namespace test {
         auto is_initialized() const noexcept -> bool;
         auto is_uninitialized() const noexcept -> bool;
     };
-
-    auto operator==(const object& left, const object& right) noexcept -> bool;
-    auto operator!=(const object& left, const object& right) noexcept -> bool;
 
 }
 

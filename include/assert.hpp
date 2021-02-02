@@ -14,17 +14,17 @@ namespace test {
         }
     }
 
-    template <typename fn, typename... args>
-    auto check(fn&& function, args&&... arguments) noexcept -> bool {
-        if (function(core::forward<args>(arguments)...)) {
+    template <typename T, typename... U>
+    auto check(T&& function, U&&... args) noexcept -> bool {
+        if (function(core::forward<U>(args)...)) {
             return core::on_success(__func__);
         } else {
             return core::on_error(__func__);
         }
     }
 
-    template <typename type, typename other>
-    auto check_equal(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_equal(const T& left, const U& right) noexcept -> bool {
         if (left == right) {
             return core::on_success(__func__);
         } else {
@@ -32,8 +32,8 @@ namespace test {
         }
     }
 
-    template <typename type, typename other>
-    auto check_not_equal(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_not_equal(const T& left, const U& right) noexcept -> bool {
         if (left != right) {
             return core::on_success(__func__);
         } else {
@@ -41,8 +41,8 @@ namespace test {
         }
     }
 
-    template <typename type, typename other>
-    auto check_less(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_less(const T& left, const U& right) noexcept -> bool {
         if (left < right) {
             return core::on_success(__func__);
         } else {
@@ -50,8 +50,8 @@ namespace test {
         }
     }
 
-    template <typename type, typename other>
-    auto check_not_less(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_not_less(const T& left, const U& right) noexcept -> bool {
         if (left >= right) {
             return core::on_success(__func__);
         } else {
@@ -59,8 +59,8 @@ namespace test {
         }
     }
 
-    template <typename type, typename other>
-    auto check_greater(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_greater(const T& left, const U& right) noexcept -> bool {
         if (left > right) {
             return core::on_success(__func__);
         } else {
@@ -68,8 +68,8 @@ namespace test {
         }
     }
 
-    template <typename type, typename other>
-    auto check_not_greater(const type& left, const other& right) noexcept -> bool {
+    template <typename T, typename U>
+    auto check_not_greater(const T& left, const U& right) noexcept -> bool {
         if (left <= right) {
             return core::on_success(__func__);
         } else {
@@ -77,20 +77,20 @@ namespace test {
         }
     }
 
-    template <typename fn, typename... args>
-    auto check_throws(fn&& function, args&&... arguments) noexcept -> bool {
+    template <typename T, typename... U>
+    auto check_throws(T&& function, U&&... args) noexcept -> bool {
         try {
-            function(core::forward<args>(arguments)...);
+            function(core::forward<U>(args)...);
             return core::on_error(__func__);
         } catch (...) {
             return core::on_success(__func__);
         }
     }
 
-    template <typename fn, typename... args>
-    auto check_nothrows(fn&& function, args&&... arguments) noexcept -> bool {
+    template <typename T, typename... U>
+    auto check_nothrows(T&& function, U&&... args) noexcept -> bool {
         try {
-            function(core::forward<args>(arguments)...);
+            function(core::forward<U>(args)...);
             return core::on_success(__func__);
         } catch (...) {
             return core::on_error(__func__);
