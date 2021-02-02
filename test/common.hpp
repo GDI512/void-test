@@ -1,7 +1,7 @@
 #ifndef TEST_COMMON_HPP
 #define TEST_COMMON_HPP
 
-#include <voidtest.hpp>
+#include <void_test.hpp>
 
 auto stop(int code) noexcept -> void;
 

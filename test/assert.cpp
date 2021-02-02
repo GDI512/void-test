@@ -1,5 +1,7 @@
 #include "common.hpp"
 
+#include <list>
+
 using namespace test;
 
 int main() {
@@ -46,5 +48,51 @@ int main() {
     {
         cassert(check_nothrows([]() { return 0; }));
         cassert(!check_nothrows([]() { throw 0; }));
+    }
+    {
+        {
+            int array[1] = {};
+            cassert(check_sorted(array, [](auto x, auto y) { return x < y; }));
+        }
+        {
+            int array[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+            cassert(check_sorted(array, [](auto x, auto y) { return x < y; }));
+        }
+        {
+            int array[8] = {0, 1, 1, 2, 2, 3, 3, 4};
+            cassert(!check_sorted(array, [](auto x, auto y) { return x < y; }));
+            cassert(check_sorted(array, [](auto x, auto y) { return x <= y; }));
+        }
+        {
+            int array[8] = {7, 0, 1, 6, 5, 2, 3, 4};
+            cassert(!check_sorted(array, [](auto x, auto y) { return x < y; }));
+            cassert(!check_sorted(array, [](auto x, auto y) { return x <= y; }));
+            cassert(!check_sorted(array, [](auto x, auto y) { return x > y; }));
+            cassert(!check_sorted(array, [](auto x, auto y) { return x >= y; }));
+        }
+        {
+            auto list = std::list<int>{};
+            cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
+        }
+        {
+            auto list = std::list<int>{1};
+            cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
+        }
+        {
+            auto list = std::list<int>{0, 1, 2, 3, 4, 5, 6, 7};
+            cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
+        }
+        {
+            auto list = std::list<int>{0, 1, 1, 2, 2, 3, 3, 4};
+            cassert(!check_sorted(list, [](auto x, auto y) { return x < y; }));
+            cassert(check_sorted(list, [](auto x, auto y) { return x <= y; }));
+        }
+        {
+            auto list = std::list<int>{7, 0, 1, 6, 5, 2, 3, 4};
+            cassert(!check_sorted(list, [](auto x, auto y) { return x < y; }));
+            cassert(!check_sorted(list, [](auto x, auto y) { return x <= y; }));
+            cassert(!check_sorted(list, [](auto x, auto y) { return x > y; }));
+            cassert(!check_sorted(list, [](auto x, auto y) { return x >= y; }));
+        }
     }
 }

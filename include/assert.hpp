@@ -1,5 +1,5 @@
-#ifndef VOIDTEST_ASSERT_HPP
-#define VOIDTEST_ASSERT_HPP
+#ifndef VOID_TEST_ASSERT_HPP
+#define VOID_TEST_ASSERT_HPP
 
 #include "state.hpp"
 #include "utility.hpp"
@@ -94,6 +94,43 @@ namespace test {
             return core::on_success(__func__);
         } catch (...) {
             return core::on_error(__func__);
+        }
+    }
+
+    template <typename T, typename U>
+    auto check_sorted(const T& container, U compare) noexcept -> bool {
+        auto first = core::begin(container);
+        const auto last = core::end(container);
+        if (first == last) {
+            return core::on_success(__func__);
+        } else {
+            auto next = ++core::begin(container);
+            if (next == last) {
+                return core::on_success(__func__);
+            } else {
+                for (; next != last; ++first, ++next) {
+                    if (!compare(*first, *next)) {
+                        return core::on_error(__func__);
+                    }
+                }
+                return core::on_success(__func__);
+            }
+        }
+    }
+
+    template <typename T, typename U, auto N>
+    auto check_sorted(const T (&array)[N], U compare) noexcept -> bool {
+        auto first = core::begin(array);
+        const auto last = core::end(array);
+        if (N <= 1) {
+            return core::on_success(__func__);
+        } else {
+            for (; first != last - 1; ++first) {
+                if (!compare(*first, *(first + 1))) {
+                    return core::on_error(__func__);
+                }
+            }
+            return core::on_success(__func__);
         }
     }
 
