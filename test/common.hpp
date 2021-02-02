@@ -14,3 +14,5 @@ auto print(int line, const char* macro) noexcept -> void;
     }
 
 #endif
+
+// clang-format off

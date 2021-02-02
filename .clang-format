@@ -12,5 +12,6 @@ NamespaceIndentation: All
 AlwaysBreakTemplateDeclarations: Yes
 AlignTrailingComments: true
 FixNamespaceComments: false
+AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: Empty
 ...

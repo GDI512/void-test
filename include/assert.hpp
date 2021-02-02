@@ -33,12 +33,52 @@ namespace test {
     }
 
     template <typename T, typename U>
+    auto check_equal(T first, T last, U other) noexcept -> bool {
+        for (; first != last; ++first, ++other) {
+            if (*first != *other) {
+                return core::on_error(__func__);
+            }
+        }
+        return core::on_success(__func__);
+    }
+
+    template <typename T, typename U, auto N>
+    auto check_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
+        for (auto i = 0; i < N; i++) {
+            if (array[i] != other[i]) {
+                return core::on_error(__func__);
+            }
+        }
+        return core::on_success(__func__);
+    }
+
+    template <typename T, typename U>
     auto check_not_equal(const T& left, const U& right) noexcept -> bool {
         if (left != right) {
             return core::on_success(__func__);
         } else {
             return core::on_error(__func__);
         }
+    }
+
+    template <typename T, typename U>
+    auto check_not_equal(T first, T last, U other) noexcept -> bool {
+        for (; first != last; ++first, ++other) {
+            if (*first != *other) {
+                return core::on_success(__func__);
+            }
+        }
+        return core::on_error(__func__);
+    }
+
+    template <typename T, typename U, auto N>
+    auto check_not_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
+        for (auto i = 0; i < N; i++) {
+            if (array[i] != other[i]) {
+                return core::on_success(__func__);
+            }
+        }
+        return core::on_error(__func__);
     }
 
     template <typename T, typename U>
@@ -103,19 +143,17 @@ namespace test {
         const auto last = core::end(container);
         if (first == last) {
             return core::on_success(__func__);
-        } else {
-            auto next = ++core::begin(container);
-            if (next == last) {
-                return core::on_success(__func__);
-            } else {
-                for (; next != last; ++first, ++next) {
-                    if (!compare(*first, *next)) {
-                        return core::on_error(__func__);
-                    }
-                }
-                return core::on_success(__func__);
+        }
+        auto next = ++core::begin(container);
+        if (next == last) {
+            return core::on_success(__func__);
+        }
+        for (; next != last; ++first, ++next) {
+            if (!compare(*first, *next)) {
+                return core::on_error(__func__);
             }
         }
+        return core::on_success(__func__);
     }
 
     template <typename T, typename U, auto N>
@@ -124,14 +162,13 @@ namespace test {
         const auto last = core::end(array);
         if (N <= 1) {
             return core::on_success(__func__);
-        } else {
-            for (; first != last - 1; ++first) {
-                if (!compare(*first, *(first + 1))) {
-                    return core::on_error(__func__);
-                }
-            }
-            return core::on_success(__func__);
         }
+        for (; first != last - 1; ++first) {
+            if (!compare(*first, *(first + 1))) {
+                return core::on_error(__func__);
+            }
+        }
+        return core::on_success(__func__);
     }
 
 }
