@@ -68,7 +68,7 @@ namespace test {
     template <>
     class generator<float> {
       private:
-        static generator instance;
+        static generator<float> instance;
 
       private:
         struct impl;
@@ -92,7 +92,7 @@ namespace test {
     template <>
     class generator<int> {
       private:
-        static generator instance;
+        static generator<int> instance;
 
       private:
         struct impl;

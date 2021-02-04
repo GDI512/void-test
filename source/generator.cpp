@@ -171,7 +171,7 @@ namespace test {
         return array;
     }
 
-    auto generator<int>::instance = generator<int>();
+    generator<int> generator<int>::instance = generator<int>();
 
     struct generator<int>::impl {
         std::random_device source;
@@ -198,7 +198,7 @@ namespace test {
         return instance();
     }
 
-    auto generator<float>::instance = generator<float>();
+    generator<float> generator<float>::instance = generator<float>();
 
     struct generator<float>::impl {
         std::random_device source;
