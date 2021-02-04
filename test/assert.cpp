@@ -1,7 +1,4 @@
-#include "assert.hpp"
 #include "common.hpp"
-
-#include <list>
 
 using namespace test;
 

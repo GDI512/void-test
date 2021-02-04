@@ -6,12 +6,12 @@
 
 namespace test::core {
 
-    extern uint indent_level;
+    extern size_t indent_level;
 
     class scope {
       public:
         ~scope() noexcept;
-        scope(string name) noexcept;
+        scope(const char* name) noexcept;
         scope(scope&& other) = delete;
         scope(const scope& other) = delete;
 
@@ -20,11 +20,11 @@ namespace test::core {
         auto operator=(const scope& other) -> scope& = delete;
     };
 
-    auto print_error(string source) noexcept -> void;
+    auto print_error(const char* source) noexcept -> void;
 
-    auto print_success(string source) noexcept -> void;
+    auto print_success(const char* source) noexcept -> void;
 
-    auto print_exception(string source) noexcept -> void;
+    auto print_exception(const char* source) noexcept -> void;
 
     auto print_registry_error(test_struct state) noexcept -> void;
 

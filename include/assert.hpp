@@ -138,7 +138,7 @@ namespace test {
     }
 
     template <typename T, typename U>
-    auto check_sorted(const T& container, U compare) noexcept -> bool {
+    auto check_sorted(const T& container, U&& compare) noexcept -> bool {
         auto first = core::begin(container);
         const auto last = core::end(container);
         if (first == last) {
@@ -157,7 +157,7 @@ namespace test {
     }
 
     template <typename T, typename U, auto N>
-    auto check_sorted(const T (&array)[N], U compare) noexcept -> bool {
+    auto check_sorted(const T (&array)[N], U&& compare) noexcept -> bool {
         auto first = core::begin(array);
         const auto last = core::end(array);
         if (N <= 1) {

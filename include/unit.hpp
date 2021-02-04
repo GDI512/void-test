@@ -8,7 +8,7 @@
 namespace test {
 
     template <typename T>
-    auto unit(string name, T&& function) noexcept -> int {
+    auto unit(const char* name, T&& function) noexcept -> int {
         auto scope = core::scope(name);
         auto registry = core::registry();
         auto verifier = core::verifier();

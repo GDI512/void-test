@@ -55,4 +55,5 @@ Keep in mind that tests are disabled for subdirectory builds like this one. If y
 
 # How to use
 
-See [wiki](https://github.com/GDI512/void-test/wiki) for a tutorial and API reference.
+See [wiki](https://github.com/GDI512/void-test/wiki) for an outdated tutorial and API reference.
+Real documentation is WIP.

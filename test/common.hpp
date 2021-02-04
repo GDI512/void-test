@@ -2,6 +2,12 @@
 #define TEST_COMMON_HPP
 
 #include <void_test.hpp>
+#include <type_traits>
+#include <utility>
+#include <vector>
+#include <limits>
+#include <list>
+#include <new>
 
 auto stop(int code) noexcept -> void;
 
@@ -14,5 +20,3 @@ auto print(int line, const char* macro) noexcept -> void;
     }
 
 #endif
-
-// clang-format off

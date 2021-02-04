@@ -12,6 +12,7 @@ function (add_test_executable target source)
 endfunction ()
 
 add_test_executable (assert assert.cpp)
+add_test_executable (generator generator.cpp)
 add_test_executable (state state.cpp)
 add_test_executable (type type.cpp)
 add_test_executable (unit unit.cpp)

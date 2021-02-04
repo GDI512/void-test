@@ -49,83 +49,83 @@ namespace test::core {
                state.constructor_error_count == 0 && state.operator_error_count == 0;
     }
 
-    auto exit_code(const global_struct& data) noexcept -> int {
-        return data.info.exit_code;
+    auto exit_code(global_struct state) noexcept -> int {
+        return state.info.exit_code;
     }
 
-    auto exit_code(int code, global_struct& data) noexcept -> void {
-        data.info.exit_code = code;
+    auto exit_code(int code, global_struct& state) noexcept -> void {
+        state.info.exit_code = code;
     }
 
-    auto register_error(global_struct& data) noexcept -> void {
-        ++data.test.total_count;
-        ++data.test.error_count;
+    auto register_error(global_struct& state) noexcept -> void {
+        ++state.test.total_count;
+        ++state.test.error_count;
     }
 
-    auto register_success(global_struct& data) noexcept -> void {
-        ++data.test.total_count;
+    auto register_success(global_struct& state) noexcept -> void {
+        ++state.test.total_count;
     }
 
-    auto register_exception(global_struct& data) noexcept -> void {
-        ++data.test.error_count;
+    auto register_exception(global_struct& state) noexcept -> void {
+        ++state.test.error_count;
     }
 
-    auto register_destruction(global_struct& data) noexcept -> void {
-        ++data.object.destroyed_count;
+    auto register_destruction(global_struct& state) noexcept -> void {
+        ++state.object.destroyed_count;
     }
 
-    auto register_construction(global_struct& data) noexcept -> void {
-        ++data.object.constructed_count;
+    auto register_construction(global_struct& state) noexcept -> void {
+        ++state.object.constructed_count;
     }
 
-    auto register_destructor_error(global_struct& data) noexcept -> void {
-        ++data.object.destructor_error_count;
+    auto register_destructor_error(global_struct& state) noexcept -> void {
+        ++state.object.destructor_error_count;
     }
 
-    auto register_constructor_error(global_struct& data) noexcept -> void {
-        ++data.object.constructor_error_count;
+    auto register_constructor_error(global_struct& state) noexcept -> void {
+        ++state.object.constructor_error_count;
     }
 
-    auto register_operator_error(global_struct& data) noexcept -> void {
-        ++data.object.operator_error_count;
+    auto register_operator_error(global_struct& state) noexcept -> void {
+        ++state.object.operator_error_count;
     }
 
-    auto on_error(string source, global_struct& data) noexcept -> bool {
-        register_error(data);
+    auto on_error(const char* source, global_struct& state) noexcept -> bool {
+        register_error(state);
         print_error(source);
         return false;
     }
 
-    auto on_success(string source, global_struct& data) noexcept -> bool {
-        register_success(data);
+    auto on_success(const char* source, global_struct& state) noexcept -> bool {
+        register_success(state);
         print_success(source);
         return true;
     }
 
-    auto on_exception(string source, global_struct& data) noexcept -> bool {
-        register_exception(data);
+    auto on_exception(const char* source, global_struct& state) noexcept -> bool {
+        register_exception(state);
         print_exception(source);
         return false;
     }
 
-    auto on_destruction(global_struct& data) noexcept -> void {
-        register_destruction(data);
+    auto on_destruction(global_struct& state) noexcept -> void {
+        register_destruction(state);
     }
 
-    auto on_construction(global_struct& data) noexcept -> void {
-        register_construction(data);
+    auto on_construction(global_struct& state) noexcept -> void {
+        register_construction(state);
     }
 
-    auto on_destructor_error(global_struct& data) noexcept -> void {
-        register_destructor_error(data);
+    auto on_destructor_error(global_struct& state) noexcept -> void {
+        register_destructor_error(state);
     }
 
-    auto on_constructor_error(global_struct& data) noexcept -> void {
-        register_constructor_error(data);
+    auto on_constructor_error(global_struct& state) noexcept -> void {
+        register_constructor_error(state);
     }
 
-    auto on_operator_error(global_struct& data) noexcept -> void {
-        register_operator_error(data);
+    auto on_operator_error(global_struct& state) noexcept -> void {
+        register_operator_error(state);
     }
 
     auto operator+(test_struct left, test_struct right) noexcept -> test_struct {

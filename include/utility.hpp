@@ -3,8 +3,8 @@
 
 namespace test {
 
-    using uint = unsigned int;
-    using string = const char*;
+    using size_t = unsigned long long;
+    using ptrdiff_t = long long;
 
 }
 
@@ -46,6 +46,11 @@ namespace test::core {
     constexpr auto is_lvalue_reference_v = is_lvalue_reference<T>::value;
 
     template <typename T>
+    constexpr auto move(T&& value) noexcept -> remove_reference_t<T>&& {
+        return static_cast<remove_reference_t<T>&&>(value);
+    }
+
+    template <typename T>
     constexpr auto forward(remove_reference_t<T>& value) noexcept -> T&& {
         return static_cast<T&&>(value);
     }
@@ -54,6 +59,13 @@ namespace test::core {
     constexpr auto forward(remove_reference_t<T>&& value) noexcept -> T&& {
         static_assert(!is_lvalue_reference_v<T>);
         return static_cast<T&&>(value);
+    }
+
+    template <typename T, typename U>
+    constexpr auto exchange(T& value, U&& new_value) -> T {
+        auto old_value = move(value);
+        value = forward<U>(new_value);
+        return old_value;
     }
 
     template <typename T>

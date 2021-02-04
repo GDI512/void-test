@@ -8,16 +8,16 @@ namespace test::core::format {
     constexpr auto error = "(\033[31merror\033[0m %s)\n";
     constexpr auto success = "(\033[32mok\033[0m %s)\n";
     constexpr auto exception = "(\033[31mexception\033[0m %s)\n";
-    constexpr auto registry_error = "(\033[31mtest error\033[0m [%i/%i])\n";
-    constexpr auto registry_success = "(\033[32mtest ok\033[0m [%i/%i])\n";
-    constexpr auto verifier_error = "(\033[31mresource error\033[0m [%i/%i] [%i/%i/%i])\n";
-    constexpr auto verifier_success = "(\033[32mresource ok\033[0m [%i/%i] [%i/%i/%i])\n";
+    constexpr auto registry_error = "(\033[31mtest error\033[0m [%zu/%zu])\n";
+    constexpr auto registry_success = "(\033[32mtest ok\033[0m [%zu/%zu])\n";
+    constexpr auto verifier_error = "(\033[31mresource error\033[0m [%zu/%zu] [%zu/%zu/%zu])\n";
+    constexpr auto verifier_success = "(\033[32mresource ok\033[0m [%zu/%zu] [%zu/%zu/%zu])\n";
 
 }
 
 namespace test::core {
 
-    uint indent_level = 0;
+    size_t indent_level = 0;
 
     static auto indent() noexcept -> void {
         ++indent_level;
@@ -27,7 +27,7 @@ namespace test::core {
         --indent_level;
     }
 
-    static auto repeat(string text, uint count) -> void {
+    static auto repeat(const char* text, size_t count) -> void {
         while (count-- > 0) {
             std::fputs(text, stdout);
         }
@@ -37,23 +37,23 @@ namespace test::core {
         outdent();
     }
 
-    scope::scope(string name) noexcept {
+    scope::scope(const char* name) noexcept {
         repeat(format::space, indent_level);
         printf(format::scope, name);
         indent();
     }
 
-    auto print_error(string source) noexcept -> void {
+    auto print_error(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::error, source);
     }
 
-    auto print_success(string source) noexcept -> void {
+    auto print_success(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::success, source);
     }
 
-    auto print_exception(string source) noexcept -> void {
+    auto print_exception(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         printf(format::exception, source);
     }
