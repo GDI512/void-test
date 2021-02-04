@@ -12,6 +12,12 @@ int main() {
         cassert(y >= 0.0 && y < 1.0f);
     }
     {
+        auto random_int = test::generator<int>::get();
+        auto random_float = test::generator<float>::get();
+        cassert(random_int >= 0 && random_int <= std::numeric_limits<int>::max());
+        cassert(random_float >= 0.0 && random_float < 1.0f);
+    }
+    {
         auto range = test::range<int>();
         auto other = test::range<float>();
         cassert(range.size() == 0 && other.size() == 0);

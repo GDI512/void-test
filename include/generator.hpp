@@ -63,37 +63,58 @@ namespace test {
     };
 
     template <typename T>
-    class generator {
-      public:
-        using value_type = T;
+    class generator {};
 
-      public:
+    template <>
+    class generator<float> {
+      private:
+        static generator instance;
+
+      private:
         struct impl;
         impl* pimpl;
 
       public:
         ~generator() noexcept;
-        generator();
-        generator(generator&& other) noexcept;
+        generator() noexcept;
+        generator(generator&& other) = delete;
         generator(const generator& other) = delete;
 
       public:
-        auto operator()() noexcept -> T;
-        auto operator=(generator&& other) noexcept -> generator&;
+        auto operator()() -> float;
+        auto operator=(generator&& other) -> generator& = delete;
         auto operator=(const generator& other) -> generator& = delete;
 
       public:
-        auto swap(generator& other) noexcept -> void;
+        static auto get() -> float;
+    };
 
-        template <typename U>
-        friend auto swap(generator<U>& left, generator<U>& right) noexcept -> void;
+    template <>
+    class generator<int> {
+      private:
+        static generator instance;
+
+      private:
+        struct impl;
+        impl* pimpl;
+
+      public:
+        ~generator() noexcept;
+        generator() noexcept;
+        generator(generator&& other) = delete;
+        generator(const generator& other) = delete;
+
+      public:
+        auto operator()() -> int;
+        auto operator=(generator&& other) -> generator& = delete;
+        auto operator=(const generator& other) -> generator& = delete;
+
+      public:
+        static auto get() -> int;
     };
 
     template <typename T>
     auto swap(range<T>& left, range<T>& right) noexcept -> void;
-
-    template <typename T>
-    auto swap(generator<T>& left, generator<T>& right) noexcept -> void;
 
     extern template class range<int>;
     extern template class range<float>;
@@ -102,8 +123,6 @@ namespace test {
 
     extern template auto swap(range<int>&, range<int>&) noexcept -> void;
     extern template auto swap(range<float>&, range<float>&) noexcept -> void;
-    extern template auto swap(generator<int>&, generator<int>&) noexcept -> void;
-    extern template auto swap(generator<float>&, generator<float>&) noexcept -> void;
 
 }
 

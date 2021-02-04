@@ -1,4 +1,6 @@
 #include <generator.hpp>
+#include <cstdlib>
+#include <cstdio>
 #include <random>
 
 namespace test {
@@ -169,48 +171,58 @@ namespace test {
         return array;
     }
 
-    template <>
+    auto generator<int>::instance = generator<int>();
+
     struct generator<int>::impl {
         std::random_device source;
         std::uniform_int_distribution<int> generator;
     };
 
-    template <>
+    generator<int>::~generator() noexcept {
+        delete pimpl;
+    }
+
+    generator<int>::generator() noexcept {
+        try {
+            pimpl = new impl();
+        } catch (...) {
+            std::abort();
+        }
+    }
+
+    auto generator<int>::operator()() -> int {
+        return pimpl->generator(pimpl->source);
+    }
+
+    auto generator<int>::get() -> int {
+        return instance();
+    }
+
+    auto generator<float>::instance = generator<float>();
+
     struct generator<float>::impl {
         std::random_device source;
         std::uniform_real_distribution<float> generator;
     };
 
-    template <typename T>
-    generator<T>::~generator() noexcept {
+    generator<float>::~generator() noexcept {
         delete pimpl;
     }
 
-    template <typename T>
-    generator<T>::generator() {
-        pimpl = new impl();
+    generator<float>::generator() noexcept {
+        try {
+            pimpl = new impl();
+        } catch (...) {
+            std::abort();
+        }
     }
 
-    template <typename T>
-    generator<T>::generator(generator&& other) noexcept {
-        pimpl = core::exchange(other.pimpl, nullptr);
-    }
-
-    template <typename T>
-    auto generator<T>::operator()() noexcept -> T {
+    auto generator<float>::operator()() -> float {
         return pimpl->generator(pimpl->source);
     }
 
-    template <typename T>
-    auto generator<T>::operator=(generator&& other) noexcept -> generator& {
-        generator(core::move(other)).swap(*this);
-        return *this;
-    }
-
-    template <typename T>
-    auto generator<T>::swap(generator& other) noexcept -> void {
-        using test::swap;
-        swap(*this, other);
+    auto generator<float>::get() -> float {
+        return instance();
     }
 
     template <typename T>
@@ -223,13 +235,6 @@ namespace test {
         right.buffer_size = buffer_size;
     }
 
-    template <typename T>
-    auto swap(generator<T>& left, generator<T>& right) noexcept -> void {
-        auto pimpl = left.pimpl;
-        left.pimpl = right.pimpl;
-        right.pimpl = pimpl;
-    }
-
     template class range<int>;
     template class range<float>;
 
@@ -238,7 +243,5 @@ namespace test {
 
     template auto swap(range<int>&, range<int>&) noexcept -> void;
     template auto swap(range<float>&, range<float>&) noexcept -> void;
-    template auto swap(generator<int>&, generator<int>&) noexcept -> void;
-    template auto swap(generator<float>&, generator<float>&) noexcept -> void;
 
 }
