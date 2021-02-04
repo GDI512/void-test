@@ -143,17 +143,19 @@ namespace test {
         const auto last = core::end(container);
         if (first == last) {
             return core::on_success(__func__);
-        }
-        auto next = ++core::begin(container);
-        if (next == last) {
-            return core::on_success(__func__);
-        }
-        for (; next != last; ++first, ++next) {
-            if (!compare(*first, *next)) {
-                return core::on_error(__func__);
+        } else {
+            auto next = ++core::begin(container);
+            if (next == last) {
+                return core::on_success(__func__);
+            } else {
+                for (; next != last; ++first, ++next) {
+                    if (!compare(*first, *next)) {
+                        return core::on_error(__func__);
+                    }
+                }
+                return core::on_success(__func__);
             }
         }
-        return core::on_success(__func__);
     }
 
     template <typename T, typename U, auto N>
@@ -162,13 +164,33 @@ namespace test {
         const auto last = core::end(array);
         if (N <= 1) {
             return core::on_success(__func__);
+        } else {
+            for (; first != last - 1; ++first) {
+                if (!compare(*first, *(first + 1))) {
+                    return core::on_error(__func__);
+                }
+            }
+            return core::on_success(__func__);
         }
-        for (; first != last - 1; ++first) {
-            if (!compare(*first, *(first + 1))) {
-                return core::on_error(__func__);
+    }
+
+    template <typename T, typename U>
+    auto check_sorted(T first, T last, U&& compare) noexcept -> bool {
+        if (first == last) {
+            return core::on_success(__func__);
+        } else {
+            auto previous = first;
+            if (++first == last) {
+                return core::on_success(__func__);
+            } else {
+                for (; first != last; ++first, ++previous) {
+                    if (!compare(*previous, *first)) {
+                        return core::on_error(__func__);
+                    }
+                }
+                return core::on_success(__func__);
             }
         }
-        return core::on_success(__func__);
     }
 
 }

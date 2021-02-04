@@ -26,8 +26,8 @@ It is highly recommended to run the tests too:
 The easiest way of using *void-test* is to add it as a git submodule or just clone it into project's source tree, for example:
 
     external/
-    |-void-test/
-    |-CMakeLists.txt
+    |- void-test/
+    |- CMakeLists.txt
     include/
     |- header.hpp
     |- ...

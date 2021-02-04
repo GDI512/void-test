@@ -1,0 +1,43 @@
+\section{Usage}
+
+To understand how \voidtest\ works you need to remember that it is meant to be used \italic{with}
+CMake and on a \italic{one-file-one-test} basis. Technically speaking nothing stops you from
+compiling it manually and putting every test case into a single translation unit but by doing so
+you would be stepping into a territory not covered by tests, which is not recommended. \par
+Building \voidtest\ is simple -- simply run the following commands in the directory of a top-level
+\italic{CMakeLists.txt} file:
+
+\begin{verbatim}
+    cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
+    cmake --build build --config RelWithDebInfo
+    cd build
+    ctest -C RelWithDebInfo
+\end{verbatim}
+
+\noindent If something goes wrong, please submit an issue report on Github. If not, you may delete
+the \italic{build} directory and copy everything else into a subdirectory in your own project.
+Here is an example of a CMake project source tree:
+
+\begin{verbatim}
+    external/
+    |- void-test/
+    |- CMakeLists.txt
+    include/
+    |- header.hpp
+    |- ...
+    source/
+    |- source.cpp
+    |- ...
+    |- CMakeLists.txt
+    test/
+    |- test0.cpp
+    |- test1.cpp
+    |- ...
+    CMakeLists.txt
+\end{verbatim}
+
+\noindent \voidtest\ defines an alias target (\code{void\_test::void\_test}) which can be used as
+an argument to the \code{target\_link\_libraries()} command. To make it available, add the
+\italic{external} subdirectory in the first call to \code{add\_subdirectory()} from the
+main {CMakeLists.txt} and then \code{add\_subdirectory(void-test)} in the \italic{external}
+directory itself.
