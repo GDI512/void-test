@@ -15,6 +15,13 @@ int main() {
     }
     {
         struct type {};
+        static_assert(core::is_same<int, int>::value);
+        static_assert(core::is_same<type, type>::value);
+        static_assert(!core::is_same<int, float>::value);
+        static_assert(!core::is_same<type&&, type>::value);
+    }
+    {
+        struct type {};
         auto value = type{};
         static_assert(std::is_same<type&&, decltype(core::move(type{}))>::value);
         static_assert(std::is_same<type&&, decltype(core::move(value))>::value);

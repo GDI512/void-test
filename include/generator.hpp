@@ -6,7 +6,7 @@
 namespace test {
 
     template <typename T>
-    class array {
+    class range {
       public:
         using value_type = T;
         using reference = T&;
@@ -23,21 +23,21 @@ namespace test {
         size_type buffer_size;
 
       public:
-        ~array() noexcept;
-        array() noexcept;
-        array(size_type size, value_type value = 0);
-        array(const_iterator first, const_iterator last);
-        array(array&& other) noexcept;
-        array(const array& other);
+        ~range() noexcept;
+        range() noexcept;
+        range(size_type size, value_type value = 0);
+        range(const_iterator first, const_iterator last);
+        range(range&& other) noexcept;
+        range(const range& other);
 
       public:
-        auto operator=(array&& other) noexcept -> array&;
-        auto operator=(const array& other) -> array&;
+        auto operator=(range&& other) noexcept -> range&;
+        auto operator=(const range& other) -> range&;
         auto operator[](size_type index) noexcept -> reference;
         auto operator[](size_type index) const noexcept -> const_reference;
 
       public:
-        auto swap(array& other) noexcept -> void;
+        auto swap(range& other) noexcept -> void;
 
       public:
         auto data() noexcept -> pointer;
@@ -55,11 +55,11 @@ namespace test {
         auto capacity() const noexcept -> size_type;
 
       public:
-        static auto random(size_type size, int min, int max) -> array<int>;
-        static auto random(size_type size, float min, float max) -> array<float>;
+        static auto random(size_type size, value_type min, value_type max) -> range;
+        static auto sequence(size_type size, value_type start, value_type step) -> range;
 
         template <typename U>
-        friend auto swap(array<U>& left, array<U>& right) noexcept -> void;
+        friend auto swap(range<U>& left, range<U>& right) noexcept -> void;
     };
 
     template <typename T>
@@ -90,18 +90,18 @@ namespace test {
     };
 
     template <typename T>
-    auto swap(array<T>& left, array<T>& right) noexcept -> void;
+    auto swap(range<T>& left, range<T>& right) noexcept -> void;
 
     template <typename T>
     auto swap(generator<T>& left, generator<T>& right) noexcept -> void;
 
-    extern template class array<int>;
-    extern template class array<float>;
+    extern template class range<int>;
+    extern template class range<float>;
     extern template class generator<int>;
     extern template class generator<float>;
 
-    extern template auto swap(array<int>&, array<int>&) noexcept -> void;
-    extern template auto swap(array<float>&, array<float>&) noexcept -> void;
+    extern template auto swap(range<int>&, range<int>&) noexcept -> void;
+    extern template auto swap(range<float>&, range<float>&) noexcept -> void;
     extern template auto swap(generator<int>&, generator<int>&) noexcept -> void;
     extern template auto swap(generator<float>&, generator<float>&) noexcept -> void;
 

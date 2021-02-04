@@ -12,19 +12,19 @@ int main() {
         cassert(y >= 0.0 && y < 1.0f);
     }
     {
-        auto array = test::array<int>();
-        auto other = test::array<float>();
-        cassert(array.size() == 0 && other.size() == 0);
-        cassert(array.capacity() == 0 && other.capacity() == 0);
-        cassert(array.data() == nullptr && other.data() == nullptr);
+        auto range = test::range<int>();
+        auto other = test::range<float>();
+        cassert(range.size() == 0 && other.size() == 0);
+        cassert(range.capacity() == 0 && other.capacity() == 0);
+        cassert(range.data() == nullptr && other.data() == nullptr);
     }
     {
-        auto array = test::array<int>(32);
-        auto other = test::array<float>(32);
-        cassert(array.size() == 32 && other.size() == 32);
-        cassert(array.capacity() == 32 && other.capacity() == 32);
-        cassert(array.data() != nullptr && other.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>(32);
+        auto other = test::range<float>(32);
+        cassert(range.size() == 32 && other.size() == 32);
+        cassert(range.capacity() == 32 && other.capacity() == 32);
+        cassert(range.data() != nullptr && other.data() != nullptr);
+        for (auto x : range) {
             cassert(x == 0);
         }
         for (auto x : other) {
@@ -32,12 +32,12 @@ int main() {
         }
     }
     {
-        auto array = test::array<int>(32, 16);
-        auto other = test::array<float>(32, 0.1f);
-        cassert(array.size() == 32 && other.size() == 32);
-        cassert(array.capacity() == 32 && other.capacity() == 32);
-        cassert(array.data() != nullptr && other.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>(32, 16);
+        auto other = test::range<float>(32, 0.1f);
+        cassert(range.size() == 32 && other.size() == 32);
+        cassert(range.capacity() == 32 && other.capacity() == 32);
+        cassert(range.data() != nullptr && other.data() != nullptr);
+        for (auto x : range) {
             cassert(x == 16);
         }
         for (auto x : other) {
@@ -45,8 +45,8 @@ int main() {
         }
     }
     {
-        auto array = test::array<int>(32, 16);
-        auto other = test::array<int>(array.begin(), array.end());
+        auto range = test::range<int>(32, 16);
+        auto other = test::range<int>(range.begin(), range.end());
         cassert(other.size() == 32);
         cassert(other.capacity() == 32);
         cassert(other.data() != nullptr);
@@ -55,8 +55,8 @@ int main() {
         }
     }
     {
-        auto array = test::array<int>(32, 16);
-        auto other = test::array<int>(array);
+        auto range = test::range<int>(32, 16);
+        auto other = test::range<int>(range);
         cassert(other.size() == 32);
         cassert(other.capacity() == 32);
         cassert(other.data() != nullptr);
@@ -65,8 +65,8 @@ int main() {
         }
     }
     {
-        auto array = test::array<int>(32, 16);
-        auto other = test::array<int>(std::move(array));
+        auto range = test::range<int>(32, 16);
+        auto other = test::range<int>(std::move(range));
         cassert(other.size() == 32);
         cassert(other.capacity() == 32);
         cassert(other.data() != nullptr);
@@ -75,63 +75,85 @@ int main() {
         }
     }
     {
-        auto array = test::array<int>();
-        auto other = test::array<int>(32, 16);
-        array = other;
-        cassert(array.size() == 32);
-        cassert(array.capacity() == 32);
-        cassert(array.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>();
+        auto other = test::range<int>(32, 16);
+        range = other;
+        cassert(range.size() == 32);
+        cassert(range.capacity() == 32);
+        cassert(range.data() != nullptr);
+        for (auto x : range) {
             cassert(x == 16);
         }
     }
     {
-        auto array = test::array<int>();
-        auto other = test::array<int>(32, 16);
-        array = std::move(other);
-        cassert(array.size() == 32);
-        cassert(array.capacity() == 32);
-        cassert(array.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>();
+        auto other = test::range<int>(32, 16);
+        range = std::move(other);
+        cassert(range.size() == 32);
+        cassert(range.capacity() == 32);
+        cassert(range.data() != nullptr);
+        for (auto x : range) {
             cassert(x == 16);
         }
     }
     {
-        auto array = test::array<int>();
-        auto other = test::array<int>(32, 16);
-        array.swap(other);
-        cassert(array.size() == 32 && other.size() == 0);
-        cassert(array.capacity() == 32 && other.capacity() == 0);
-        cassert(array.data() != nullptr && other.data() == nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>();
+        auto other = test::range<int>(32, 16);
+        range.swap(other);
+        cassert(range.size() == 32 && other.size() == 0);
+        cassert(range.capacity() == 32 && other.capacity() == 0);
+        cassert(range.data() != nullptr && other.data() == nullptr);
+        for (auto x : range) {
             cassert(x == 16);
         }
     }
     {
-        auto array = test::array<int>(32);
-        for (auto i = 0u; i < array.size(); i++) {
-            array[i] = i;
+        auto range = test::range<int>(32);
+        for (auto i = 0u; i < range.size(); i++) {
+            range[i] = i;
         }
-        for (auto i = 0u; i < array.size(); i++) {
-            cassert(array[i] == i);
+        for (auto i = 0u; i < range.size(); i++) {
+            cassert(range[i] == i);
         }
     }
     {
-        auto array = test::array<int>::random(8192, -16, 16);
-        cassert(array.size() == 8192);
-        cassert(array.capacity() == 8192);
-        cassert(array.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<int>::random(8192, -16, 16);
+        cassert(range.size() == 8192);
+        cassert(range.capacity() == 8192);
+        cassert(range.data() != nullptr);
+        for (auto x : range) {
             cassert(x >= -16 && x <= 16);
         }
     }
     {
-        auto array = test::array<float>::random(8192, -1.0f, 1.0f);
-        cassert(array.size() == 8192);
-        cassert(array.capacity() == 8192);
-        cassert(array.data() != nullptr);
-        for (auto x : array) {
+        auto range = test::range<float>::random(8192, -1.0f, 1.0f);
+        cassert(range.size() == 8192);
+        cassert(range.capacity() == 8192);
+        cassert(range.data() != nullptr);
+        for (auto x : range) {
             cassert(x >= -1.0f && x < 1.0f);
+        }
+    }
+    {
+        auto range = test::range<int>::sequence(8192, 1, 1);
+        cassert(range.size() == 8192);
+        cassert(range.capacity() == 8192);
+        cassert(range.data() != nullptr);
+        cassert(range.front() == 1);
+        cassert(range.back() == 8192);
+        for (auto i = 0u; i < range.size(); i++) {
+            cassert(range[i] == i * 1 + 1);
+        }
+    }
+    {
+        auto range = test::range<float>::sequence(16, 0.0f, 1.0f);
+        cassert(range.size() == 16);
+        cassert(range.capacity() == 16);
+        cassert(range.data() != nullptr);
+        cassert(range.front() == 0.0f);
+        cassert(range.back() == 15.0f);
+        for (auto i = 0u; i < range.size(); i++) {
+            cassert(range[i] == i * 1.0f + 0.0f);
         }
     }
 }

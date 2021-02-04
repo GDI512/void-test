@@ -33,6 +33,12 @@ namespace test::core {
         using type = T;
     };
 
+    template <typename T, typename U>
+    struct is_same : false_type {};
+
+    template <typename T>
+    struct is_same<T, T> : true_type {};
+
     template <typename T>
     struct is_lvalue_reference : false_type {};
 
@@ -44,6 +50,9 @@ namespace test::core {
 
     template <typename T>
     constexpr auto is_lvalue_reference_v = is_lvalue_reference<T>::value;
+
+    template <typename T, typename U>
+    constexpr auto is_same_v = is_same<T, U>::value;
 
     template <typename T>
     constexpr auto move(T&& value) noexcept -> remove_reference_t<T>&& {
