@@ -6,30 +6,68 @@ namespace test::core {
     global_struct global = {};
 
     registry::~registry() noexcept {
-        const auto diff = state.test - snapshot;
-        if (is_ok(diff) && !is_empty(diff)) {
-            print_registry_success(diff);
-        } else if (!is_ok(diff)) {
+        const auto difference = global.test - snapshot;
+        if (is_ok(difference) && !is_empty(difference)) {
+            scope::on_registry_success(difference);
+        } else if (!is_ok(difference)) {
             exit_code(exit_failure);
-            print_registry_error(diff);
+            scope::on_registry_error(difference);
         }
-        state.test -= diff;
+        global.test -= difference;
     }
 
-    registry::registry(global_struct& state) noexcept : snapshot(global.test), state(state) {}
+    registry::registry() noexcept : snapshot(global.test) {}
+
+    auto registry::on_error(const char* source) noexcept -> bool {
+        ++global.test.error_count;
+        ++global.test.total_count;
+        scope::on_error(source);
+        return false;
+    }
+
+    auto registry::on_success(const char* source) noexcept -> bool {
+        ++global.test.total_count;
+        scope::on_success(source);
+        return true;
+    }
+
+    auto registry::on_exception(const char* source) noexcept -> void {
+        ++global.test.error_count;
+        scope::on_exception(source);
+    }
 
     verifier::~verifier() noexcept {
-        const auto diff = state.object - snapshot;
-        if (is_ok(diff) && !is_empty(diff)) {
-            print_verifier_success(diff);
-        } else if (!is_ok(diff)) {
+        const auto difference = global.object - snapshot;
+        if (is_ok(difference) && !is_empty(difference)) {
+            scope::on_verifier_success(difference);
+        } else if (!is_ok(difference)) {
             exit_code(exit_failure);
-            print_verifier_error(diff);
+            scope::on_verifier_error(difference);
         }
-        state.object -= diff;
+        global.object -= difference;
     }
 
-    verifier::verifier(global_struct& state) noexcept : snapshot(global.object), state(state) {}
+    verifier::verifier() noexcept : snapshot(global.object) {}
+
+    auto verifier::on_destruction() noexcept -> void {
+        ++global.object.destroyed_count;
+    }
+
+    auto verifier::on_construction() noexcept -> void {
+        ++global.object.constructed_count;
+    }
+
+    auto verifier::on_destructor_error() noexcept -> void {
+        ++global.object.destructor_error_count;
+    }
+
+    auto verifier::on_constructor_error() noexcept -> void {
+        ++global.object.constructor_error_count;
+    }
+
+    auto verifier::on_operator_error() noexcept -> void {
+        ++global.object.operator_error_count;
+    }
 
     auto is_ok(test_struct state) noexcept -> bool {
         return state.error_count == 0;
@@ -49,83 +87,12 @@ namespace test::core {
                state.constructor_error_count == 0 && state.operator_error_count == 0;
     }
 
-    auto exit_code(global_struct state) noexcept -> int {
-        return state.info.exit_code;
+    auto exit_code() noexcept -> int {
+        return global.info.exit_code;
     }
 
-    auto exit_code(int code, global_struct& state) noexcept -> void {
-        state.info.exit_code = code;
-    }
-
-    auto register_error(global_struct& state) noexcept -> void {
-        ++state.test.total_count;
-        ++state.test.error_count;
-    }
-
-    auto register_success(global_struct& state) noexcept -> void {
-        ++state.test.total_count;
-    }
-
-    auto register_exception(global_struct& state) noexcept -> void {
-        ++state.test.error_count;
-    }
-
-    auto register_destruction(global_struct& state) noexcept -> void {
-        ++state.object.destroyed_count;
-    }
-
-    auto register_construction(global_struct& state) noexcept -> void {
-        ++state.object.constructed_count;
-    }
-
-    auto register_destructor_error(global_struct& state) noexcept -> void {
-        ++state.object.destructor_error_count;
-    }
-
-    auto register_constructor_error(global_struct& state) noexcept -> void {
-        ++state.object.constructor_error_count;
-    }
-
-    auto register_operator_error(global_struct& state) noexcept -> void {
-        ++state.object.operator_error_count;
-    }
-
-    auto on_error(const char* source, global_struct& state) noexcept -> bool {
-        register_error(state);
-        print_error(source);
-        return false;
-    }
-
-    auto on_success(const char* source, global_struct& state) noexcept -> bool {
-        register_success(state);
-        print_success(source);
-        return true;
-    }
-
-    auto on_exception(const char* source, global_struct& state) noexcept -> bool {
-        register_exception(state);
-        print_exception(source);
-        return false;
-    }
-
-    auto on_destruction(global_struct& state) noexcept -> void {
-        register_destruction(state);
-    }
-
-    auto on_construction(global_struct& state) noexcept -> void {
-        register_construction(state);
-    }
-
-    auto on_destructor_error(global_struct& state) noexcept -> void {
-        register_destructor_error(state);
-    }
-
-    auto on_constructor_error(global_struct& state) noexcept -> void {
-        register_constructor_error(state);
-    }
-
-    auto on_operator_error(global_struct& state) noexcept -> void {
-        register_operator_error(state);
+    auto exit_code(int code) noexcept -> void {
+        global.info.exit_code = code;
     }
 
     auto operator+(test_struct left, test_struct right) noexcept -> test_struct {

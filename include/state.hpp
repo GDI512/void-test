@@ -34,33 +34,43 @@ namespace test::core {
     class registry {
       private:
         test_struct snapshot;
-        global_struct& state;
 
       public:
         ~registry() noexcept;
-        registry(global_struct& state = global) noexcept;
+        registry() noexcept;
         registry(registry&& other) = delete;
         registry(const registry& other) = delete;
 
       public:
         auto operator=(registry&& other) -> registry& = delete;
         auto operator=(const registry& other) -> registry& = delete;
+
+      public:
+        static auto on_error(const char* source) noexcept -> bool;
+        static auto on_success(const char* source) noexcept -> bool;
+        static auto on_exception(const char* source) noexcept -> void;
     };
 
     class verifier {
       private:
         object_struct snapshot;
-        global_struct& state;
 
       public:
         ~verifier() noexcept;
-        verifier(global_struct& state = global) noexcept;
+        verifier() noexcept;
         verifier(verifier&& other) = delete;
         verifier(const verifier& other) = delete;
 
       public:
         auto operator=(verifier&& other) -> verifier& = delete;
         auto operator=(const verifier& other) -> verifier& = delete;
+
+      public:
+        static auto on_destruction() noexcept -> void;
+        static auto on_construction() noexcept -> void;
+        static auto on_destructor_error() noexcept -> void;
+        static auto on_constructor_error() noexcept -> void;
+        static auto on_operator_error() noexcept -> void;
     };
 
     auto is_ok(test_struct state) noexcept -> bool;
@@ -69,40 +79,8 @@ namespace test::core {
     auto is_empty(test_struct state) noexcept -> bool;
     auto is_empty(object_struct state) noexcept -> bool;
 
-    auto exit_code(global_struct state = global) noexcept -> int;
-    auto exit_code(int code, global_struct& state = global) noexcept -> void;
-
-    auto register_error(global_struct& state = global) noexcept -> void;
-
-    auto register_success(global_struct& state = global) noexcept -> void;
-
-    auto register_exception(global_struct& state = global) noexcept -> void;
-
-    auto register_destruction(global_struct& state = global) noexcept -> void;
-
-    auto register_construction(global_struct& state = global) noexcept -> void;
-
-    auto register_destructor_error(global_struct& state = global) noexcept -> void;
-
-    auto register_constructor_error(global_struct& state = global) noexcept -> void;
-
-    auto register_operator_error(global_struct& state = global) noexcept -> void;
-
-    auto on_error(const char* source, global_struct& state = global) noexcept -> bool;
-
-    auto on_success(const char* source, global_struct& state = global) noexcept -> bool;
-
-    auto on_exception(const char* source, global_struct& state = global) noexcept -> bool;
-
-    auto on_destruction(global_struct& state = global) noexcept -> void;
-
-    auto on_construction(global_struct& state = global) noexcept -> void;
-
-    auto on_destructor_error(global_struct& state = global) noexcept -> void;
-
-    auto on_constructor_error(global_struct& state = global) noexcept -> void;
-
-    auto on_operator_error(global_struct& state = global) noexcept -> void;
+    auto exit_code() noexcept -> int;
+    auto exit_code(int code) noexcept -> void;
 
     auto operator+(test_struct left, test_struct right) noexcept -> test_struct;
     auto operator-(test_struct left, test_struct right) noexcept -> test_struct;

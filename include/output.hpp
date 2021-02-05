@@ -18,21 +18,16 @@ namespace test::core {
       public:
         auto operator=(scope&& other) -> scope& = delete;
         auto operator=(const scope& other) -> scope& = delete;
+
+      public:
+        static auto on_error(const char* source) noexcept -> void;
+        static auto on_success(const char* source) noexcept -> void;
+        static auto on_exception(const char* source) noexcept -> void;
+        static auto on_registry_error(test_struct state) noexcept -> void;
+        static auto on_registry_success(test_struct state) noexcept -> void;
+        static auto on_verifier_error(object_struct state) noexcept -> void;
+        static auto on_verifier_success(object_struct state) noexcept -> void;
     };
-
-    auto print_error(const char* source) noexcept -> void;
-
-    auto print_success(const char* source) noexcept -> void;
-
-    auto print_exception(const char* source) noexcept -> void;
-
-    auto print_registry_error(test_struct state) noexcept -> void;
-
-    auto print_registry_success(test_struct state) noexcept -> void;
-
-    auto print_verifier_error(object_struct state) noexcept -> void;
-
-    auto print_verifier_success(object_struct state) noexcept -> void;
 
 }
 

@@ -45,77 +45,78 @@ int main() {
         cassert(!core::is_empty(state))
     }
     {
-        auto state = core::global_struct{};
-        cassert(core::exit_code(state) == core::exit_success);
-        core::exit_code(core::exit_failure, state);
-        cassert(core::exit_code(state) == core::exit_failure);
+        core::global = core::global_struct{};
+        cassert(core::exit_code() == core::exit_success);
+        core::exit_code(core::exit_failure);
+        cassert(core::exit_code() == core::exit_failure);
     }
     {
-        auto state = core::global_struct{};
-        core::register_error(state);
-        cassert(state.test.total_count == 1);
-        cassert(state.test.error_count == 1);
+        core::global = core::global_struct{};
+        core::registry::on_error("");
+        cassert(core::global.test.total_count == 1);
+        cassert(core::global.test.error_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_success(state);
-        cassert(state.test.total_count == 1);
+        core::global = core::global_struct{};
+        core::registry::on_success("");
+        cassert(core::global.test.total_count == 1);
+        cassert(core::global.test.error_count == 0);
     }
     {
-        auto state = core::global_struct{};
-        core::register_exception(state);
-        cassert(state.test.total_count == 0);
-        cassert(state.test.error_count == 1);
+        core::global = core::global_struct{};
+        core::registry::on_exception("");
+        cassert(core::global.test.total_count == 0);
+        cassert(core::global.test.error_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_destruction(state);
-        cassert(state.object.destroyed_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_destruction();
+        cassert(core::global.object.destroyed_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_construction(state);
-        cassert(state.object.constructed_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_construction();
+        cassert(core::global.object.constructed_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_destructor_error(state);
-        cassert(state.object.destructor_error_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_destructor_error();
+        cassert(core::global.object.destructor_error_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_constructor_error(state);
-        cassert(state.object.constructor_error_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_constructor_error();
+        cassert(core::global.object.constructor_error_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        core::register_operator_error(state);
-        cassert(state.object.operator_error_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_operator_error();
+        cassert(core::global.object.operator_error_count == 1);
     }
     {
-        auto state = core::global_struct{};
-        cassert(core::on_error("", state) == false);
-        cassert(state.test.total_count == 1);
-        cassert(state.test.error_count == 1);
-        cassert(core::on_success("", state) == true);
-        cassert(state.test.total_count == 2);
-        cassert(state.test.error_count == 1);
-        cassert(core::on_exception("", state) == false);
-        cassert(state.test.total_count == 2);
-        cassert(state.test.error_count == 2);
+        core::global = core::global_struct{};
+        cassert(core::registry::on_error("") == false);
+        cassert(core::global.test.total_count == 1);
+        cassert(core::global.test.error_count == 1);
+        cassert(core::registry::on_success("") == true);
+        cassert(core::global.test.total_count == 2);
+        cassert(core::global.test.error_count == 1);
+        core::registry::on_exception("");
+        cassert(core::global.test.total_count == 2);
+        cassert(core::global.test.error_count == 2);
     }
     {
-        auto state = core::global_struct{};
-        core::on_destruction(state);
-        cassert(state.object.destroyed_count == 1);
-        core::on_construction(state);
-        cassert(state.object.constructed_count == 1);
-        core::on_destructor_error(state);
-        cassert(state.object.destructor_error_count == 1);
-        core::on_constructor_error(state);
-        cassert(state.object.constructor_error_count == 1);
-        core::on_operator_error(state);
-        cassert(state.object.operator_error_count == 1);
+        core::global = core::global_struct{};
+        core::verifier::on_destruction();
+        cassert(core::global.object.destroyed_count == 1);
+        core::verifier::on_construction();
+        cassert(core::global.object.constructed_count == 1);
+        core::verifier::on_destructor_error();
+        cassert(core::global.object.destructor_error_count == 1);
+        core::verifier::on_constructor_error();
+        cassert(core::global.object.constructor_error_count == 1);
+        core::verifier::on_operator_error();
+        cassert(core::global.object.operator_error_count == 1);
     }
     {
         const auto state = core::test_struct{7, 7};
@@ -186,30 +187,30 @@ int main() {
         cassert(state.operator_error_count == 12);
     }
     {
-        auto state = core::global_struct{};
+        core::global = core::global_struct{};
         {
-            auto tracker = core::registry(state);
-            core::on_error("", state);
-            core::on_success("", state);
-            core::on_exception("", state);
+            auto tracker = core::registry();
+            core::registry::on_error("");
+            core::registry::on_success("");
+            core::registry::on_exception("");
         }
-        cassert(state.test.total_count == 0);
-        cassert(state.test.error_count == 0);
+        cassert(core::global.test.total_count == 0);
+        cassert(core::global.test.error_count == 0);
     }
     {
-        auto state = core::global_struct{};
+        core::global = core::global_struct{};
         {
-            auto tracker = core::verifier(state);
-            core::on_destruction(state);
-            core::on_construction(state);
-            core::on_destructor_error(state);
-            core::on_constructor_error(state);
-            core::on_operator_error(state);
+            auto tracker = core::verifier();
+            core::verifier::on_destruction();
+            core::verifier::on_construction();
+            core::verifier::on_destructor_error();
+            core::verifier::on_constructor_error();
+            core::verifier::on_operator_error();
         }
-        cassert(state.object.destroyed_count == 0);
-        cassert(state.object.constructed_count == 0);
-        cassert(state.object.destructor_error_count == 0);
-        cassert(state.object.constructor_error_count == 0);
-        cassert(state.object.operator_error_count == 0);
+        cassert(core::global.object.destroyed_count == 0);
+        cassert(core::global.object.constructed_count == 0);
+        cassert(core::global.object.destructor_error_count == 0);
+        cassert(core::global.object.constructor_error_count == 0);
+        cassert(core::global.object.operator_error_count == 0);
     }
 }

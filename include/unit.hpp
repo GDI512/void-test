@@ -15,7 +15,7 @@ namespace test {
         try {
             function();
         } catch (...) {
-            core::on_exception(name);
+            core::registry::on_exception(name);
         }
         return 0;
     }

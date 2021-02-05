@@ -43,38 +43,38 @@ namespace test::core {
         indent();
     }
 
-    auto print_error(const char* source) noexcept -> void {
+    auto scope::on_error(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::error, source);
     }
 
-    auto print_success(const char* source) noexcept -> void {
+    auto scope::on_success(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::success, source);
     }
 
-    auto print_exception(const char* source) noexcept -> void {
+    auto scope::on_exception(const char* source) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::exception, source);
     }
 
-    auto print_registry_error(test_struct state) noexcept -> void {
+    auto scope::on_registry_error(test_struct state) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::registry_error, state.error_count, state.total_count);
     }
 
-    auto print_registry_success(test_struct state) noexcept -> void {
+    auto scope::on_registry_success(test_struct state) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::registry_success, state.error_count, state.total_count);
     }
 
-    auto print_verifier_error(object_struct state) noexcept -> void {
+    auto scope::on_verifier_error(object_struct state) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::verifier_error, state.destroyed_count, state.constructed_count,
                     state.destructor_error_count, state.constructor_error_count, state.operator_error_count);
     }
 
-    auto print_verifier_success(object_struct state) noexcept -> void {
+    auto scope::on_verifier_success(object_struct state) noexcept -> void {
         repeat(format::space, indent_level);
         std::printf(format::verifier_success, state.destroyed_count, state.constructed_count,
                     state.destructor_error_count, state.constructor_error_count, state.operator_error_count);
