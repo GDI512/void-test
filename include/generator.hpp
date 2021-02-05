@@ -76,7 +76,7 @@ namespace test {
 
       public:
         ~generator() noexcept;
-        generator() noexcept;
+        generator();
         generator(generator&& other) = delete;
         generator(const generator& other) = delete;
 
@@ -100,7 +100,7 @@ namespace test {
 
       public:
         ~generator() noexcept;
-        generator() noexcept;
+        generator();
         generator(generator&& other) = delete;
         generator(const generator& other) = delete;
 

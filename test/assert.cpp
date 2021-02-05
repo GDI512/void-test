@@ -19,22 +19,22 @@ int main() {
         int array[] = {0, 1, 2, 3, 4, 5, 6, 7};
         int other[] = {0, 1, 2, 3, 4, 5, 6, 7};
         cassert(check_equal(array, other));
+        cassert(check_equal(std::begin(array), std::end(array), std::begin(other)));
     }
     {
         int array[] = {0, 1, 2, 3, 4, 5, 6, 7};
         int other[] = {0, 1, 2, 4, 4, 5, 6, 7};
         cassert(!check_equal(array, other));
+        cassert(!check_equal(std::begin(array), std::end(array), std::begin(other)));
     }
     {
         auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
         auto other = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
-        cassert(check_equal(list, other));
         cassert(check_equal(list.begin(), list.end(), other.begin()));
     }
     {
         auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
         auto other = std::forward_list<int>{0, 1, 2, 4, 4, 5, 6, 7};
-        cassert(!check_equal(list, other));
         cassert(!check_equal(list.begin(), list.end(), other.begin()));
     }
     {
@@ -45,21 +45,23 @@ int main() {
         int array[] = {0, 1, 2, 4, 4, 5, 6, 7};
         int other[] = {0, 1, 2, 3, 4, 5, 6, 7};
         cassert(check_not_equal(array, other));
+        cassert(check_not_equal(std::begin(array), std::end(array), std::begin(other)));
     }
     {
         int array[] = {0, 1, 2, 3, 4, 5, 6, 7};
         int other[] = {0, 1, 2, 3, 4, 5, 6, 7};
         cassert(!check_not_equal(array, other));
+        cassert(!check_not_equal(std::begin(array), std::end(array), std::begin(other)));
     }
     {
         auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
         auto other = std::forward_list<int>{0, 1, 2, 4, 4, 5, 6, 7};
-        cassert(check_not_equal(list, other));
+        cassert(check_not_equal(list.begin(), list.end(), other.begin()));
     }
     {
         auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
         auto other = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
-        cassert(!check_not_equal(list, other));
+        cassert(!check_not_equal(list.begin(), list.end(), other.begin()));
     }
     {
         cassert(check_less(2, 4));
@@ -111,32 +113,23 @@ int main() {
     }
     {
         auto list = std::forward_list<int>{};
-        cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
         cassert(check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x < y; }));
     }
     {
         auto list = std::forward_list<int>{1};
-        cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
         cassert(check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x < y; }));
     }
     {
         auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
-        cassert(check_sorted(list, [](auto x, auto y) { return x < y; }));
         cassert(check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x < y; }));
     }
     {
         auto list = std::forward_list<int>{0, 1, 1, 2, 2, 3, 3, 4};
-        cassert(!check_sorted(list, [](auto x, auto y) { return x < y; }));
-        cassert(check_sorted(list, [](auto x, auto y) { return x <= y; }));
         cassert(!check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x < y; }));
         cassert(check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x <= y; }));
     }
     {
         auto list = std::forward_list<int>{7, 0, 1, 6, 5, 2, 3, 4};
-        cassert(!check_sorted(list, [](auto x, auto y) { return x < y; }));
-        cassert(!check_sorted(list, [](auto x, auto y) { return x <= y; }));
-        cassert(!check_sorted(list, [](auto x, auto y) { return x > y; }));
-        cassert(!check_sorted(list, [](auto x, auto y) { return x >= y; }));
         cassert(!check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x < y; }));
         cassert(!check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x <= y; }));
         cassert(!check_sorted(list.begin(), list.end(), [](auto x, auto y) { return x > y; }));

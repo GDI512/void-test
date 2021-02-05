@@ -138,18 +138,16 @@ namespace test {
     }
 
     template <typename T, typename U>
-    auto check_sorted(const T& container, U&& compare) noexcept -> bool {
-        auto first = core::begin(container);
-        const auto last = core::end(container);
+    auto check_sorted(T first, T last, U&& compare) noexcept -> bool {
         if (first == last) {
             return core::on_success(__func__);
         } else {
-            auto next = ++core::begin(container);
-            if (next == last) {
+            auto previous = first;
+            if (++first == last) {
                 return core::on_success(__func__);
             } else {
-                for (; next != last; ++first, ++next) {
-                    if (!compare(*first, *next)) {
+                for (; first != last; ++first, ++previous) {
+                    if (!compare(*previous, *first)) {
                         return core::on_error(__func__);
                     }
                 }
@@ -171,25 +169,6 @@ namespace test {
                 }
             }
             return core::on_success(__func__);
-        }
-    }
-
-    template <typename T, typename U>
-    auto check_sorted(T first, T last, U&& compare) noexcept -> bool {
-        if (first == last) {
-            return core::on_success(__func__);
-        } else {
-            auto previous = first;
-            if (++first == last) {
-                return core::on_success(__func__);
-            } else {
-                for (; first != last; ++first, ++previous) {
-                    if (!compare(*previous, *first)) {
-                        return core::on_error(__func__);
-                    }
-                }
-                return core::on_success(__func__);
-            }
         }
     }
 

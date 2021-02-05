@@ -171,7 +171,13 @@ namespace test {
         return array;
     }
 
-    generator<int> generator<int>::instance = generator<int>();
+    generator<int> generator<int>::instance = []() {
+        try {
+            return generator<int>();
+        } catch (...) {
+            std::exit(2);
+        }
+    }();
 
     struct generator<int>::impl {
         std::random_device source;
@@ -182,12 +188,8 @@ namespace test {
         delete pimpl;
     }
 
-    generator<int>::generator() noexcept {
-        try {
-            pimpl = new impl();
-        } catch (...) {
-            std::abort();
-        }
+    generator<int>::generator() {
+        pimpl = new impl();
     }
 
     auto generator<int>::operator()() -> int {
@@ -198,7 +200,13 @@ namespace test {
         return instance();
     }
 
-    generator<float> generator<float>::instance = generator<float>();
+    generator<float> generator<float>::instance = []() {
+        try {
+            return generator<float>();
+        } catch (...) {
+            std::exit(2);
+        }
+    }();
 
     struct generator<float>::impl {
         std::random_device source;
@@ -209,12 +217,8 @@ namespace test {
         delete pimpl;
     }
 
-    generator<float>::generator() noexcept {
-        try {
-            pimpl = new impl();
-        } catch (...) {
-            std::abort();
-        }
+    generator<float>::generator() {
+        pimpl = new impl();
     }
 
     auto generator<float>::operator()() -> float {

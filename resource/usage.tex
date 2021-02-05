@@ -6,18 +6,15 @@ compiling it manually and putting every test case into a single translation unit
 you would be stepping into a territory not covered by tests, which is not recommended. \par
 Building \voidtest\ is simple -- simply run the following commands in the directory of a top-level
 \italic{CMakeLists.txt} file:
-
 \begin{verbatim}
     cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
     cmake --build build --config RelWithDebInfo
     cd build
     ctest -C RelWithDebInfo
 \end{verbatim}
-
-\noindent If something goes wrong, please submit an issue report on Github. If not, you may delete
+If something goes wrong, please submit an issue report on Github. If not, you may delete
 the \italic{build} directory and copy everything else into a subdirectory in your own project.
 Here is an example of a CMake project source tree:
-
 \begin{verbatim}
     external/
     |- void-test/
@@ -35,9 +32,10 @@ Here is an example of a CMake project source tree:
     |- ...
     CMakeLists.txt
 \end{verbatim}
-
-\noindent \voidtest\ defines an alias target (\code{void\_test::void\_test}) which can be used as
+\voidtest\ declares an alias target (\code{void\_test::void\_test}) which can be used as
 an argument to the \code{target\_link\_libraries()} command. To make it available, add the
 \italic{external} subdirectory in the first call to \code{add\_subdirectory()} from the
 main {CMakeLists.txt} and then \code{add\_subdirectory(void-test)} in the \italic{external}
-directory itself.
+directory itself. After linking \voidtest\ against your test executable, please keep in mind that
+this framework \bold{defines its own main function} -- everything in the following section assumes
+you use it instead of defining your own.
