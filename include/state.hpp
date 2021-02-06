@@ -5,16 +5,13 @@
 
 namespace test::core {
 
-    constexpr int exit_success = 0;
-    constexpr int exit_failure = 1;
-
-    struct info_struct {
-        int exit_code;
-    };
+    enum class exit_code : int { success = 0, failure = 1, internal_error = 2 };
 
     struct test_struct {
         size_t total_count;
         size_t error_count;
+        auto is_ok() const noexcept -> bool;
+        auto is_empty() const noexcept -> bool;
     };
 
     struct object_struct {
@@ -23,13 +20,14 @@ namespace test::core {
         size_t destructor_error_count;
         size_t constructor_error_count;
         size_t operator_error_count;
+        auto is_ok() const noexcept -> bool;
+        auto is_empty() const noexcept -> bool;
     };
 
-    extern struct global_struct {
-        info_struct info;
-        test_struct test;
-        object_struct object;
-    } global;
+    struct global_struct {
+        test_struct test_state;
+        object_struct object_state;
+    };
 
     class registry {
       private:
@@ -73,15 +71,6 @@ namespace test::core {
         static auto on_operator_error() noexcept -> void;
     };
 
-    auto is_ok(test_struct state) noexcept -> bool;
-    auto is_ok(object_struct state) noexcept -> bool;
-
-    auto is_empty(test_struct state) noexcept -> bool;
-    auto is_empty(object_struct state) noexcept -> bool;
-
-    auto exit_code() noexcept -> int;
-    auto exit_code(int code) noexcept -> void;
-
     auto operator+(test_struct left, test_struct right) noexcept -> test_struct;
     auto operator-(test_struct left, test_struct right) noexcept -> test_struct;
 
@@ -93,6 +82,9 @@ namespace test::core {
 
     auto operator+=(object_struct& left, object_struct right) noexcept -> object_struct&;
     auto operator-=(object_struct& left, object_struct right) noexcept -> object_struct&;
+
+    extern exit_code code;
+    extern global_struct global;
 
 }
 
