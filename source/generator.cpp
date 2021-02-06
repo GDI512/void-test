@@ -171,6 +171,16 @@ namespace test {
         return array;
     }
 
+    template <typename T>
+    auto swap(range<T>& left, range<T>& right) noexcept -> void {
+        auto buffer = left.buffer;
+        auto buffer_size = left.buffer_size;
+        left.buffer = right.buffer;
+        left.buffer_size = right.buffer_size;
+        right.buffer = buffer;
+        right.buffer_size = buffer_size;
+    }
+
     generator<int> generator<int>::instance = []() {
         try {
             return generator<int>();
@@ -227,16 +237,6 @@ namespace test {
 
     auto generator<float>::get() -> float {
         return instance();
-    }
-
-    template <typename T>
-    auto swap(range<T>& left, range<T>& right) noexcept -> void {
-        auto buffer = left.buffer;
-        auto buffer_size = left.buffer_size;
-        left.buffer = right.buffer;
-        left.buffer_size = right.buffer_size;
-        right.buffer = buffer;
-        right.buffer_size = buffer_size;
     }
 
     template class range<int>;

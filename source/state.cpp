@@ -26,13 +26,13 @@ namespace test::core {
     }
 
     registry::~registry() noexcept {
-        const auto result = global.test_state - snapshot;
+        const auto result = compute_unit_result(snapshot);
         if (result.is_ok() && !result.is_empty()) {
-            global.test_state -= result;
+            restore_global_state(result);
             scope::on_registry_success(result);
         } else if (!result.is_ok()) {
             code = exit_code::failure;
-            global.test_state -= result;
+            restore_global_state(result);
             scope::on_registry_error(result);
         }
     }
@@ -58,13 +58,13 @@ namespace test::core {
     }
 
     verifier::~verifier() noexcept {
-        const auto result = global.object_state - snapshot;
+        const auto result = compute_unit_result(snapshot);
         if (result.is_ok() && !result.is_empty()) {
-            global.object_state -= result;
+            restore_global_state(result);
             scope::on_verifier_success(result);
         } else if (!result.is_ok()) {
             code = exit_code::failure;
-            global.object_state -= result;
+            restore_global_state(result);
             scope::on_verifier_error(result);
         }
     }
@@ -91,62 +91,34 @@ namespace test::core {
         ++global.object_state.operator_error_count;
     }
 
-    auto operator+(test_struct left, test_struct right) noexcept -> test_struct {
-        return {left.total_count + right.total_count, left.error_count + right.error_count};
+    auto restore_global_state(test_struct result) noexcept -> void {
+        global.test_state.total_count -= result.total_count;
+        global.test_state.error_count -= result.error_count;
     }
 
-    auto operator-(test_struct left, test_struct right) noexcept -> test_struct {
-        return {left.total_count - right.total_count, left.error_count - right.error_count};
+    auto restore_global_state(object_struct result) noexcept -> void {
+        global.object_state.destroyed_count -= result.destroyed_count;
+        global.object_state.constructed_count -= result.constructed_count;
+        global.object_state.destructor_error_count -= result.destructor_error_count;
+        global.object_state.constructor_error_count -= result.constructor_error_count;
+        global.object_state.operator_error_count -= result.operator_error_count;
     }
 
-    auto operator+=(test_struct& left, test_struct right) noexcept -> test_struct& {
-        left.total_count += right.total_count;
-        left.error_count += right.error_count;
-        return left;
+    auto compute_unit_result(test_struct snapshot) noexcept -> test_struct {
+        auto result = test_struct();
+        result.error_count = global.test_state.error_count - snapshot.error_count;
+        result.total_count = global.test_state.total_count - snapshot.total_count;
+        return result;
     }
 
-    auto operator-=(test_struct& left, test_struct right) noexcept -> test_struct& {
-        left.total_count -= right.total_count;
-        left.error_count -= right.error_count;
-        return left;
-    }
-
-    auto operator+(object_struct left, object_struct right) noexcept -> object_struct {
-        return {
-            left.destroyed_count + right.destroyed_count,
-            left.constructed_count + right.constructed_count,
-            left.destructor_error_count + right.destructor_error_count,
-            left.constructor_error_count + right.constructor_error_count,
-            left.operator_error_count + right.operator_error_count,
-        };
-    }
-
-    auto operator-(object_struct left, object_struct right) noexcept -> object_struct {
-        return {
-            left.destroyed_count - right.destroyed_count,
-            left.constructed_count - right.constructed_count,
-            left.destructor_error_count - right.destructor_error_count,
-            left.constructor_error_count - right.constructor_error_count,
-            left.operator_error_count - right.operator_error_count,
-        };
-    }
-
-    auto operator+=(object_struct& left, object_struct right) noexcept -> object_struct& {
-        left.destroyed_count += right.destroyed_count;
-        left.constructed_count += right.constructed_count;
-        left.destructor_error_count += right.destructor_error_count;
-        left.constructor_error_count += right.constructor_error_count;
-        left.operator_error_count += right.operator_error_count;
-        return left;
-    }
-
-    auto operator-=(object_struct& left, object_struct right) noexcept -> object_struct& {
-        left.destroyed_count -= right.destroyed_count;
-        left.constructed_count -= right.constructed_count;
-        left.destructor_error_count -= right.destructor_error_count;
-        left.constructor_error_count -= right.constructor_error_count;
-        left.operator_error_count -= right.operator_error_count;
-        return left;
+    auto compute_unit_result(object_struct snapshot) noexcept -> object_struct {
+        auto result = object_struct();
+        result.destroyed_count = global.object_state.destroyed_count - snapshot.destroyed_count;
+        result.constructed_count = global.object_state.constructed_count - snapshot.constructed_count;
+        result.destructor_error_count = global.object_state.destructor_error_count - snapshot.destructor_error_count;
+        result.constructor_error_count = global.object_state.constructor_error_count - snapshot.destructor_error_count;
+        result.operator_error_count = global.object_state.operator_error_count - snapshot.destructor_error_count;
+        return result;
     }
 
 }

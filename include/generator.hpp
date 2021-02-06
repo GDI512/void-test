@@ -63,6 +63,9 @@ namespace test {
     };
 
     template <typename T>
+    auto swap(range<T>& left, range<T>& right) noexcept -> void;
+
+    template <typename T>
     class generator {};
 
     template <>
@@ -112,9 +115,6 @@ namespace test {
       public:
         static auto get() -> int;
     };
-
-    template <typename T>
-    auto swap(range<T>& left, range<T>& right) noexcept -> void;
 
     extern template class range<int>;
     extern template class range<float>;

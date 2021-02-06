@@ -71,17 +71,11 @@ namespace test::core {
         static auto on_operator_error() noexcept -> void;
     };
 
-    auto operator+(test_struct left, test_struct right) noexcept -> test_struct;
-    auto operator-(test_struct left, test_struct right) noexcept -> test_struct;
+    auto restore_global_state(test_struct result) noexcept -> void;
+    auto restore_global_state(object_struct result) noexcept -> void;
 
-    auto operator+=(test_struct& left, test_struct right) noexcept -> test_struct&;
-    auto operator-=(test_struct& left, test_struct right) noexcept -> test_struct&;
-
-    auto operator+(object_struct left, object_struct right) noexcept -> object_struct;
-    auto operator-(object_struct left, object_struct right) noexcept -> object_struct;
-
-    auto operator+=(object_struct& left, object_struct right) noexcept -> object_struct&;
-    auto operator-=(object_struct& left, object_struct right) noexcept -> object_struct&;
+    auto compute_unit_result(test_struct snapshot) noexcept -> test_struct;
+    auto compute_unit_result(object_struct snapshot) noexcept -> object_struct;
 
     extern exit_code code;
     extern global_struct global;

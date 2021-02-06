@@ -1,5 +1,9 @@
 cmake_minimum_required (VERSION 3.15)
 
+if (CLANG_TIDY)
+    set (CMAKE_CXX_CLANG_TIDY clang-tidy)
+endif ()
+
 file (GLOB SOURCE CONFIGURE_DEPENDS *.cpp)
 
 add_library (void_test STATIC)
@@ -18,3 +22,5 @@ endif ()
 if (NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
     add_library (void_test::void_test ALIAS void_test)
 endif ()
+
+unset (CMAKE_CXX_CLANG_TIDY)
