@@ -66,7 +66,7 @@ namespace test {
     auto swap(range<T>& left, range<T>& right) noexcept -> void;
 
     template <typename T>
-    class generator {};
+    class generator;
 
     template <>
     class generator<float> {
