@@ -5,6 +5,13 @@ if (CLANG_TIDY)
 endif ()
 
 file (GLOB SOURCE CONFIGURE_DEPENDS *.cpp)
+file (GLOB HEADER CONFIGURE_DEPENDS ../include/*.hpp)
+
+if (CLANG_FORMAT)
+    foreach (FILE IN LISTS SOURCE HEADER)
+        execute_process (COMMAND clang-format -i ${FILE})
+    endforeach ()
+endif ()
 
 add_library (void_test STATIC)
 target_sources (void_test PRIVATE ${SOURCE})

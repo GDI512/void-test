@@ -24,6 +24,28 @@ namespace test {
     }
 
     template <typename T, typename U>
+    auto check(T first, T last, U&& function) noexcept -> bool {
+        for (; first != last; ++first) {
+            if (!function(*first)) {
+                return core::registry::on_error(__func__);
+            }
+        }
+        return core::registry::on_success(__func__);
+    }
+
+    template <typename T, typename U, auto N>
+    auto check(T (&array)[N], U&& function) noexcept -> bool {
+        auto first = core::begin(array);
+        const auto last = core::end(array);
+        for (; first != last; ++first) {
+            if (!function(*first)) {
+                return core::registry::on_error(__func__);
+            }
+        }
+        return core::registry::on_success(__func__);
+    }
+
+    template <typename T, typename U>
     auto check_equal(const T& left, const U& right) noexcept -> bool {
         if (left == right) {
             return core::registry::on_success(__func__);

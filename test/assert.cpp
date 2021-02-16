@@ -12,6 +12,16 @@ int main() {
         cassert(!check([](auto x) { return x; }, false));
     }
     {
+        auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5, 6, 7};
+        cassert(check(list.begin(), list.end(), [](auto x) { return x <= 7; }));
+        cassert(!check(list.begin(), list.end(), [](auto x) { return x < 7; }));
+    }
+    {
+        int array[] = {0, 1, 2, 3, 4, 5, 6, 7};
+        cassert(check(array, [](auto x) { return x <= 7; }));
+        cassert(!check(array, [](auto x) { return x < 7; }));
+    }
+    {
         cassert(check_equal(2, 2));
         cassert(!check_equal(2, 4));
     }
