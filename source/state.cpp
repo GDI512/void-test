@@ -4,33 +4,14 @@
 namespace test::core {
 
     exit_code code = exit_code::success;
-
-    global_struct global = {};
-
-    auto test_struct::is_ok() const noexcept -> bool {
-        return error_count == 0;
-    }
-
-    auto test_struct::is_empty() const noexcept -> bool {
-        return error_count == 0 && total_count == 0;
-    }
-
-    auto object_struct::is_ok() const noexcept -> bool {
-        return destroyed_count == constructed_count && destructor_error_count == 0 && constructor_error_count == 0 &&
-               operator_error_count == 0;
-    }
-
-    auto object_struct::is_empty() const noexcept -> bool {
-        return destroyed_count == 0 && constructed_count == 0 && destructor_error_count == 0 &&
-               constructor_error_count == 0 && operator_error_count == 0;
-    }
+    global_info global = {};
 
     registry::~registry() noexcept {
         const auto result = compute_unit_result(snapshot);
-        if (result.is_ok() && !result.is_empty()) {
+        if (error_free(result) && !empty(result)) {
             restore_global_state(result);
             scope::on_registry_success(result);
-        } else if (!result.is_ok()) {
+        } else if (!error_free(result)) {
             code = exit_code::failure;
             restore_global_state(result);
             scope::on_registry_error(result);
@@ -59,10 +40,10 @@ namespace test::core {
 
     verifier::~verifier() noexcept {
         const auto result = compute_unit_result(snapshot);
-        if (result.is_ok() && !result.is_empty()) {
+        if (error_free(result) && !empty(result)) {
             restore_global_state(result);
             scope::on_verifier_success(result);
-        } else if (!result.is_ok()) {
+        } else if (!error_free(result)) {
             code = exit_code::failure;
             restore_global_state(result);
             scope::on_verifier_error(result);
@@ -91,12 +72,12 @@ namespace test::core {
         ++global.object_state.operator_error_count;
     }
 
-    auto restore_global_state(test_struct result) noexcept -> void {
+    auto restore_global_state(test_info result) noexcept -> void {
         global.test_state.total_count -= result.total_count;
         global.test_state.error_count -= result.error_count;
     }
 
-    auto restore_global_state(object_struct result) noexcept -> void {
+    auto restore_global_state(object_info result) noexcept -> void {
         global.object_state.destroyed_count -= result.destroyed_count;
         global.object_state.constructed_count -= result.constructed_count;
         global.object_state.destructor_error_count -= result.destructor_error_count;
@@ -104,21 +85,39 @@ namespace test::core {
         global.object_state.operator_error_count -= result.operator_error_count;
     }
 
-    auto compute_unit_result(test_struct snapshot) noexcept -> test_struct {
-        auto result = test_struct();
+    auto compute_unit_result(test_info snapshot) noexcept -> test_info {
+        auto result = test_info();
         result.error_count = global.test_state.error_count - snapshot.error_count;
         result.total_count = global.test_state.total_count - snapshot.total_count;
         return result;
     }
 
-    auto compute_unit_result(object_struct snapshot) noexcept -> object_struct {
-        auto result = object_struct();
+    auto compute_unit_result(object_info snapshot) noexcept -> object_info {
+        auto result = object_info();
         result.destroyed_count = global.object_state.destroyed_count - snapshot.destroyed_count;
         result.constructed_count = global.object_state.constructed_count - snapshot.constructed_count;
         result.destructor_error_count = global.object_state.destructor_error_count - snapshot.destructor_error_count;
         result.constructor_error_count = global.object_state.constructor_error_count - snapshot.destructor_error_count;
         result.operator_error_count = global.object_state.operator_error_count - snapshot.destructor_error_count;
         return result;
+    }
+
+    auto empty(test_info state) noexcept -> bool {
+        return state.error_count == 0 && state.total_count == 0;
+    }
+
+    auto empty(object_info state) noexcept -> bool {
+        return state.destroyed_count == 0 && state.constructed_count == 0 && state.destructor_error_count == 0 &&
+               state.constructor_error_count == 0 && state.operator_error_count == 0;
+    }
+
+    auto error_free(test_info state) noexcept -> bool {
+        return state.error_count == 0;
+    }
+
+    auto error_free(object_info state) noexcept -> bool {
+        return state.destroyed_count == state.constructed_count && state.destructor_error_count == 0 &&
+               state.constructor_error_count == 0 && state.operator_error_count == 0;
     }
 
 }

@@ -8,52 +8,5 @@ May go through some API-breaking changes in the future.
 * **Fast to compile** - The header files do not include any system headers or other external dependencies to minimize impact on compile times. All code which can and should be precompiled is compiled into a static library.
 * **Easy to use** - Everything from building to writing tests is as straightforward as possible. At least by C++ standards.
 
-# Building
-To build for use outside CMake, run the following commands:
-
-    git clone https://github.com/GDI512/void-test.git
-    cd void-test
-    cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo
-    cmake --build build --config RelWithDebInfo
-
-It is highly recommended to run the tests too:
-
-    cd build
-    ctest
-    cd ..
-
-# Adding to CMake projects
-The easiest way of using *void-test* is to add it as a git submodule or just clone it into project's source tree, for example:
-
-    external/
-    |- void-test/
-    |- CMakeLists.txt
-    include/
-    |- header.hpp
-    |- ...
-    source/
-    |- src.cpp
-    |- ...
-    |- CMakeLists.txt
-    CMakeLists.txt
-
-Assuming *external* was added as a subdirectory itself, adding the following line to *external/CMakeLists.txt* will make the alias target `void_test::void_test` accessible:
-
-```cmake
-add_subdirectory (void_test)
-```
-
-Afterwards all you need to do is just add it as a dependency like you would do with any other CMake library:
-
-```cmake
-add_executable (<test-target>)
-target_sources (<test-target> PRIVATE <source-file>)
-target_link_libraries (<test-target> PRIVATE void_test::void_test)
-```
-
-Keep in mind that tests are disabled for subdirectory builds like this one. If you would like to test *void-test* on your machine, follow the procedure from previous section.
-
-# How to use
-
-See [wiki](https://github.com/GDI512/void-test/wiki) for an outdated tutorial and API reference.
-Real documentation is WIP.
+# Getting started
+For tutorial and API documentation, see [wiki](https://github.com/GDI512/void-test/wiki).

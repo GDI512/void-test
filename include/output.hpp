@@ -23,10 +23,10 @@ namespace test::core {
         static auto on_error(const char* source) noexcept -> void;
         static auto on_success(const char* source) noexcept -> void;
         static auto on_exception(const char* source) noexcept -> void;
-        static auto on_registry_error(test_struct state) noexcept -> void;
-        static auto on_registry_success(test_struct state) noexcept -> void;
-        static auto on_verifier_error(object_struct state) noexcept -> void;
-        static auto on_verifier_success(object_struct state) noexcept -> void;
+        static auto on_registry_error(test_info state) noexcept -> void;
+        static auto on_registry_success(test_info state) noexcept -> void;
+        static auto on_verifier_error(object_info state) noexcept -> void;
+        static auto on_verifier_success(object_info state) noexcept -> void;
     };
 
 }

@@ -7,31 +7,27 @@ namespace test::core {
 
     enum class exit_code : int { success = 0, failure = 1, internal_error = 2 };
 
-    struct test_struct {
+    struct test_info {
         size_t total_count;
         size_t error_count;
-        auto is_ok() const noexcept -> bool;
-        auto is_empty() const noexcept -> bool;
     };
 
-    struct object_struct {
+    struct object_info {
         size_t destroyed_count;
         size_t constructed_count;
         size_t destructor_error_count;
         size_t constructor_error_count;
         size_t operator_error_count;
-        auto is_ok() const noexcept -> bool;
-        auto is_empty() const noexcept -> bool;
     };
 
-    struct global_struct {
-        test_struct test_state;
-        object_struct object_state;
+    struct global_info {
+        test_info test_state;
+        object_info object_state;
     };
 
     class registry {
       private:
-        test_struct snapshot;
+        test_info snapshot;
 
       public:
         ~registry() noexcept;
@@ -51,7 +47,7 @@ namespace test::core {
 
     class verifier {
       private:
-        object_struct snapshot;
+        object_info snapshot;
 
       public:
         ~verifier() noexcept;
@@ -71,14 +67,20 @@ namespace test::core {
         static auto on_operator_error() noexcept -> void;
     };
 
-    auto restore_global_state(test_struct result) noexcept -> void;
-    auto restore_global_state(object_struct result) noexcept -> void;
+    auto restore_global_state(test_info result) noexcept -> void;
+    auto restore_global_state(object_info result) noexcept -> void;
 
-    auto compute_unit_result(test_struct snapshot) noexcept -> test_struct;
-    auto compute_unit_result(object_struct snapshot) noexcept -> object_struct;
+    auto compute_unit_result(test_info snapshot) noexcept -> test_info;
+    auto compute_unit_result(object_info snapshot) noexcept -> object_info;
+
+    auto empty(test_info state) noexcept -> bool;
+    auto empty(object_info state) noexcept -> bool;
+
+    auto error_free(test_info state) noexcept -> bool;
+    auto error_free(object_info state) noexcept -> bool;
 
     extern exit_code code;
-    extern global_struct global;
+    extern global_info global;
 
 }
 

@@ -1,4 +1,5 @@
 #include "common.hpp"
+#include "state.hpp"
 
 using namespace test;
 
@@ -19,79 +20,79 @@ int main() {
         cassert(core::global.object_state.operator_error_count == 0);
     }
     {
-        auto state = core::test_struct{};
-        cassert(state.is_ok());
+        auto state = core::test_info{};
+        cassert(error_free(state));
         state.total_count += 1;
-        cassert(state.is_ok());
+        cassert(error_free(state));
         state.error_count += 1;
-        cassert(!state.is_ok());
+        cassert(!error_free(state));
     }
     {
-        auto state = core::object_struct{};
-        cassert(state.is_ok());
+        auto state = core::object_info{};
+        cassert(error_free(state));
         state.constructed_count += 1;
         state.destroyed_count += 1;
-        cassert(state.is_ok());
+        cassert(error_free(state));
         state.destroyed_count += 1;
-        cassert(!state.is_ok());
+        cassert(!error_free(state));
     }
     {
-        auto state = core::test_struct{};
-        cassert(state.is_empty());
+        auto state = core::test_info{};
+        cassert(empty(state));
         state.total_count += 1;
-        cassert(!state.is_empty())
+        cassert(!empty(state))
     }
     {
-        auto state = core::object_struct{};
-        cassert(state.is_empty());
+        auto state = core::object_info{};
+        cassert(empty(state));
         state.constructed_count += 1;
-        cassert(!state.is_empty())
+        cassert(!empty(state))
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::registry::on_error("");
         cassert(core::global.test_state.total_count == 1);
         cassert(core::global.test_state.error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::registry::on_success("");
         cassert(core::global.test_state.total_count == 1);
         cassert(core::global.test_state.error_count == 0);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::registry::on_exception("");
         cassert(core::global.test_state.total_count == 0);
         cassert(core::global.test_state.error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_destruction();
         cassert(core::global.object_state.destroyed_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_construction();
         cassert(core::global.object_state.constructed_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_destructor_error();
         cassert(core::global.object_state.destructor_error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_constructor_error();
         cassert(core::global.object_state.constructor_error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_operator_error();
         cassert(core::global.object_state.operator_error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         cassert(core::registry::on_error("") == false);
         cassert(core::global.test_state.total_count == 1);
         cassert(core::global.test_state.error_count == 1);
@@ -103,7 +104,7 @@ int main() {
         cassert(core::global.test_state.error_count == 2);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         core::verifier::on_destruction();
         cassert(core::global.object_state.destroyed_count == 1);
         core::verifier::on_construction();
@@ -116,7 +117,7 @@ int main() {
         cassert(core::global.object_state.operator_error_count == 1);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         {
             auto tracker = core::registry();
             core::registry::on_error("");
@@ -128,7 +129,7 @@ int main() {
         cassert(core::global.test_state.error_count == 0);
     }
     {
-        core::global = core::global_struct{};
+        core::global = core::global_info{};
         {
             auto tracker = core::verifier();
             core::verifier::on_destruction();
