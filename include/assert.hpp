@@ -14,15 +14,6 @@ namespace test {
         }
     }
 
-    template <typename T, typename... U>
-    auto check(T&& function, U&&... args) noexcept -> bool {
-        if (function(core::forward<U>(args)...)) {
-            return core::registry::on_success(__func__);
-        } else {
-            return core::registry::on_error(__func__);
-        }
-    }
-
     template <typename T, typename U>
     auto check(T first, T last, U&& function) noexcept -> bool {
         for (; first != last; ++first) {

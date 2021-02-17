@@ -1,0 +1,69 @@
+\section{Tutorial}
+
+\subsection{Concepts}
+Because \voidtest\ relies heavily on \cplusplus\ features outside of their
+intended use, it is necessary to remember the purpose of certain API elements.
+First of all, assume everything from assertions to more specialized testing
+utilities is \textsl{not} thread-safe --- this is because adding another layer
+of complexity on top of a mountain of, as some would undoubtedly call it, \textsl{terrible
+hacks} just to get this thing to work fast \textsl{and} without macros would be
+undesirable. If this is not an issue then keep in mind that the tests are run
+during the \textsl{dynamic initialization} of variables at a namespace scope. The
+following example shows what it means:
+\begin{verbatim}
+  #include <void_test.hpp>
+
+  auto var = test::unit("unit", []() {
+      test::unit("this", []() {
+          test::unit("is", []() {
+              test::check(false);
+              test::check(true);
+          });
+          test::unit("an", []() {
+              test::check_not_equal(1, 0);
+              test::check_not_equal(0, 1);
+          });
+      });
+      test::unit("example", []() {
+          test::check_greater(1, 0);
+          test::check_less(0, 1);
+      });
+  });
+\end{verbatim}
+The \verb!test::unit()! function returns a value --- what that value actually
+is does not matter. What matters is that during the aforementioned
+\textsl{dynamic initialization} of the \verb!var! variable, the body of a lambda
+passed as the second argument is executed in the context set up by the
+\verb!unit!. Because of this behavior, you can think of it as of a \textsl{test
+case} macro known from other testing frameworks.
+
+\subsection{Writing a Test}
+A minimal working example of a test program written using \voidtest\ would look
+something like this:
+\begin{verbatim}
+  #include <void_test.hpp>
+
+  auto unit = test::unit("unit", []() {});
+\end{verbatim}
+All test units are executed sequentially as they appear in the source code and,
+as the previous section has shown, can be nested. Because this framework defines
+its own entry point, there is no need to write the main function by yourself.
+However, all assertions need to be written as part of a procedure which gets
+passed to a unit. Here is a more interesting example:
+\begin{verbatim}
+  #include <void_test.hpp>
+
+  auto unit = test::unit("unit", []() {
+      int array[] = {0, 1, 2, 3, 4, 5, 6, 7};
+      test::check(array, [](auto x) { return x < 8; });
+  });
+\end{verbatim}
+And the console output it produces:
+\begin{verbatim}
+  (unit unit)
+    (ok check)
+    (test ok [0/1])
+\end{verbatim}
+
+\subsection{Testing Container Types}
+\subsection{Generating Input}

@@ -1,0 +1,23 @@
+\section{Getting Started}
+Integrating \voidtest\ into a CMake project is easy. Simply clone the Git
+repository somewhere into your source tree and add it via the
+\verb!add_subdirectory()! command. Because \voidtest\ defines an alias target
+\verb!void_test::void_test! you will be able to link with it using
+\verb!target_link_libraries()!. It is highly recommended to run the test suite
+before using it though, as some parts of this framework rely on
+implementation-defined behavior. The whole procedure should look as follows:
+\begin{enumerate}
+  \item Clone \verb!https://github.com/GDI512/void-test.git! anywhere you want
+  \item Run \verb!cmake -S . -B build -D CMAKE_BUILD_TYPE=RelWithDebInfo! in that
+  directory to generate build files
+  \item Run \verb!cmake --build build --config RelWithDebInfo! to build \voidtest\
+  \item Run \verb!cd build && ctest -C RelWithDebInfo! to see if everything works
+  as expected --- in case some of the tests fail, please report an issue on Github
+  \item If everything went right, repeat the first step except this time clone the
+  repository as a subdirectory of your project
+  \item Link \voidtest\ to your test executables as explained at the beginning of
+  this section
+\end{enumerate}
+In case you cannot use CMake as your project's build system, stop at the 4th
+step, find the compiled static library in the build directory and copy
+it with the header files.
