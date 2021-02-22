@@ -165,4 +165,30 @@ int main() {
         cassert(core::global.object_state.constructor_error_count == 0);
         cassert(core::global.object_state.operator_error_count == 1);
     }
+    {
+        auto tracker = core::verifier();
+        auto instance = counter();
+        cassert(core::global.object_state.constructed_count == 1);
+    }
+    {
+        auto tracker = core::verifier();
+        auto instance = counter();
+        auto other = counter(instance);
+        cassert(core::global.object_state.constructed_count == 2);
+    }
+    {
+        auto tracker = core::verifier();
+        auto instance = counter();
+        auto other = counter(std::move(instance));
+        cassert(core::global.object_state.constructed_count == 2);
+    }
+    {
+        auto tracker = core::verifier();
+        {
+            auto instance = counter();
+            auto other = counter();
+        }
+        cassert(core::global.object_state.constructed_count == 2);
+        cassert(core::global.object_state.destroyed_count == 2);
+    }
 }

@@ -75,4 +75,44 @@ namespace test {
         return value == uninitialized_memory_value;
     }
 
+    counter::~counter() noexcept {
+        core::verifier::on_destruction();
+    }
+
+    counter::counter() noexcept {
+        core::verifier::on_construction();
+    }
+
+    counter::counter(counter&& other) noexcept {
+        static_cast<void>(other);
+        core::verifier::on_construction();
+    }
+
+    counter::counter(const counter& other) noexcept {
+        static_cast<void>(other);
+        core::verifier::on_construction();
+    }
+
+    auto counter::operator=(counter&& other) noexcept -> counter& {
+        static_cast<void>(other);
+        return *this;
+    }
+
+    auto counter::operator=(const counter& other) noexcept -> counter& {
+        static_cast<void>(other);
+        return *this;
+    }
+
+    auto operator==(const counter& left, const counter& right) noexcept -> bool {
+        static_cast<void>(left);
+        static_cast<void>(right);
+        return true;
+    }
+
+    auto operator!=(const counter& left, const counter& right) noexcept -> bool {
+        static_cast<void>(left);
+        static_cast<void>(right);
+        return false;
+    }
+
 }
