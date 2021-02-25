@@ -6,8 +6,14 @@ set (HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
 file (GLOB SOURCE CONFIGURE_DEPENDS "${SOURCE_DIR}/*.cpp")
 file (GLOB HEADER CONFIGURE_DEPENDS "${HEADER_DIR}/*.hpp")
 
+find_program (CLANG_TIDY clang-tidy)
+find_program (CLANG_FORMAT clang-format)
+
+if (CLANG_TIDY)
+    set (CMAKE_CXX_CLANG_TIDY clang-tidy)
+endif ()
+
 add_library (cppltf STATIC)
-add_library (cppltf::cppltf ALIAS cppltf)
 target_sources (cppltf PRIVATE ${SOURCE})
 target_include_directories (cppltf PUBLIC ${HEADER_DIR})
 target_compile_features (cppltf PUBLIC cxx_std_17)
@@ -23,3 +29,11 @@ endif ()
 if (NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
     add_library (cppltf::cppltf ALIAS cppltf)
 endif ()
+
+if (CLANG_FORMAT)
+    foreach (FILE IN LISTS SOURCE HEADER)
+        execute_process (COMMAND clang-format -i ${FILE})
+    endforeach ()
+endif ()
+
+unset (CMAKE_CXX_CLANG_TIDY)
