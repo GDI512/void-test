@@ -1,5 +1,7 @@
 #include "common.hpp"
 
+#include <forward_list>
+
 using namespace test;
 
 int main() {

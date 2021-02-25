@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_ASSERT_HPP
-#define VOID_TEST_ASSERT_HPP
+#ifndef CPPLTF_ASSERT_HPP
+#define CPPLTF_ASSERT_HPP
 
 #include "state.hpp"
 #include "utility.hpp"

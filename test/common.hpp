@@ -1,23 +1,22 @@
 #ifndef TEST_COMMON_HPP
 #define TEST_COMMON_HPP
 
-#include <void_test.hpp>
-#include <forward_list>
-#include <type_traits>
-#include <utility>
-#include <vector>
-#include <limits>
-#include <list>
-#include <new>
+#include <cppltf.hpp>
+#include <cstdlib>
+#include <cstdio>
 
-auto stop(int code) noexcept -> void;
+inline auto stop(int code) noexcept -> void {
+    exit(code);
+}
 
-auto print(int line, const char* macro) noexcept -> void;
+inline auto print(int line, const char* macro) noexcept -> void {
+    printf("Line: %i %s\n", line, macro);
+}
 
-#define cassert(x)                                                                                                     \
-    if (!(x)) {                                                                                                        \
-        print(__LINE__, #x);                                                                                           \
-        stop(1);                                                                                                       \
+#define cassert(x)             \
+    if (!(x)) {                \
+        print(__LINE__, #x);   \
+        stop(1);               \
     }
 
 #endif

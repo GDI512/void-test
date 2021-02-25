@@ -1,5 +1,8 @@
 #include "common.hpp"
 
+#include <utility>
+#include <new>
+
 using namespace test;
 
 int main() {

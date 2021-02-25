@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_TYPE_HPP
-#define VOID_TEST_TYPE_HPP
+#ifndef CPPLTF_TYPE_HPP
+#define CPPLTF_TYPE_HPP
 
 namespace test {
 

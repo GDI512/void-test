@@ -1,5 +1,5 @@
 # About
-The *void_test* testing framework is designed to have minimal impact on compile
+The `cppltf` testing framework is designed to have minimal impact on compile
 times. It does not rely on macros and is very easy to integrate into other CMake
 projects.
 

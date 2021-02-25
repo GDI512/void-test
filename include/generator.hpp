@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_GENERATOR_HPP
-#define VOID_TEST_GENERATOR_HPP
+#ifndef CPPLTF_GENERATOR_HPP
+#define CPPLTF_GENERATOR_HPP
 
 #include "utility.hpp"
 

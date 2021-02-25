@@ -1,5 +1,4 @@
 #include "common.hpp"
-#include "state.hpp"
 
 using namespace test;
 

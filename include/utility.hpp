@@ -1,10 +1,10 @@
-#ifndef VOID_TEST_UTILITY_HPP
-#define VOID_TEST_UTILITY_HPP
+#ifndef CPPLTF_UTILITY_HPP
+#define CPPLTF_UTILITY_HPP
 
 namespace test {
 
-    using size_t = unsigned long long;
-    using ptrdiff_t = long long;
+    using size_t = decltype(sizeof(unsigned));
+    using ptrdiff_t = decltype(static_cast<unsigned*>(0) - static_cast<unsigned*>(0));
 
 }
 

@@ -1,5 +1,8 @@
 #include "common.hpp"
 
+#include <type_traits>
+#include <vector>
+
 using namespace test;
 
 int main() {

@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.15)
 
-project (voidtest VERSION 0.1.0 LANGUAGES CXX)
+project (cppltf VERSION 0.1.0 LANGUAGES CXX)
 
 enable_testing ()
 

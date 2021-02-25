@@ -1,5 +1,5 @@
-#ifndef VOID_TEST_STATE_HPP
-#define VOID_TEST_STATE_HPP
+#ifndef CPPLTF_STATE_HPP
+#define CPPLTF_STATE_HPP
 
 #include "utility.hpp"
 
