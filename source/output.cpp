@@ -9,10 +9,10 @@ namespace test::core::format {
     constexpr auto error = "(\033[31merror\033[0m %s)\n";
     constexpr auto success = "(\033[32mok\033[0m %s)\n";
     constexpr auto exception = "(\033[31mexception\033[0m %s)\n";
-    constexpr auto registry_error = "(\033[31mtest error\033[0m [%llu/%llu])\n";
-    constexpr auto registry_success = "(\033[32mtest ok\033[0m [%llu/%llu])\n";
-    constexpr auto verifier_error = "(\033[31mresource error\033[0m [%llu/%llu] [%llu/%llu/%llu])\n";
-    constexpr auto verifier_success = "(\033[32mresource ok\033[0m [%llu/%llu] [%llu/%llu/%llu])\n";
+    constexpr auto registry_error = "(\033[31mtest error\033[0m [%zu/%zu])\n";
+    constexpr auto registry_success = "(\033[32mtest ok\033[0m [%zu/%zu])\n";
+    constexpr auto verifier_error = "(\033[31mresource error\033[0m [%zu/%zu] [%zu/%zu/%zu])\n";
+    constexpr auto verifier_success = "(\033[32mresource ok\033[0m [%zu/%zu] [%zu/%zu/%zu])\n";
 
 }
 
