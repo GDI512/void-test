@@ -8,7 +8,7 @@
 
 namespace test {
 
-    inline auto check(bool value) noexcept -> bool {
+    inline auto check(bool value) -> bool {
         if (value) {
             registry::on_success(scope);
             return true;
@@ -19,7 +19,7 @@ namespace test {
     }
 
     template <typename I, typename F>
-    auto check(I first, I last, F&& predicate) noexcept -> bool {
+    auto check(I first, I last, F&& predicate) -> bool {
         if (test::all_of(first, last, predicate)) {
             registry::on_success(scope);
             return true;
@@ -29,19 +29,8 @@ namespace test {
         }
     }
 
-    template <typename T, typename U, auto N>
-    auto check(T (&array)[N], U&& predicate) noexcept -> bool {
-        if (test::all_of(test::begin(array), test::end(array), predicate)) {
-            registry::on_success(scope);
-            return true;
-        } else {
-            registry::on_error(scope);
-            return false;
-        }
-    }
-
     template <typename T, typename U>
-    auto check_equal(const T& left, const U& right) noexcept -> bool {
+    auto check_equal(const T& left, const U& right) -> bool {
         if (left == right) {
             registry::on_success(scope);
             return true;
@@ -52,7 +41,7 @@ namespace test {
     }
 
     template <typename I, typename O>
-    auto check_equal(I first, I last, O other) noexcept -> bool {
+    auto check_equal(I first, I last, O other) -> bool {
         if (test::equal(first, last, other)) {
             registry::on_success(scope);
             return true;
@@ -62,19 +51,8 @@ namespace test {
         }
     }
 
-    template <typename T, typename U, auto N>
-    auto check_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        if (test::equal(test::begin(array), test::end(array), other)) {
-            registry::on_success(scope);
-            return true;
-        } else {
-            registry::on_error(scope);
-            return false;
-        }
-    }
-
     template <typename T, typename U>
-    auto check_not_equal(const T& left, const U& right) noexcept -> bool {
+    auto check_not_equal(const T& left, const U& right) -> bool {
         if (left != right) {
             registry::on_success(scope);
             return true;
@@ -85,7 +63,7 @@ namespace test {
     }
 
     template <typename I, typename O>
-    auto check_not_equal(I first, I last, O other) noexcept -> bool {
+    auto check_not_equal(I first, I last, O other) -> bool {
         if (!test::equal(first, last, other)) {
             registry::on_success(scope);
             return true;
@@ -95,19 +73,8 @@ namespace test {
         }
     }
 
-    template <typename T, typename U, auto N>
-    auto check_not_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        if (!test::equal(test::begin(array), test::end(array), other)) {
-            registry::on_success(scope);
-            return true;
-        } else {
-            registry::on_error(scope);
-            return false;
-        }
-    }
-
     template <typename T, typename U>
-    auto check_less(const T& left, const U& right) noexcept -> bool {
+    auto check_less(const T& left, const U& right) -> bool {
         if (left < right) {
             registry::on_success(scope);
             return true;
@@ -118,7 +85,7 @@ namespace test {
     }
 
     template <typename T, typename U>
-    auto check_not_less(const T& left, const U& right) noexcept -> bool {
+    auto check_not_less(const T& left, const U& right) -> bool {
         if (left >= right) {
             registry::on_success(scope);
             return true;
@@ -129,7 +96,7 @@ namespace test {
     }
 
     template <typename T, typename U>
-    auto check_greater(const T& left, const U& right) noexcept -> bool {
+    auto check_greater(const T& left, const U& right) -> bool {
         if (left > right) {
             registry::on_success(scope);
             return true;
@@ -140,7 +107,7 @@ namespace test {
     }
 
     template <typename T, typename U>
-    auto check_not_greater(const T& left, const U& right) noexcept -> bool {
+    auto check_not_greater(const T& left, const U& right) -> bool {
         if (left <= right) {
             registry::on_success(scope);
             return true;
@@ -151,7 +118,7 @@ namespace test {
     }
 
     template <typename F, typename... V>
-    auto check_throws(F&& function, V&&... args) noexcept -> bool {
+    auto check_throws(F&& function, V&&... args) -> bool {
         try {
             function(forward<V>(args)...);
             registry::on_error(scope);
@@ -163,7 +130,7 @@ namespace test {
     }
 
     template <typename F, typename... V>
-    auto check_nothrows(F&& function, V&&... args) noexcept -> bool {
+    auto check_nothrows(F&& function, V&&... args) -> bool {
         try {
             function(forward<V>(args)...);
             registry::on_success(scope);
@@ -175,7 +142,7 @@ namespace test {
     }
 
     template <typename I, typename O>
-    auto check_sorted(I first, I last, O&& compare) noexcept -> bool {
+    auto check_sorted(I first, I last, O&& compare) -> bool {
         if (test::is_sorted(first, last, compare)) {
             registry::on_success(scope);
             return true;
@@ -185,9 +152,9 @@ namespace test {
         }
     }
 
-    template <typename T, typename U, auto N>
-    auto check_sorted(const T (&array)[N], U&& compare) noexcept -> bool {
-        if (test::is_sorted(test::begin(array), test::end(array), compare)) {
+    template <typename I, typename T>
+    auto check_contains(I first, I last, const T& value) -> bool {
+        if (test::find(first, last, value) != last) {
             registry::on_success(scope);
             return true;
         } else {

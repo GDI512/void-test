@@ -100,6 +100,14 @@ namespace test {
         return true;
     }
 
+    template <typename I, typename T>
+    constexpr auto find(I first, I last, const T& value) -> I {
+        for (; first != last; ++first)
+            if (*first == value)
+                return first;
+        return last;
+    }
+
 }
 
 #endif
