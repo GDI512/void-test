@@ -1,20 +1,18 @@
 #include "common.hpp"
 
-using namespace test;
-
 int main() {
     {
-        unit("unit", [] { check(true); });
-        unit("unit", [] { check_equal(0, 0); });
-        CASSERT(core::code == core::exit_code::success);
+        test::unit("unit", [] { test::check(true); });
+        test::unit("unit", [] { test::check_equal(0, 0); });
+        CASSERT(test::code == test::exit_code::success);
     }
     {
-        unit("unit", [] { check(false); });
-        unit("unit", [] { check_equal(0, 0); });
-        CASSERT(core::code == core::exit_code::failure);
+        test::unit("unit", [] { test::check(false); });
+        test::unit("unit", [] { test::check_equal(0, 0); });
+        CASSERT(test::code == test::exit_code::failure);
     }
     {
-        using namespace test::core;
+        using namespace test;
         unit("this", [] {
             CASSERT(global.test_state.error_count == 0 && global.test_state.total_count == 0);
             unit("is", [] {

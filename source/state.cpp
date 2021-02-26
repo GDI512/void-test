@@ -1,7 +1,7 @@
 #include <output.hpp>
 #include <state.hpp>
 
-namespace test::core {
+namespace test {
 
     exit_code code = exit_code::success;
     global_info global = {};

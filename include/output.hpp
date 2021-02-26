@@ -4,9 +4,9 @@
 #include "state.hpp"
 #include "utility.hpp"
 
-namespace test::core {
+namespace test {
 
-    extern size_t indent_level;
+    extern size_type indent_level;
 
     class scope {
       public:

@@ -3,21 +3,21 @@
 
 #include "utility.hpp"
 
-namespace test::core {
+namespace test {
 
     enum class exit_code : int { success = 0, failure = 1, internal_error = 2 };
 
     struct test_info {
-        size_t total_count;
-        size_t error_count;
+        size_type total_count;
+        size_type error_count;
     };
 
     struct object_info {
-        size_t destroyed_count;
-        size_t constructed_count;
-        size_t destructor_error_count;
-        size_t constructor_error_count;
-        size_t operator_error_count;
+        size_type destroyed_count;
+        size_type constructed_count;
+        size_type destructor_error_count;
+        size_type constructor_error_count;
+        size_type operator_error_count;
     };
 
     struct global_info {

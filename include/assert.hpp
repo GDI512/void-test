@@ -9,182 +9,142 @@
 namespace test {
 
     inline auto check(bool value) noexcept -> bool {
-        if (value) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (value)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
-    template <typename T, typename U>
-    auto check(T first, T last, U&& function) noexcept -> bool {
-        for (; first != last; ++first) {
-            if (!function(*first)) {
-                return core::registry::on_error(scope);
-            }
-        }
-        return core::registry::on_success(scope);
+    template <typename I, typename F>
+    auto check(I first, I last, F&& predicate) noexcept -> bool {
+        if (test::all_of(first, last, predicate))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U, auto N>
-    auto check(T (&array)[N], U&& function) noexcept -> bool {
-        auto first = core::begin(array);
-        const auto last = core::end(array);
-        for (; first != last; ++first) {
-            if (!function(*first)) {
-                return core::registry::on_error(scope);
-            }
-        }
-        return core::registry::on_success(scope);
+    auto check(T (&array)[N], U&& predicate) noexcept -> bool {
+        if (test::all_of(test::begin(array), test::end(array), predicate))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_equal(const T& left, const U& right) noexcept -> bool {
-        if (left == right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left == right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
-    template <typename T, typename U>
-    auto check_equal(T first, T last, U other) noexcept -> bool {
-        for (; first != last; ++first, ++other) {
-            if (*first != *other) {
-                return core::registry::on_error(scope);
-            }
-        }
-        return core::registry::on_success(scope);
+    template <typename I, typename O>
+    auto check_equal(I first, I last, O other) noexcept -> bool {
+        if (test::equal(first, last, other))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U, auto N>
     auto check_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        for (auto i = 0; i < N; i++) {
-            if (array[i] != other[i]) {
-                return core::registry::on_error(scope);
-            }
-        }
-        return core::registry::on_success(scope);
+        if (test::equal(test::begin(array), test::end(array), other))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_not_equal(const T& left, const U& right) noexcept -> bool {
-        if (left != right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left != right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
-    template <typename T, typename U>
-    auto check_not_equal(T first, T last, U other) noexcept -> bool {
-        for (; first != last; ++first, ++other) {
-            if (*first != *other) {
-                return core::registry::on_success(scope);
-            }
-        }
-        return core::registry::on_error(scope);
+    template <typename I, typename O>
+    auto check_not_equal(I first, I last, O other) noexcept -> bool {
+        if (!test::equal(first, last, other))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U, auto N>
     auto check_not_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        for (auto i = 0; i < N; i++) {
-            if (array[i] != other[i]) {
-                return core::registry::on_success(scope);
-            }
-        }
-        return core::registry::on_error(scope);
+        if (!test::equal(test::begin(array), test::end(array), other))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_less(const T& left, const U& right) noexcept -> bool {
-        if (left < right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left < right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_not_less(const T& left, const U& right) noexcept -> bool {
-        if (left >= right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left >= right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_greater(const T& left, const U& right) noexcept -> bool {
-        if (left > right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left > right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U>
     auto check_not_greater(const T& left, const U& right) noexcept -> bool {
-        if (left <= right) {
-            return core::registry::on_success(scope);
-        } else {
-            return core::registry::on_error(scope);
-        }
+        if (left <= right)
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
-    template <typename T, typename... U>
-    auto check_throws(T&& function, U&&... args) noexcept -> bool {
+    template <typename F, typename... V>
+    auto check_throws(F&& function, V&&... args) noexcept -> bool {
         try {
-            function(core::forward<U>(args)...);
-            return core::registry::on_error(scope);
+            function(forward<V>(args)...);
+            return test::registry::on_error(scope);
         } catch (...) {
-            return core::registry::on_success(scope);
+            return test::registry::on_success(scope);
         }
     }
 
-    template <typename T, typename... U>
-    auto check_nothrows(T&& function, U&&... args) noexcept -> bool {
+    template <typename F, typename... V>
+    auto check_nothrows(F&& function, V&&... args) noexcept -> bool {
         try {
-            function(core::forward<U>(args)...);
-            return core::registry::on_success(scope);
+            function(forward<V>(args)...);
+            return test::registry::on_success(scope);
         } catch (...) {
-            return core::registry::on_error(scope);
+            return test::registry::on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_sorted(T first, T last, U&& compare) noexcept -> bool {
-        if (first == last) {
-            return core::registry::on_success(scope);
-        } else {
-            auto previous = first;
-            if (++first == last) {
-                return core::registry::on_success(scope);
-            } else {
-                for (; first != last; ++first, ++previous) {
-                    if (!compare(*previous, *first)) {
-                        return core::registry::on_error(scope);
-                    }
-                }
-                return core::registry::on_success(scope);
-            }
-        }
+    template <typename I, typename O>
+    auto check_sorted(I first, I last, O&& compare) noexcept -> bool {
+        if (test::is_sorted(first, last, compare))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
     template <typename T, typename U, auto N>
     auto check_sorted(const T (&array)[N], U&& compare) noexcept -> bool {
-        auto first = core::begin(array);
-        const auto last = core::end(array);
-        if constexpr (N <= 1) {
-            return core::registry::on_success(scope);
-        } else {
-            for (; first != last - 1; ++first) {
-                if (!compare(*first, *(first + 1))) {
-                    return core::registry::on_error(scope);
-                }
-            }
-            return core::registry::on_success(scope);
-        }
+        if (test::is_sorted(test::begin(array), test::end(array), compare))
+            return test::registry::on_success(scope);
+        else
+            return test::registry::on_error(scope);
     }
 
 }

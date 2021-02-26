@@ -3,13 +3,11 @@
 #include <utility>
 #include <new>
 
-using namespace test;
-
 int main() {
     {
-        auto tracker = core::verifier();
-        const auto instance = object(16);
-        auto other = object(32);
+        auto tracker = test::verifier();
+        const auto instance = test::object(16);
+        auto other = test::object(32);
         CASSERT(instance == 16);
         CASSERT(other == 32);
         other = instance;
@@ -17,181 +15,181 @@ int main() {
         CASSERT(other == 16);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 1);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 1);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
         instance.~object();
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 1);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 1);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
         instance.~object();
         instance.~object();
-        CASSERT(core::global.object_state.destroyed_count == 2);
-        CASSERT(core::global.object_state.constructed_count == 1);
-        CASSERT(core::global.object_state.destructor_error_count == 1);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        CASSERT(test::global.object_state.destroyed_count == 2);
+        CASSERT(test::global.object_state.constructed_count == 1);
+        CASSERT(test::global.object_state.destructor_error_count == 1);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        new (&instance) object();
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 1);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        new (&instance) test::object();
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 1);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object(instance);
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object(instance);
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object(std::move(instance));
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object(std::move(instance));
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
         instance.~object();
-        auto other = object(instance);
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 1);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto other = test::object(instance);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 1);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
         instance.~object();
-        auto other = object(std::move(instance));
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 1);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        auto other = test::object(std::move(instance));
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 1);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         instance = other;
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         instance = std::move(other);
-        CASSERT(core::global.object_state.destroyed_count == 0);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 0);
+        CASSERT(test::global.object_state.destroyed_count == 0);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 0);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         instance.~object();
         instance = other;
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 1);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 1);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         instance.~object();
         instance = std::move(other);
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 1);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 1);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         other.~object();
         instance = other;
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 1);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 1);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = object();
-        auto other = object();
+        auto tracker = test::verifier();
+        auto instance = test::object();
+        auto other = test::object();
         other.~object();
         instance = std::move(other);
-        CASSERT(core::global.object_state.destroyed_count == 1);
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destructor_error_count == 0);
-        CASSERT(core::global.object_state.constructor_error_count == 0);
-        CASSERT(core::global.object_state.operator_error_count == 1);
+        CASSERT(test::global.object_state.destroyed_count == 1);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destructor_error_count == 0);
+        CASSERT(test::global.object_state.constructor_error_count == 0);
+        CASSERT(test::global.object_state.operator_error_count == 1);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = counter();
-        CASSERT(core::global.object_state.constructed_count == 1);
+        auto tracker = test::verifier();
+        auto instance = test::counter();
+        CASSERT(test::global.object_state.constructed_count == 1);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = counter();
-        auto other = counter(instance);
-        CASSERT(core::global.object_state.constructed_count == 2);
+        auto tracker = test::verifier();
+        auto instance = test::counter();
+        auto other = test::counter(instance);
+        CASSERT(test::global.object_state.constructed_count == 2);
     }
     {
-        auto tracker = core::verifier();
-        auto instance = counter();
-        auto other = counter(std::move(instance));
-        CASSERT(core::global.object_state.constructed_count == 2);
+        auto tracker = test::verifier();
+        auto instance = test::counter();
+        auto other = test::counter(std::move(instance));
+        CASSERT(test::global.object_state.constructed_count == 2);
     }
     {
-        auto tracker = core::verifier();
+        auto tracker = test::verifier();
         {
-            auto instance = counter();
-            auto other = counter();
+            auto instance = test::counter();
+            auto other = test::counter();
         }
-        CASSERT(core::global.object_state.constructed_count == 2);
-        CASSERT(core::global.object_state.destroyed_count == 2);
+        CASSERT(test::global.object_state.constructed_count == 2);
+        CASSERT(test::global.object_state.destroyed_count == 2);
     }
 }

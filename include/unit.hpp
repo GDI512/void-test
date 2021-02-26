@@ -9,13 +9,13 @@ namespace test {
 
     template <typename T>
     auto unit(const char* name, T&& function) noexcept -> int {
-        auto scope = core::scope(name);
-        auto registry = core::registry();
-        auto verifier = core::verifier();
+        auto scope = test::scope(name);
+        auto registry = test::registry();
+        auto verifier = test::verifier();
         try {
             function();
         } catch (...) {
-            core::registry::on_exception(name);
+            registry::on_exception(name);
         }
         return 0;
     }

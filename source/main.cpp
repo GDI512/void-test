@@ -1,7 +1,5 @@
 #include <state.hpp>
 
-using namespace test::core;
-
 int main() {
-    return static_cast<int>(code);
+    return static_cast<int>(test::code);
 }

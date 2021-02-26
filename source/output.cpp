@@ -2,7 +2,7 @@
 #include <output.hpp>
 #include <cstdio>
 
-namespace test::core::format {
+namespace test::format {
 
     constexpr auto space = "  ";
     constexpr auto scope = "(\033[93munit\033[0m %s)\n";
@@ -16,9 +16,9 @@ namespace test::core::format {
 
 }
 
-namespace test::core {
+namespace test {
 
-    size_t indent_level = 0;
+    size_type indent_level = 0;
 
     static auto indent() noexcept -> void {
         ++indent_level;
@@ -28,7 +28,7 @@ namespace test::core {
         --indent_level;
     }
 
-    static auto repeat(const char* text, size_t count) -> void {
+    static auto repeat(const char* text, size_type count) -> void {
         while (count-- > 0) {
             std::fputs(text, stdout);
         }
