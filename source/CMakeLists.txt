@@ -10,6 +10,7 @@ find_program (CLANG_TIDY clang-tidy)
 find_program (CLANG_FORMAT clang-format)
 
 if (CLANG_TIDY)
+    message (STATUS "Using Clang-Tidy")
     set (CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif ()
 
@@ -31,6 +32,7 @@ if (NOT "${CMAKE_SOURCE_DIR}" STREQUAL "${PROJECT_SOURCE_DIR}")
 endif ()
 
 if (CLANG_FORMAT)
+    message (STATUS "Using Clang-Format")
     foreach (FILE IN LISTS SOURCE HEADER)
         execute_process (COMMAND clang-format -i ${FILE})
     endforeach ()

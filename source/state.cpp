@@ -85,6 +85,12 @@ namespace test {
         ++global.error.assignment;
     }
 
+}
+
+namespace test {
+
+    exit_code return_value = exit_code::success;
+
     state registry::global = {};
 
     registry::~registry() noexcept {
@@ -145,7 +151,5 @@ namespace test {
     auto registry::on_operator_error() noexcept -> void {
         test::on_operator_error(global);
     }
-
-    exit_code return_value = exit_code::success;
 
 }

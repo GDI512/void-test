@@ -3,7 +3,6 @@
 
 #include "state.hpp"
 #include "output.hpp"
-#include "utility.hpp"
 
 namespace test {
 
