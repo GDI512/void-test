@@ -7,51 +7,6 @@ namespace test {
     struct object_tag {};
     struct error_tag {};
 
-    static auto difference(state global, state snapshot) noexcept -> state {
-        auto result = state();
-        result.assert.total = global.assert.total - snapshot.assert.total;
-        result.assert.error = global.assert.error - snapshot.assert.error;
-        result.object.destroyed = global.object.destroyed - snapshot.object.destroyed;
-        result.object.constructed = global.object.constructed - snapshot.object.constructed;
-        result.error.destructor = global.error.destructor - snapshot.error.destructor;
-        result.error.constructor = global.error.constructor - snapshot.error.constructor;
-        result.error.assignment = global.error.assignment - snapshot.error.assignment;
-        return result;
-    }
-
-    static auto restore(state& global, state snapshot) noexcept -> void {
-        global.assert.total -= snapshot.assert.total;
-        global.assert.error -= snapshot.assert.error;
-        global.object.destroyed -= snapshot.object.destroyed;
-        global.object.constructed -= snapshot.object.constructed;
-        global.error.destructor -= snapshot.error.destructor;
-        global.error.constructor -= snapshot.error.constructor;
-        global.error.assignment -= snapshot.error.assignment;
-    }
-
-    static auto status(state result, assert_tag) noexcept -> bool {
-        return result.assert.error == 0;
-    }
-
-    static auto status(state result, object_tag) noexcept -> bool {
-        return result.object.destroyed == result.object.constructed;
-    }
-
-    static auto status(state result, error_tag) noexcept -> bool {
-        return result.error.destructor + result.error.constructor + result.error.assignment == 0;
-    }
-
-    static auto empty(state result) noexcept -> bool {
-        return result.assert.total == 0 && result.object.constructed == 0 && result.object.destroyed == 0;
-    }
-
-    static auto status(state result) noexcept -> bool {
-        const auto assert_status = test::status(result, assert_tag());
-        const auto object_status = test::status(result, object_tag());
-        const auto error_status = test::status(result, error_tag());
-        return assert_status && object_status && error_status;
-    }
-
     static auto code(exit_code value) noexcept -> void {
         return_value = value;
     }
@@ -83,6 +38,81 @@ namespace test {
 
     static auto on_operator_error(state& global) noexcept -> void {
         ++global.error.assignment;
+    }
+
+    static auto difference(state global, state snapshot, assert_tag) -> decltype(snapshot.assert) {
+        auto result = decltype(snapshot.assert)();
+        result.total = global.assert.total - snapshot.assert.total;
+        result.error = global.assert.error - snapshot.assert.error;
+        return result;
+    }
+
+    static auto difference(state global, state snapshot, object_tag) -> decltype(snapshot.object) {
+        auto result = decltype(snapshot.object)();
+        result.destroyed = global.object.destroyed - snapshot.object.destroyed;
+        result.constructed = global.object.constructed - snapshot.object.constructed;
+        return result;
+    }
+
+    static auto difference(state global, state snapshot, error_tag) -> decltype(snapshot.error) {
+        auto result = decltype(snapshot.error)();
+        result.destructor = global.error.destructor - snapshot.error.destructor;
+        result.constructor = global.error.constructor - snapshot.error.constructor;
+        result.assignment = global.error.assignment - snapshot.error.assignment;
+        return result;
+    }
+
+    static auto difference(state global, state snapshot) noexcept -> state {
+        auto result = state();
+        result.assert = test::difference(global, snapshot, assert_tag());
+        result.object = test::difference(global, snapshot, object_tag());
+        result.error = test::difference(global, snapshot, error_tag());
+        return result;
+    }
+
+    static auto restore(state& global, state snapshot, assert_tag) noexcept -> void {
+        global.assert.total -= snapshot.assert.total;
+        global.assert.error -= snapshot.assert.error;
+    }
+
+    static auto restore(state& global, state snapshot, object_tag) noexcept -> void {
+        global.object.destroyed -= snapshot.object.destroyed;
+        global.object.constructed -= snapshot.object.constructed;
+    }
+
+    static auto restore(state& global, state snapshot, error_tag) noexcept -> void {
+        global.error.destructor -= snapshot.error.destructor;
+        global.error.constructor -= snapshot.error.constructor;
+        global.error.assignment -= snapshot.error.assignment;
+    }
+
+    static auto restore(state& global, state snapshot) noexcept -> void {
+        test::restore(global, snapshot, assert_tag());
+        test::restore(global, snapshot, object_tag());
+        test::restore(global, snapshot, error_tag());
+    }
+
+    static auto status(state result, assert_tag) noexcept -> bool {
+        return result.assert.error == 0;
+    }
+
+    static auto status(state result, object_tag) noexcept -> bool {
+        return result.object.destroyed == result.object.constructed;
+    }
+
+    static auto status(state result, error_tag) noexcept -> bool {
+        return result.error.destructor + result.error.constructor + result.error.assignment == 0;
+    }
+
+    static auto status(state result) noexcept -> bool {
+        const auto assert_status = test::status(result, assert_tag());
+        const auto object_status = test::status(result, object_tag());
+        const auto error_status = test::status(result, error_tag());
+        return assert_status && object_status && error_status;
+    }
+
+    static auto empty(state result) noexcept -> bool {
+        return result.assert.total == 0 && result.object.constructed + result.object.destroyed == 0;
     }
 
 }
