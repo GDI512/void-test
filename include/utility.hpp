@@ -8,7 +8,7 @@ namespace test {
 
 }
 
-namespace test::core {
+namespace test::traits {
 
     struct true_type {
         static constexpr auto value = true;
@@ -45,28 +45,32 @@ namespace test::core {
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
 
-    template <typename T>
-    using remove_reference_t = typename remove_reference<T>::type;
+}
+
+namespace test::core {
 
     template <typename T>
-    constexpr auto is_lvalue_reference_v = is_lvalue_reference<T>::value;
+    using remove_reference = typename traits::remove_reference<T>::type;
 
     template <typename T, typename U>
-    constexpr auto is_same_v = is_same<T, U>::value;
+    constexpr auto is_same = traits::is_same<T, U>::value;
 
     template <typename T>
-    constexpr auto move(T&& value) noexcept -> remove_reference_t<T>&& {
-        return static_cast<remove_reference_t<T>&&>(value);
+    constexpr auto is_lvalue_reference = traits::is_lvalue_reference<T>::value;
+
+    template <typename T>
+    constexpr auto move(T&& value) noexcept -> remove_reference<T>&& {
+        return static_cast<remove_reference<T>&&>(value);
     }
 
     template <typename T>
-    constexpr auto forward(remove_reference_t<T>& value) noexcept -> T&& {
+    constexpr auto forward(remove_reference<T>& value) noexcept -> T&& {
         return static_cast<T&&>(value);
     }
 
     template <typename T>
-    constexpr auto forward(remove_reference_t<T>&& value) noexcept -> T&& {
-        static_assert(!is_lvalue_reference_v<T>);
+    constexpr auto forward(remove_reference<T>&& value) noexcept -> T&& {
+        static_assert(!is_lvalue_reference<T>);
         return static_cast<T&&>(value);
     }
 

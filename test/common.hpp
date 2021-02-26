@@ -13,7 +13,7 @@ inline auto print(int line, const char* macro) noexcept -> void {
     printf("Line: %i %s\n", line, macro);
 }
 
-#define cassert(x)             \
+#define CASSERT(x)             \
     if (!(x)) {                \
         print(__LINE__, #x);   \
         stop(1);               \

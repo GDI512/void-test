@@ -175,7 +175,7 @@ namespace test {
     auto check_sorted(const T (&array)[N], U&& compare) noexcept -> bool {
         auto first = core::begin(array);
         const auto last = core::end(array);
-        if (N <= 1) {
+        if constexpr (N <= 1) {
             return core::registry::on_success(scope);
         } else {
             for (; first != last - 1; ++first) {

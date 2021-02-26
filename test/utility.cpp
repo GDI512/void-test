@@ -7,21 +7,21 @@ using namespace test;
 
 int main() {
     {
-        static_assert(std::is_same<int, core::remove_reference<int>::type>::value);
-        static_assert(std::is_same<int, core::remove_reference<int&>::type>::value);
-        static_assert(std::is_same<int, core::remove_reference<int&&>::type>::value);
+        static_assert(std::is_same<int, core::remove_reference<int>>::value);
+        static_assert(std::is_same<int, core::remove_reference<int&>>::value);
+        static_assert(std::is_same<int, core::remove_reference<int&&>>::value);
     }
     {
-        static_assert(core::is_lvalue_reference<int&>::value);
-        static_assert(!core::is_lvalue_reference<int>::value);
-        static_assert(!core::is_lvalue_reference<int&&>::value);
+        static_assert(core::is_lvalue_reference<int&>);
+        static_assert(!core::is_lvalue_reference<int>);
+        static_assert(!core::is_lvalue_reference<int&&>);
     }
     {
         struct type {};
-        static_assert(core::is_same<int, int>::value);
-        static_assert(core::is_same<type, type>::value);
-        static_assert(!core::is_same<int, float>::value);
-        static_assert(!core::is_same<type&&, type>::value);
+        static_assert(core::is_same<int, int>);
+        static_assert(core::is_same<type, type>);
+        static_assert(!core::is_same<int, float>);
+        static_assert(!core::is_same<type&&, type>);
     }
     {
         struct type {};
@@ -40,15 +40,15 @@ int main() {
         auto value = 4;
         auto other = 8;
         value = core::exchange(other, 0);
-        cassert(value == 8);
-        cassert(other == 0);
+        CASSERT(value == 8);
+        CASSERT(other == 0);
     }
     {
         int array[16] = {};
         auto vector = std::vector<int>(16);
-        cassert(core::begin(array) == array);
-        cassert(core::end(array) == array + 16);
-        cassert(core::begin(vector) == vector.begin());
-        cassert(core::end(vector) == vector.end());
+        CASSERT(core::begin(array) == array);
+        CASSERT(core::end(array) == array + 16);
+        CASSERT(core::begin(vector) == vector.begin());
+        CASSERT(core::end(vector) == vector.end());
     }
 }
