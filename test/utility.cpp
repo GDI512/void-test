@@ -1,5 +1,6 @@
 #include "common.hpp"
 
+#include <forward_list>
 #include <type_traits>
 #include <vector>
 
@@ -38,15 +39,57 @@ int main() {
         auto value = 4;
         auto other = 8;
         value = test::exchange(other, 0);
-        CASSERT(value == 8);
-        CASSERT(other == 0);
+        cassert(value == 8);
+        cassert(other == 0);
     }
     {
         int array[16] = {};
         auto vector = std::vector<int>(16);
-        CASSERT(test::begin(array) == array);
-        CASSERT(test::end(array) == array + 16);
-        CASSERT(test::begin(vector) == vector.begin());
-        CASSERT(test::end(vector) == vector.end());
+        cassert(test::begin(array) == array);
+        cassert(test::begin(vector) == vector.begin());
+    }
+    {
+        int array[16] = {};
+        auto vector = std::vector<int>(16);
+        cassert(test::end(array) == array + 16);
+        cassert(test::end(vector) == vector.end());
+    }
+    {
+        auto x = 10;
+        auto y = test::exchange(x, 5);
+        cassert(x == 5);
+        cassert(y == 10);
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5};
+        cassert(test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x < y; }));
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x >= y; }));
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 1, 3, 4, 5};
+        cassert(test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x <= y; }));
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x < y; }));
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x >= y; }));
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 0, 3, 4, 5};
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x < y; }));
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x <= y; }));
+        cassert(!test::is_sorted(list.begin(), list.end(), [](auto x, auto y){ return x >= y; }));
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 2, 3, 4, 5};
+        cassert(test::all_of(list.begin(), list.end(), [](auto x){ return x < 6; }));
+        cassert(!test::all_of(list.begin(), list.end(), [](auto x){ return x < 5; }));
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 0, 3, 4, 5};
+        auto other = std::forward_list<int>{0, 1, 0, 3, 4, 5};
+        cassert(test::equal(list.begin(), list.end(), other.begin()));
+    }
+    {
+        auto list = std::forward_list<int>{0, 1, 0, 3, 4, 5};
+        auto other = std::forward_list<int>{0, 1, 1, 3, 4, 5};
+        cassert(!test::equal(list.begin(), list.end(), other.begin()));
     }
 }

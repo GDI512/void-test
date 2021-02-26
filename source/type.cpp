@@ -9,34 +9,34 @@ namespace test {
     constexpr auto uninitialized_memory_value = static_cast<int>(0x00000000);
 
     object::~object() noexcept {
-        verifier::on_destruction();
+        registry::on_destruction();
         if (!is_initialized() || !is_self()) {
-            verifier::on_destructor_error();
+            registry::on_destructor_error();
         }
         self = reinterpret_cast<object*>(invalid_pointer_value);
         value = uninitialized_memory_value;
     }
 
     object::object(int number) noexcept : number(number), self(this) {
-        verifier::on_construction();
+        registry::on_construction();
         if (is_initialized()) {
-            verifier::on_constructor_error();
+            registry::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     object::object(object&& other) noexcept : number(other.number), self(this) {
-        verifier::on_construction();
+        registry::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
-            verifier::on_constructor_error();
+            registry::on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
     object::object(const object& other) noexcept : number(other.number), self(this) {
-        verifier::on_construction();
+        registry::on_construction();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
-            verifier::on_constructor_error();
+            registry::on_constructor_error();
         }
         value = initialized_memory_value;
     }
@@ -47,7 +47,7 @@ namespace test {
 
     auto object::operator=(object&& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            verifier::on_operator_error();
+            registry::on_operator_error();
         } else {
             number = other.number;
         }
@@ -56,7 +56,7 @@ namespace test {
 
     auto object::operator=(const object& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            verifier::on_operator_error();
+            registry::on_operator_error();
         } else {
             number = other.number;
         }
@@ -76,21 +76,21 @@ namespace test {
     }
 
     counter::~counter() noexcept {
-        verifier::on_destruction();
+        registry::on_destruction();
     }
 
     counter::counter() noexcept {
-        verifier::on_construction();
+        registry::on_construction();
     }
 
     counter::counter(counter&& other) noexcept {
         static_cast<void>(other);
-        verifier::on_construction();
+        registry::on_construction();
     }
 
     counter::counter(const counter& other) noexcept {
         static_cast<void>(other);
-        verifier::on_construction();
+        registry::on_construction();
     }
 
     auto counter::operator=(counter&& other) noexcept -> counter& {

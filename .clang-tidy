@@ -5,29 +5,9 @@ Checks: '-*,
          performance-*,
          clang-analyzer-*,
          clang-diagnostic-*,
-         readability-identifier-*,
          -cert-oop54-cpp,
          -cert-err58-cpp,
          -bugprone-unhandled-self-assignment'
-CheckOptions:
-  - key: readability-identifier-naming.ClassCase
-    value: lower_case
-  - key: readability-identifier-naming.EnumCase
-    value: lower_case
-  - key: readability-identifier-naming.FunctionCase
-    value: lower_case
-  - key: readability-identifier-naming.MemberCase
-    value: lower_case
-  - key: readability-identifier-naming.ParameterCase
-    value: lower_case
-  - key: readability-identifier-naming.UnionCase
-    value: lower_case
-  - key: readability-identifier-naming.VariableCase
-    value: lower_case
-  - key: readability-identifier-naming.MacroDefinitionCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.IgnoreMainLikeFunctions
-    value: 1
 UseColor: true
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'

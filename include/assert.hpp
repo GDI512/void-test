@@ -9,115 +9,156 @@
 namespace test {
 
     inline auto check(bool value) noexcept -> bool {
-        if (value)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (value) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename I, typename F>
     auto check(I first, I last, F&& predicate) noexcept -> bool {
-        if (test::all_of(first, last, predicate))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::all_of(first, last, predicate)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U, auto N>
     auto check(T (&array)[N], U&& predicate) noexcept -> bool {
-        if (test::all_of(test::begin(array), test::end(array), predicate))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::all_of(test::begin(array), test::end(array), predicate)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_equal(const T& left, const U& right) noexcept -> bool {
-        if (left == right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left == right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename I, typename O>
     auto check_equal(I first, I last, O other) noexcept -> bool {
-        if (test::equal(first, last, other))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::equal(first, last, other)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U, auto N>
     auto check_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        if (test::equal(test::begin(array), test::end(array), other))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::equal(test::begin(array), test::end(array), other)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_not_equal(const T& left, const U& right) noexcept -> bool {
-        if (left != right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left != right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename I, typename O>
     auto check_not_equal(I first, I last, O other) noexcept -> bool {
-        if (!test::equal(first, last, other))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (!test::equal(first, last, other)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U, auto N>
     auto check_not_equal(const T (&array)[N], const U (&other)[N]) noexcept -> bool {
-        if (!test::equal(test::begin(array), test::end(array), other))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (!test::equal(test::begin(array), test::end(array), other)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_less(const T& left, const U& right) noexcept -> bool {
-        if (left < right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left < right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_not_less(const T& left, const U& right) noexcept -> bool {
-        if (left >= right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left >= right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_greater(const T& left, const U& right) noexcept -> bool {
-        if (left > right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left > right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U>
     auto check_not_greater(const T& left, const U& right) noexcept -> bool {
-        if (left <= right)
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (left <= right) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename F, typename... V>
     auto check_throws(F&& function, V&&... args) noexcept -> bool {
         try {
             function(forward<V>(args)...);
-            return test::registry::on_error(scope);
+            registry::on_error(scope);
+            return false;
         } catch (...) {
-            return test::registry::on_success(scope);
+            registry::on_success(scope);
+            return true;
         }
     }
 
@@ -125,26 +166,34 @@ namespace test {
     auto check_nothrows(F&& function, V&&... args) noexcept -> bool {
         try {
             function(forward<V>(args)...);
-            return test::registry::on_success(scope);
+            registry::on_success(scope);
+            return true;
         } catch (...) {
-            return test::registry::on_error(scope);
+            registry::on_error(scope);
+            return false;
         }
     }
 
     template <typename I, typename O>
     auto check_sorted(I first, I last, O&& compare) noexcept -> bool {
-        if (test::is_sorted(first, last, compare))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::is_sorted(first, last, compare)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
     template <typename T, typename U, auto N>
     auto check_sorted(const T (&array)[N], U&& compare) noexcept -> bool {
-        if (test::is_sorted(test::begin(array), test::end(array), compare))
-            return test::registry::on_success(scope);
-        else
-            return test::registry::on_error(scope);
+        if (test::is_sorted(test::begin(array), test::end(array), compare)) {
+            registry::on_success(scope);
+            return true;
+        } else {
+            registry::on_error(scope);
+            return false;
+        }
     }
 
 }

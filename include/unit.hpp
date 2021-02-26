@@ -9,9 +9,8 @@ namespace test {
 
     template <typename T>
     auto unit(const char* name, T&& function) noexcept -> int {
-        auto scope = test::scope(name);
-        auto registry = test::registry();
-        auto verifier = test::verifier();
+        const auto scope = test::output(name);
+        const auto registry = test::registry();
         try {
             function();
         } catch (...) {
