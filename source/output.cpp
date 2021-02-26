@@ -61,11 +61,11 @@ namespace test {
     }
 
     auto output::on_unit_error(state result) noexcept -> void {
-        if (!empty(result, test_tag())) {
+        if (!test::empty(result, test_tag())) {
             test::repeat(format::space, indent_level);
             std::printf(format::test_error, result.assert.error, result.assert.total);
         }
-        if (!empty(result, resource_tag())) {
+        if (!test::empty(result, resource_tag())) {
             test::repeat(format::space, indent_level);
             std::printf(format::resource_error, result.object.destroyed, result.object.constructed,
                         result.error.destructor, result.error.constructor, result.error.assignment);
@@ -73,11 +73,11 @@ namespace test {
     }
 
     auto output::on_unit_success(state result) noexcept -> void {
-        if (!empty(result, test_tag())) {
+        if (!test::empty(result, test_tag())) {
             test::repeat(format::space, indent_level);
             std::printf(format::test_success, result.assert.error, result.assert.total);
         }
-        if (!empty(result, resource_tag())) {
+        if (!test::empty(result, resource_tag())) {
             test::repeat(format::space, indent_level);
             std::printf(format::resource_success, result.object.destroyed, result.object.constructed,
                         result.error.destructor, result.error.constructor, result.error.assignment);
