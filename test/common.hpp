@@ -5,11 +5,11 @@
 #include <cstdlib>
 #include <cstdio>
 
-inline auto stop(int code) noexcept -> void {
+inline auto stop(int code) noexcept {
     exit(code);
 }
 
-inline auto print(int line, const char* macro) noexcept -> void {
+inline auto print(int line, const char* macro) noexcept {
     printf("Line: %i %s\n", line, macro);
 }
 

@@ -5,172 +5,172 @@
 
 int main() {
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
+            auto instance = test::object{};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
+            auto instance = test::object{};
             instance.~object();
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            new (&instance) test::object();
+            auto instance = test::object{};
+            new (&instance) test::object{};
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object(instance);
+            auto instance = test::object{};
+            auto other = test::object{instance};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object(std::move(instance));
+            auto instance = test::object{};
+            auto other = test::object{std::move(instance)};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
+            auto instance = test::object{};
             instance.~object();
-            auto other = test::object(instance);
+            auto other = test::object{instance};
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
+            auto instance = test::object{};
             instance.~object();
-            auto other = test::object(std::move(instance));
+            auto other = test::object{std::move(instance)};
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             instance = other;
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             instance = std::move(other);
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             instance.~object();
             instance = other;
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             instance.~object();
             instance = std::move(other);
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             other.~object();
             instance = other;
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::object();
-            auto other = test::object();
+            auto instance = test::object{};
+            auto other = test::object{};
             other.~object();
             instance = std::move(other);
         }
         cassert(!registry.status());
     }
     {
-        auto registry = test::registry();
-        auto instance = test::object(32);
-        const auto other = test::object(16);
+        auto registry = test::aux::registry{};
+        auto instance = test::object{32};
+        const auto other = test::object{16};
         cassert(instance == 32);
         cassert(other == 16);
     }
     {
-        auto registry = test::registry();
-        auto instance = test::object(32);
-        const auto other = test::object(16);
+        auto registry = test::aux::registry{};
+        auto instance = test::object{32};
+        const auto other = test::object{16};
         instance = other;
         cassert(instance == 16);
         cassert(other == 16);
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::counter();
+            auto instance = test::counter{};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::counter();
-            auto other = test::counter(instance);
+            auto instance = test::counter{};
+            auto other = test::counter{instance};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::counter();
-            auto other = test::counter(std::move(instance));
+            auto instance = test::counter{};
+            auto other = test::counter{std::move(instance)};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::counter();
-            auto other = test::counter();
+            auto instance = test::counter{};
+            auto other = test::counter{};
             instance = other;
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::registry();
+        auto registry = test::aux::registry{};
         {
-            auto instance = test::counter();
-            auto other = test::counter();
+            auto instance = test::counter{};
+            auto other = test::counter{};
             instance = std::move(other);
         }
         cassert(registry.status());

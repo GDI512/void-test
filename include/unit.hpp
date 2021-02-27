@@ -8,12 +8,12 @@ namespace test {
 
     template <typename T>
     auto unit(const char* name, T&& function) noexcept -> int {
-        const auto scope = test::output(name);
-        const auto registry = test::registry();
+        const auto scope = aux::output(name);
+        const auto registry = aux::registry();
         try {
             function();
         } catch (...) {
-            registry::on_exception(name);
+            aux::registry::on_exception(name);
         }
         return 0;
     }

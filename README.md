@@ -14,5 +14,6 @@ can and should be precompiled is compiled into a static library.
 straightforward as possible.
 
 # Getting started
-For tutorial and basic API documentation, see
-[wiki](https://github.com/GDI512/void-test/wiki).
+For tutorial and possibly outdated documentation, see
+[wiki](https://github.com/GDI512/void-test/wiki). A proper API reference manual
+is in the works.

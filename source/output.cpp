@@ -1,86 +1,96 @@
 #include <output.hpp>
 #include <format.hpp>
 #include <state.hpp>
+#include <cstdarg>
 #include <cstdio>
 
-namespace test {
+namespace {
+
+    using namespace test;
 
     struct test_tag {};
     struct resource_tag {};
 
-    static auto indent() noexcept -> void {
-        ++indent_level;
+    auto indent() noexcept {
+        ++aux::indentation;
     }
 
-    static auto outdent() noexcept -> void {
-        --indent_level;
+    auto outdent() noexcept {
+        --aux::indentation;
     }
 
-    static auto empty(state result, test_tag) {
-        return result.assert.total == 0;
-    }
-
-    static auto empty(state result, resource_tag) {
-        return result.object.destroyed == 0 && result.object.constructed == 0;
-    }
-
-    static auto repeat(const char* text, size_type count) -> void {
+    auto repeat(const char* text, aux::size_type count) noexcept {
         while (count-- > 0)
             std::fputs(text, stdout);
     }
 
+    auto print(const char* format, ...) noexcept {
+        auto args = va_list{};
+        va_start(args, format);
+        std::vprintf(format, args);
+        va_end(args);
+    }
+
+    constexpr auto empty(aux::state state, test_tag) noexcept {
+        return state.assert.total == 0;
+    }
+
+    constexpr auto empty(aux::state state, resource_tag) noexcept {
+        return state.object.destroyed + state.object.constructed == 0;
+    }
+
 }
 
-namespace test {
+namespace test::aux {
 
-    size_type indent_level = 0;
+    size_type indentation = 0;
 
     output::~output() noexcept {
-        test::outdent();
+        ::outdent();
     }
 
     output::output(const char* name) noexcept {
-        test::repeat(format::space, indent_level);
-        std::printf(format::scope, name);
-        test::indent();
+        ::repeat(format::space, indentation);
+        ::print(format::scope, name);
+        ::indent();
     }
 
     auto output::on_error(const char* source) noexcept -> void {
-        test::repeat(format::space, indent_level);
-        std::printf(format::error, source);
+        ::repeat(format::space, indentation);
+        ::print(format::error, source);
     }
 
     auto output::on_success(const char* source) noexcept -> void {
-        test::repeat(format::space, indent_level);
-        std::printf(format::success, source);
+        ::repeat(format::space, indentation);
+        ::print(format::success, source);
     }
 
     auto output::on_exception(const char* source) noexcept -> void {
-        test::repeat(format::space, indent_level);
-        std::printf(format::exception, source);
+        ::repeat(format::space, indentation);
+        ::print(format::exception, source);
     }
 
     auto output::on_unit_error(state result) noexcept -> void {
-        if (!test::empty(result, test_tag())) {
-            test::repeat(format::space, indent_level);
-            std::printf(format::test_error, result.assert.error, result.assert.total);
+        if (!::empty(result, test_tag())) {
+            ::repeat(format::space, indentation);
+            ::print(format::test_error, result.assert.error, result.assert.total);
         }
-        if (!test::empty(result, resource_tag())) {
-            test::repeat(format::space, indent_level);
-            std::printf(format::resource_error, result.object.destroyed, result.object.constructed,
-                        result.error.destructor, result.error.constructor, result.error.assignment);
+        if (!::empty(result, resource_tag())) {
+            ::repeat(format::space, indentation);
+            ::print(format::resource_error, result.object.destroyed, result.object.constructed,
+                    result.error.destructor, result.error.constructor, result.error.assignment);
         }
     }
 
     auto output::on_unit_success(state result) noexcept -> void {
-        if (!test::empty(result, test_tag())) {
-            test::repeat(format::space, indent_level);
-            std::printf(format::test_success, result.assert.error, result.assert.total);
+        if (!::empty(result, test_tag())) {
+            ::repeat(format::space, indentation);
+            ::print(format::test_success, result.assert.error, result.assert.total);
         }
-        if (!test::empty(result, resource_tag())) {
-            test::repeat(format::space, indent_level);
-            std::printf(format::resource_success, result.object.destroyed, result.object.constructed,
-                        result.error.destructor, result.error.constructor, result.error.assignment);
+        if (!::empty(result, resource_tag())) {
+            ::repeat(format::space, indentation);
+            ::print(format::resource_success, result.object.destroyed, result.object.constructed,
+                    result.error.destructor, result.error.constructor, result.error.assignment);
         }
     }
 

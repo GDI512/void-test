@@ -10,21 +10,21 @@ namespace test {
 
     inline auto check(bool value) -> bool {
         if (value) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
 
     template <typename I, typename F>
     auto check(I first, I last, F&& predicate) -> bool {
-        if (test::all_of(first, last, predicate)) {
-            registry::on_success(scope);
+        if (aux::all_of(first, last, predicate)) {
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -32,21 +32,21 @@ namespace test {
     template <typename T, typename U>
     auto check_equal(const T& left, const U& right) -> bool {
         if (left == right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
 
     template <typename I, typename O>
     auto check_equal(I first, I last, O other) -> bool {
-        if (test::equal(first, last, other)) {
-            registry::on_success(scope);
+        if (aux::equal(first, last, other)) {
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -54,21 +54,21 @@ namespace test {
     template <typename T, typename U>
     auto check_not_equal(const T& left, const U& right) -> bool {
         if (left != right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
 
     template <typename I, typename O>
     auto check_not_equal(I first, I last, O other) -> bool {
-        if (!test::equal(first, last, other)) {
-            registry::on_success(scope);
+        if (!aux::equal(first, last, other)) {
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -76,10 +76,10 @@ namespace test {
     template <typename T, typename U>
     auto check_less(const T& left, const U& right) -> bool {
         if (left < right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -87,10 +87,10 @@ namespace test {
     template <typename T, typename U>
     auto check_not_less(const T& left, const U& right) -> bool {
         if (left >= right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -98,10 +98,10 @@ namespace test {
     template <typename T, typename U>
     auto check_greater(const T& left, const U& right) -> bool {
         if (left > right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -109,10 +109,10 @@ namespace test {
     template <typename T, typename U>
     auto check_not_greater(const T& left, const U& right) -> bool {
         if (left <= right) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
@@ -120,11 +120,11 @@ namespace test {
     template <typename F, typename... V>
     auto check_throws(F&& function, V&&... args) -> bool {
         try {
-            function(forward<V>(args)...);
-            registry::on_error(scope);
+            function(aux::forward<V>(args)...);
+            aux::registry::on_error(scope);
             return false;
         } catch (...) {
-            registry::on_success(scope);
+            aux::registry::on_success(scope);
             return true;
         }
     }
@@ -132,33 +132,33 @@ namespace test {
     template <typename F, typename... V>
     auto check_nothrows(F&& function, V&&... args) -> bool {
         try {
-            function(forward<V>(args)...);
-            registry::on_success(scope);
+            function(aux::forward<V>(args)...);
+            aux::registry::on_success(scope);
             return true;
         } catch (...) {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
 
     template <typename I, typename O>
     auto check_sorted(I first, I last, O&& compare) -> bool {
-        if (test::is_sorted(first, last, compare)) {
-            registry::on_success(scope);
+        if (aux::is_sorted(first, last, compare)) {
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }
 
     template <typename I, typename T>
     auto check_contains(I first, I last, const T& value) -> bool {
-        if (test::find(first, last, value) != last) {
-            registry::on_success(scope);
+        if (aux::find(first, last, value) != last) {
+            aux::registry::on_success(scope);
             return true;
         } else {
-            registry::on_error(scope);
+            aux::registry::on_error(scope);
             return false;
         }
     }

@@ -3,7 +3,7 @@
 
 #include "utility.hpp"
 
-namespace test {
+namespace test::aux {
 
     enum class exit_code : int { success = 0, failure = 1 };
 
@@ -55,7 +55,7 @@ namespace test {
         static auto on_operator_error() noexcept -> void;
     };
 
-    extern exit_code return_value;
+    extern exit_code exit_value;
 
 }
 

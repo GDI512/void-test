@@ -4,7 +4,7 @@
 #include "state.hpp"
 #include "utility.hpp"
 
-namespace test {
+namespace test::aux {
 
     class output {
       public:
@@ -25,7 +25,7 @@ namespace test {
         static auto on_unit_success(state state) noexcept -> void;
     };
 
-    extern size_type indent_level;
+    extern size_type indentation;
 
 }
 

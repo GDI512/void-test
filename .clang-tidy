@@ -7,6 +7,7 @@ Checks: '-*,
          clang-diagnostic-*,
          -cert-oop54-cpp,
          -cert-err58-cpp,
+         -cert-dcl50-cpp,
          -bugprone-unhandled-self-assignment'
 UseColor: true
 WarningsAsErrors: '*'
