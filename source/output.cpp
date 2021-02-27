@@ -25,7 +25,7 @@ namespace {
     }
 
     auto print(const char* format, ...) noexcept {
-        auto args = va_list{};
+        va_list args;
         va_start(args, format);
         std::vprintf(format, args);
         va_end(args);
