@@ -129,10 +129,10 @@ namespace test::aux {
         const auto result = ::difference(global, snapshot);
         if (!empty() && status()) {
             output::on_unit_success(result);
-            ::restore(global, snapshot);
+            ::restore(global, result);
         } else {
             output::on_unit_error(result);
-            ::restore(global, snapshot);
+            ::restore(global, result);
             ::code(exit_code::failure);
         }
     }
