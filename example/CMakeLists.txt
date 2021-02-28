@@ -7,3 +7,4 @@ function (add_example_executable target source)
 endfunction ()
 
 add_example_executable (group group.cpp)
+add_example_executable (check check.cpp)

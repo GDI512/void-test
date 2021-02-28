@@ -40,6 +40,11 @@ const auto group = test::unit("<group>", []{
 
 });
 
+// ================================================================
+//    Note - an uncaught exception thrown inside a unit gets
+//  caught by that unit and counts as an assertion failure.
+// ================================================================
+
 const auto other = test::unit("<other>", []{
 
     test::unit("<case>", []{
