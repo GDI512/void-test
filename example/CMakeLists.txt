@@ -6,5 +6,6 @@ function (add_example_executable target source)
     target_link_libraries (${target} PRIVATE cppltf)
 endfunction ()
 
+add_example_executable (object object.cpp)
 add_example_executable (group group.cpp)
 add_example_executable (check check.cpp)
