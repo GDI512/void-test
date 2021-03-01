@@ -8,6 +8,9 @@ namespace test::core {
 
     class output {
       public:
+        static size_type indentation;
+
+      public:
         ~output() noexcept;
         output(string name) noexcept;
         output(output&& other) = delete;
@@ -24,8 +27,6 @@ namespace test::core {
         static auto on_unit_error(state state) noexcept -> void;
         static auto on_unit_success(state state) noexcept -> void;
     };
-
-    extern size_type indentation;
 
 }
 
