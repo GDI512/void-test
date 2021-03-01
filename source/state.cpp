@@ -9,7 +9,7 @@ namespace {
     struct object_tag {};
     struct error_tag {};
 
-    constexpr auto code(aux::exit_code value) noexcept {
+    constexpr auto set_exit(aux::exit_code value) noexcept {
         aux::exit_value = value;
     }
 
@@ -76,26 +76,26 @@ namespace {
         return result;
     }
 
-    constexpr auto restore(aux::state& state, aux::state snapshot, assert_tag) noexcept {
+    constexpr auto rollback(aux::state& state, aux::state snapshot, assert_tag) noexcept {
         state.assert.total -= snapshot.assert.total;
         state.assert.error -= snapshot.assert.error;
     }
 
-    constexpr auto restore(aux::state& state, aux::state snapshot, object_tag) noexcept {
+    constexpr auto rollback(aux::state& state, aux::state snapshot, object_tag) noexcept {
         state.object.destroyed -= snapshot.object.destroyed;
         state.object.constructed -= snapshot.object.constructed;
     }
 
-    constexpr auto restore(aux::state& state, aux::state snapshot, error_tag) noexcept {
+    constexpr auto rollback(aux::state& state, aux::state snapshot, error_tag) noexcept {
         state.error.destructor -= snapshot.error.destructor;
         state.error.constructor -= snapshot.error.constructor;
         state.error.assignment -= snapshot.error.assignment;
     }
 
-    constexpr auto restore(aux::state& state, aux::state snapshot) noexcept {
-        ::restore(state, snapshot, assert_tag{});
-        ::restore(state, snapshot, object_tag{});
-        ::restore(state, snapshot, error_tag{});
+    constexpr auto rollback(aux::state& state, aux::state snapshot) noexcept {
+        ::rollback(state, snapshot, assert_tag{});
+        ::rollback(state, snapshot, object_tag{});
+        ::rollback(state, snapshot, error_tag{});
     }
 
     constexpr auto status(aux::state state, assert_tag) noexcept {
@@ -129,11 +129,11 @@ namespace test::aux {
         const auto result = ::difference(global, snapshot);
         if (!empty() && status()) {
             output::on_unit_success(result);
-            ::restore(global, result);
+            ::rollback(global, result);
         } else {
             output::on_unit_error(result);
-            ::restore(global, result);
-            ::code(exit_code::failure);
+            ::rollback(global, result);
+            ::set_exit(exit_code::failure);
         }
     }
 
