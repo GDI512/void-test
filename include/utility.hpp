@@ -1,7 +1,7 @@
 #ifndef CPPLTF_UTILITY_HPP
 #define CPPLTF_UTILITY_HPP
 
-namespace test::aux {
+namespace test::core {
 
     struct true_type {
         static constexpr auto value = true;
@@ -38,6 +38,7 @@ namespace test::aux {
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
 
+    using string = const char*;
     using size_type = decltype(sizeof(int));
     using difference_type = decltype(static_cast<int*>(0) - static_cast<int*>(0));
 
@@ -99,8 +100,8 @@ namespace test::aux {
 
     template <typename T, typename U>
     constexpr auto exchange(T& value, U&& new_value) {
-        auto old = aux::move(value);
-        value = aux::forward<U>(new_value);
+        auto old = core::move(value);
+        value = core::forward<U>(new_value);
         return old;
     }
 

@@ -3,20 +3,20 @@
 
 #include "utility.hpp"
 
-namespace test::aux {
+namespace test::core {
 
     enum class exit_code : int { success = 0, failure = 1 };
 
     struct state {
-        struct {
+        struct assert_struct {
             size_type total;
             size_type error;
         } assert;
-        struct {
+        struct object_struct {
             size_type destroyed;
             size_type constructed;
         } object;
-        struct {
+        struct error_struct {
             size_type destructor;
             size_type constructor;
             size_type assignment;
@@ -45,9 +45,9 @@ namespace test::aux {
         auto status() noexcept -> bool;
 
       public:
-        static auto on_error(const char* source) noexcept -> void;
-        static auto on_success(const char* source) noexcept -> void;
-        static auto on_exception(const char* source) noexcept -> void;
+        static auto on_error(string source) noexcept -> void;
+        static auto on_success(string source) noexcept -> void;
+        static auto on_exception(string source) noexcept -> void;
         static auto on_destruction() noexcept -> void;
         static auto on_construction() noexcept -> void;
         static auto on_destructor_error() noexcept -> void;

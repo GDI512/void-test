@@ -5,121 +5,117 @@ namespace {
 
     using namespace test;
 
-    struct assert_tag {};
-    struct object_tag {};
-    struct error_tag {};
-
-    constexpr auto set_exit(aux::exit_code value) noexcept {
-        aux::exit_value = value;
+    auto set_exit(core::exit_code value) noexcept {
+        core::exit_value = value;
     }
 
-    constexpr auto empty(aux::state state) noexcept {
+    auto empty(core::state state) noexcept {
         return state.assert.total + state.object.constructed + state.object.destroyed == 0;
     }
 
-    constexpr auto on_error(aux::state& state) noexcept {
-        ++state.assert.total;
-        ++state.assert.error;
+    auto on_error(core::state::assert_struct& state) noexcept {
+        ++state.total;
+        ++state.error;
     }
 
-    constexpr auto on_success(aux::state& state) noexcept {
-        ++state.assert.total;
+    auto on_success(core::state::assert_struct& state) noexcept {
+        ++state.total;
     }
 
-    constexpr auto on_destruction(aux::state& state) noexcept {
-        ++state.object.destroyed;
+    auto on_destruction(core::state::object_struct& state) noexcept {
+        ++state.destroyed;
     }
 
-    constexpr auto on_construction(aux::state& state) noexcept {
-        ++state.object.constructed;
+    auto on_construction(core::state::object_struct& state) noexcept {
+        ++state.constructed;
     }
 
-    constexpr auto on_destructor_error(aux::state& state) noexcept {
-        ++state.error.destructor;
+    auto on_destructor_error(core::state::error_struct& state) noexcept {
+        ++state.destructor;
     }
 
-    constexpr auto on_constructor_error(aux::state& state) noexcept {
-        ++state.error.constructor;
+    auto on_constructor_error(core::state::error_struct& state) noexcept {
+        ++state.constructor;
     }
 
-    constexpr auto on_operator_error(aux::state& state) noexcept {
-        ++state.error.assignment;
+    auto on_operator_error(core::state::error_struct& state) noexcept {
+        ++state.assignment;
     }
 
-    constexpr auto difference(aux::state state, aux::state snapshot, assert_tag) noexcept {
-        auto result = decltype(snapshot.assert){};
-        result.total = state.assert.total - snapshot.assert.total;
-        result.error = state.assert.error - snapshot.assert.error;
+    auto difference(core::state::assert_struct state, core::state::assert_struct snapshot) noexcept {
+        auto result = decltype(state){};
+        result.total = state.total - snapshot.total;
+        result.error = state.error - snapshot.error;
         return result;
     }
 
-    constexpr auto difference(aux::state state, aux::state snapshot, object_tag) noexcept {
-        auto result = decltype(snapshot.object){};
-        result.destroyed = state.object.destroyed - snapshot.object.destroyed;
-        result.constructed = state.object.constructed - snapshot.object.constructed;
+    auto difference(core::state::object_struct state, core::state::object_struct snapshot) noexcept {
+        auto result = decltype(state){};
+        result.destroyed = state.destroyed - snapshot.destroyed;
+        result.constructed = state.constructed - snapshot.constructed;
         return result;
     }
 
-    constexpr auto difference(aux::state state, aux::state snapshot, error_tag) noexcept {
-        auto result = decltype(snapshot.error){};
-        result.destructor = state.error.destructor - snapshot.error.destructor;
-        result.constructor = state.error.constructor - snapshot.error.constructor;
-        result.assignment = state.error.assignment - snapshot.error.assignment;
+    auto difference(core::state::error_struct state, core::state::error_struct snapshot) noexcept {
+        auto result = decltype(state){};
+        result.destructor = state.destructor - snapshot.destructor;
+        result.constructor = state.constructor - snapshot.constructor;
+        result.assignment = state.assignment - snapshot.assignment;
         return result;
     }
 
-    constexpr auto difference(aux::state state, aux::state snapshot) noexcept {
-        auto result = aux::state{};
-        result.assert = ::difference(state, snapshot, assert_tag{});
-        result.object = ::difference(state, snapshot, object_tag{});
-        result.error = ::difference(state, snapshot, error_tag{});
+    auto difference(core::state state, core::state snapshot) noexcept {
+        auto result = core::state{};
+        result.assert = ::difference(state.assert, snapshot.assert);
+        result.object = ::difference(state.object, snapshot.object);
+        result.error = ::difference(state.error, snapshot.error);
         return result;
     }
 
-    constexpr auto rollback(aux::state& state, aux::state snapshot, assert_tag) noexcept {
-        state.assert.total -= snapshot.assert.total;
-        state.assert.error -= snapshot.assert.error;
+    auto rollback(core::state::assert_struct& state, core::state::assert_struct snapshot) noexcept {
+        state.total -= snapshot.total;
+        state.error -= snapshot.error;
     }
 
-    constexpr auto rollback(aux::state& state, aux::state snapshot, object_tag) noexcept {
-        state.object.destroyed -= snapshot.object.destroyed;
-        state.object.constructed -= snapshot.object.constructed;
+    auto rollback(core::state::object_struct& state, core::state::object_struct snapshot) noexcept {
+        state.destroyed -= snapshot.destroyed;
+        state.constructed -= snapshot.constructed;
     }
 
-    constexpr auto rollback(aux::state& state, aux::state snapshot, error_tag) noexcept {
-        state.error.destructor -= snapshot.error.destructor;
-        state.error.constructor -= snapshot.error.constructor;
-        state.error.assignment -= snapshot.error.assignment;
+    auto rollback(core::state::error_struct& state, core::state::error_struct snapshot) noexcept {
+        state.destructor -= snapshot.destructor;
+        state.constructor -= snapshot.constructor;
+        state.assignment -= snapshot.assignment;
     }
 
-    constexpr auto rollback(aux::state& state, aux::state snapshot) noexcept {
-        ::rollback(state, snapshot, assert_tag{});
-        ::rollback(state, snapshot, object_tag{});
-        ::rollback(state, snapshot, error_tag{});
+    auto rollback(core::state& state, core::state snapshot) noexcept {
+        ::rollback(state.assert, snapshot.assert);
+        ::rollback(state.object, snapshot.object);
+        ::rollback(state.error, snapshot.error);
     }
 
-    constexpr auto status(aux::state state, assert_tag) noexcept {
-        return state.assert.error == 0;
+    auto status(core::state::assert_struct state) noexcept {
+        return state.error == 0;
     }
 
-    constexpr auto status(aux::state state, object_tag) noexcept {
-        return state.object.destroyed == state.object.constructed;
+    auto status(core::state::object_struct state) noexcept {
+        return state.destroyed == state.constructed;
     }
 
-    constexpr auto status(aux::state state, error_tag) noexcept {
-        return state.error.destructor + state.error.constructor + state.error.assignment == 0;
+    auto status(core::state::error_struct state) noexcept {
+        return state.destructor + state.constructor + state.assignment == 0;
     }
 
-    constexpr auto status(aux::state state) noexcept {
-        const auto assert_status = ::status(state, assert_tag{});
-        const auto object_status = ::status(state, object_tag{});
-        const auto error_status = ::status(state, error_tag{});
+    auto status(core::state state) noexcept {
+        const auto assert_status = ::status(state.assert);
+        const auto object_status = ::status(state.object);
+        const auto error_status = ::status(state.error);
         return assert_status && object_status && error_status;
     }
 
 }
 
-namespace test::aux {
+namespace test::core {
 
     exit_code exit_value = exit_code::success;
 
@@ -149,39 +145,39 @@ namespace test::aux {
         return ::status(result);
     }
 
-    auto registry::on_error(const char* source) noexcept -> void {
+    auto registry::on_error(string source) noexcept -> void {
         output::on_error(source);
-        ::on_error(global);
+        ::on_error(global.assert);
     }
 
-    auto registry::on_success(const char* source) noexcept -> void {
+    auto registry::on_success(string source) noexcept -> void {
         output::on_success(source);
-        ::on_success(global);
+        ::on_success(global.assert);
     }
 
-    auto registry::on_exception(const char* source) noexcept -> void {
+    auto registry::on_exception(string source) noexcept -> void {
         output::on_exception(source);
-        ::on_error(global);
+        ::on_error(global.assert);
     }
 
     auto registry::on_destruction() noexcept -> void {
-        ::on_destruction(global);
+        ::on_destruction(global.object);
     }
 
     auto registry::on_construction() noexcept -> void {
-        ::on_construction(global);
+        ::on_construction(global.object);
     }
 
     auto registry::on_destructor_error() noexcept -> void {
-        ::on_destructor_error(global);
+        ::on_destructor_error(global.error);
     }
 
     auto registry::on_constructor_error() noexcept -> void {
-        ::on_constructor_error(global);
+        ::on_constructor_error(global.error);
     }
 
     auto registry::on_operator_error() noexcept -> void {
-        ::on_operator_error(global);
+        ::on_operator_error(global.error);
     }
 
 }

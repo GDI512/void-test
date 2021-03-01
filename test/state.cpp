@@ -2,71 +2,71 @@
 
 int main() {
     {
-        cassert(test::aux::exit_value == test::aux::exit_code::success);
+        cassert(test::core::exit_value == test::core::exit_code::success);
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         cassert(registry.empty());
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_error("");
+        auto registry = test::core::registry{};
+        test::core::registry::on_error("");
         cassert(!registry.empty());
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_success("");
-        cassert(!registry.empty());
-        cassert(registry.status());
-    }
-    {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_exception("");
-        cassert(!registry.empty());
-        cassert(!registry.status());
-    }
-    {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_destruction();
-        cassert(!registry.empty());
-        cassert(!registry.status());
-    }
-    {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_destruction();
-        test::aux::registry::on_construction();
+        auto registry = test::core::registry{};
+        test::core::registry::on_success("");
         cassert(!registry.empty());
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_destructor_error();
+        auto registry = test::core::registry{};
+        test::core::registry::on_exception("");
+        cassert(!registry.empty());
+        cassert(!registry.status());
+    }
+    {
+        auto registry = test::core::registry{};
+        test::core::registry::on_destruction();
+        cassert(!registry.empty());
+        cassert(!registry.status());
+    }
+    {
+        auto registry = test::core::registry{};
+        test::core::registry::on_destruction();
+        test::core::registry::on_construction();
+        cassert(!registry.empty());
+        cassert(registry.status());
+    }
+    {
+        auto registry = test::core::registry{};
+        test::core::registry::on_destructor_error();
         cassert(registry.empty());
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_constructor_error();
+        auto registry = test::core::registry{};
+        test::core::registry::on_constructor_error();
         cassert(registry.empty());
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
-        test::aux::registry::on_operator_error();
+        auto registry = test::core::registry{};
+        test::core::registry::on_operator_error();
         cassert(registry.empty());
         cassert(!registry.status());
     }
     {
         {
-            auto registry = test::aux::registry{};
-            test::aux::registry::on_error("");
-            test::aux::registry::on_exception("");
-            test::aux::registry::on_destructor_error();
-            test::aux::registry::on_constructor_error();
-            test::aux::registry::on_operator_error();
+            auto registry = test::core::registry{};
+            test::core::registry::on_error("");
+            test::core::registry::on_exception("");
+            test::core::registry::on_destructor_error();
+            test::core::registry::on_constructor_error();
+            test::core::registry::on_operator_error();
         }
-        cassert(test::aux::exit_value == test::aux::exit_code::failure);
+        cassert(test::core::exit_value == test::core::exit_code::failure);
     }
 }

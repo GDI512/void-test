@@ -7,13 +7,13 @@
 namespace test {
 
     template <typename T>
-    auto unit(const char* name, T&& function) noexcept -> int {
-        const auto scope = aux::output(name);
-        const auto registry = aux::registry();
+    auto unit(core::string name, T&& function) noexcept -> int {
+        const auto scope = core::output(name);
+        const auto registry = core::registry();
         try {
             function();
         } catch (...) {
-            aux::registry::on_exception(name);
+            core::registry::on_exception(name);
         }
         return 0;
     }

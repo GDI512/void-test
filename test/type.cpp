@@ -5,14 +5,14 @@
 
 int main() {
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             instance.~object();
@@ -20,7 +20,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             new (&instance) test::object{};
@@ -28,7 +28,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{instance};
@@ -36,7 +36,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{std::move(instance)};
@@ -44,7 +44,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             instance.~object();
@@ -53,7 +53,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             instance.~object();
@@ -62,7 +62,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -71,7 +71,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -80,7 +80,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -90,7 +90,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -100,7 +100,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -110,7 +110,7 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::object{};
             auto other = test::object{};
@@ -120,14 +120,14 @@ int main() {
         cassert(!registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         auto instance = test::object{32};
         const auto other = test::object{16};
         cassert(instance == 32);
         cassert(other == 16);
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         auto instance = test::object{32};
         const auto other = test::object{16};
         instance = other;
@@ -135,14 +135,14 @@ int main() {
         cassert(other == 16);
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::counter{};
         }
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::counter{};
             auto other = test::counter{instance};
@@ -150,7 +150,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::counter{};
             auto other = test::counter{std::move(instance)};
@@ -158,7 +158,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::counter{};
             auto other = test::counter{};
@@ -167,7 +167,7 @@ int main() {
         cassert(registry.status());
     }
     {
-        auto registry = test::aux::registry{};
+        auto registry = test::core::registry{};
         {
             auto instance = test::counter{};
             auto other = test::counter{};
