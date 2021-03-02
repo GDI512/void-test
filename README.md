@@ -1,3 +1,6 @@
+[![Windows Build](https://github.com/GDI512/cppltf/actions/workflows/windows-ci.yml/badge.svg)](https://github.com/GDI512/cppltf/actions/workflows/windows-ci.yml)
+[![MacOS Build](https://github.com/GDI512/cppltf/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/GDI512/cppltf/actions/workflows/macos-ci.yml)
+[![Linux Build](https://github.com/GDI512/cppltf/actions/workflows/linux-ci.yml/badge.svg)](https://github.com/GDI512/cppltf/actions/workflows/linux-ci.yml)
 # About
 The *Lightweight C++ Testing Framework* is a modern macro-free library designed
 for testing small projects. It guarantees fast compile times by removing all
