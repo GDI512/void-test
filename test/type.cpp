@@ -5,6 +5,28 @@
 
 int main() {
     {
+        auto instance = test::object{4};
+        auto other = test::object{2};
+        cassert(instance == 4);
+        cassert(other == 2);
+        cassert(instance != other);
+        cassert(!(instance == other));
+    }
+    {
+        auto instance = test::object{4};
+        auto other = test::object{2};
+        instance = other;
+        cassert(instance == 2);
+        cassert(other == 2);
+    }
+    {
+        auto instance = test::object{4};
+        auto other = test::object{2};
+        instance = std::move(other);
+        cassert(instance == 2);
+        cassert(other == 2);
+    }
+    {
         auto registry = test::core::registry{};
         {
             auto instance = test::object{};
@@ -133,6 +155,28 @@ int main() {
         instance = other;
         cassert(instance == 16);
         cassert(other == 16);
+    }
+    {
+        auto instance = test::counter{4};
+        auto other = test::counter{2};
+        cassert(instance == 4);
+        cassert(other == 2);
+        cassert(instance != other);
+        cassert(!(instance == other));
+    }
+    {
+        auto instance = test::counter{4};
+        auto other = test::counter{2};
+        instance = other;
+        cassert(instance == 2);
+        cassert(other == 2);
+    }
+    {
+        auto instance = test::counter{4};
+        auto other = test::counter{2};
+        instance = std::move(other);
+        cassert(instance == 2);
+        cassert(other == 2);
     }
     {
         auto registry = test::core::registry{};

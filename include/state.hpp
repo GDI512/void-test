@@ -55,7 +55,7 @@ namespace test::core {
         static auto on_operator_error() noexcept -> void;
     };
 
-    extern exit_code exit_value;
+    extern exit_code code;
 
 }
 

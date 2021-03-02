@@ -27,19 +27,20 @@ namespace test {
     };
 
     class counter {
+      private:
+        int number;
+
       public:
         ~counter() noexcept;
-        counter() noexcept;
+        counter(int number = 0) noexcept;
         counter(counter&& other) noexcept;
         counter(const counter& other) noexcept;
 
       public:
+        operator int() const noexcept;
         auto operator=(counter&& other) noexcept -> counter&;
         auto operator=(const counter& other) noexcept -> counter&;
     };
-
-    auto operator==(const counter& left, const counter& right) noexcept -> bool;
-    auto operator!=(const counter& left, const counter& right) noexcept -> bool;
 
 }
 

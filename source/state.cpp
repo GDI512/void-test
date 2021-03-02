@@ -5,41 +5,27 @@ namespace {
 
     using namespace test;
 
-    auto set_exit(core::exit_code value) noexcept {
-        core::exit_value = value;
-    }
-
     auto empty(core::state state) noexcept {
         return state.assert.total + state.object.constructed + state.object.destroyed == 0;
     }
 
-    auto on_error(core::state::assert_struct& state) noexcept {
-        ++state.total;
-        ++state.error;
+    auto status(core::state::assert_struct state) noexcept {
+        return state.error == 0;
     }
 
-    auto on_success(core::state::assert_struct& state) noexcept {
-        ++state.total;
+    auto status(core::state::object_struct state) noexcept {
+        return state.destroyed == state.constructed;
     }
 
-    auto on_destruction(core::state::object_struct& state) noexcept {
-        ++state.destroyed;
+    auto status(core::state::error_struct state) noexcept {
+        return state.destructor + state.constructor + state.assignment == 0;
     }
 
-    auto on_construction(core::state::object_struct& state) noexcept {
-        ++state.constructed;
-    }
-
-    auto on_destructor_error(core::state::error_struct& state) noexcept {
-        ++state.destructor;
-    }
-
-    auto on_constructor_error(core::state::error_struct& state) noexcept {
-        ++state.constructor;
-    }
-
-    auto on_operator_error(core::state::error_struct& state) noexcept {
-        ++state.assignment;
+    auto status(core::state state) noexcept {
+        const auto assert_status = ::status(state.assert);
+        const auto object_status = ::status(state.object);
+        const auto error_status = ::status(state.error);
+        return assert_status && object_status && error_status;
     }
 
     auto difference(core::state::assert_struct state, core::state::assert_struct snapshot) noexcept {
@@ -94,30 +80,44 @@ namespace {
         ::rollback(state.error, snapshot.error);
     }
 
-    auto status(core::state::assert_struct state) noexcept {
-        return state.error == 0;
+    auto on_exit(core::exit_code value) noexcept {
+        core::code = value;
     }
 
-    auto status(core::state::object_struct state) noexcept {
-        return state.destroyed == state.constructed;
+    auto on_error(core::state::assert_struct& state) noexcept {
+        ++state.total;
+        ++state.error;
     }
 
-    auto status(core::state::error_struct state) noexcept {
-        return state.destructor + state.constructor + state.assignment == 0;
+    auto on_success(core::state::assert_struct& state) noexcept {
+        ++state.total;
     }
 
-    auto status(core::state state) noexcept {
-        const auto assert_status = ::status(state.assert);
-        const auto object_status = ::status(state.object);
-        const auto error_status = ::status(state.error);
-        return assert_status && object_status && error_status;
+    auto on_destruction(core::state::object_struct& state) noexcept {
+        ++state.destroyed;
+    }
+
+    auto on_construction(core::state::object_struct& state) noexcept {
+        ++state.constructed;
+    }
+
+    auto on_destructor_error(core::state::error_struct& state) noexcept {
+        ++state.destructor;
+    }
+
+    auto on_constructor_error(core::state::error_struct& state) noexcept {
+        ++state.constructor;
+    }
+
+    auto on_operator_error(core::state::error_struct& state) noexcept {
+        ++state.assignment;
     }
 
 }
 
 namespace test::core {
 
-    exit_code exit_value = exit_code::success;
+    exit_code code = exit_code::success;
 
     state registry::global = {};
 
@@ -129,7 +129,7 @@ namespace test::core {
         } else {
             output::on_unit_error(result);
             ::rollback(global, result);
-            ::set_exit(exit_code::failure);
+            ::on_exit(exit_code::failure);
         }
     }
 

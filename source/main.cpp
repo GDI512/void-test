@@ -3,5 +3,5 @@
 using namespace test;
 
 int main() {
-    return static_cast<int>(core::exit_value);
+    return static_cast<int>(core::code);
 }

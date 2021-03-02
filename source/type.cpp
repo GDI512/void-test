@@ -79,40 +79,30 @@ namespace test {
         core::registry::on_destruction();
     }
 
-    counter::counter() noexcept {
+    counter::counter(int number) noexcept : number(number) {
         core::registry::on_construction();
     }
 
-    counter::counter(counter&& other) noexcept {
-        static_cast<void>(other);
+    counter::counter(counter&& other) noexcept : number(other.number) {
         core::registry::on_construction();
     }
 
-    counter::counter(const counter& other) noexcept {
-        static_cast<void>(other);
+    counter::counter(const counter& other) noexcept : number(other.number) {
         core::registry::on_construction();
+    }
+
+    counter::operator int() const noexcept {
+        return number;
     }
 
     auto counter::operator=(counter&& other) noexcept -> counter& {
-        static_cast<void>(other);
+        number = other.number;
         return *this;
     }
 
     auto counter::operator=(const counter& other) noexcept -> counter& {
-        static_cast<void>(other);
+        number = other.number;
         return *this;
-    }
-
-    auto operator==(const counter& left, const counter& right) noexcept -> bool {
-        static_cast<void>(left);
-        static_cast<void>(right);
-        return true;
-    }
-
-    auto operator!=(const counter& left, const counter& right) noexcept -> bool {
-        static_cast<void>(left);
-        static_cast<void>(right);
-        return false;
     }
 
 }

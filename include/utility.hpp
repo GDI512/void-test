@@ -99,9 +99,9 @@ namespace test::core {
     }
 
     template <typename T, typename U>
-    constexpr auto exchange(T& value, U&& new_value) {
+    constexpr auto exchange(T& value, U&& replacement) {
         auto old = core::move(value);
-        value = core::forward<U>(new_value);
+        value = core::forward<U>(replacement);
         return old;
     }
 
