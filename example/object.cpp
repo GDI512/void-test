@@ -36,6 +36,12 @@ const auto group = test::unit("raii", []{
         test::check_equal(vector.capacity(), 64);
     });
 
+    // ================================================
+    //    Both test::counter and test::object are
+    //  constructible from and implicitly convertible
+    //  to int
+    // ================================================
+
     test::unit("test::vector", []{
         auto vector = std::vector<test::object>(64);
         test::check_equal(vector.size(), 64);
