@@ -5,22 +5,11 @@
 
 namespace test::core {
 
-    using state_array = array<int, 7>;
+    using state_array = array<size_type, 7>;
 
-    enum exit_code {
-        success,
-        failure
-    };
+    enum exit_code { success, failure };
 
-    enum state {
-        checks,
-        errors,
-        destructors,
-        constructors,
-        destructor_errors,
-        constructor_errors,
-        assignment_errors
-    };
+    enum state { checks, errors, destructors, constructors, destructor_errors, constructor_errors, assignment_errors };
 
     class registry {
       private:

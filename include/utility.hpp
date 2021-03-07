@@ -172,6 +172,12 @@ namespace test::core {
         constexpr auto size() const noexcept -> size_type { return N; }
     };
 
+    auto on_error(string source) noexcept -> bool;
+
+    auto on_success(string source) noexcept -> bool;
+
+    auto on_exception(string source) noexcept -> void;
+
 }
 
 #endif
