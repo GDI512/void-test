@@ -13,12 +13,6 @@ namespace test::core {
       public:
         ~output() noexcept;
         output(string name) noexcept;
-        output(output&& other) = delete;
-        output(const output& other) = delete;
-
-      public:
-        auto operator=(output&& other) -> output& = delete;
-        auto operator=(const output& other) -> output& = delete;
 
       public:
         static auto on_error(string source) noexcept -> void;

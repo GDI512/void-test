@@ -27,14 +27,6 @@ namespace {
         va_end(args);
     }
 
-    auto empty(core::state::assert_struct state) noexcept {
-        return state.total == 0;
-    }
-
-    auto empty(core::state::object_struct state) noexcept {
-        return state.destroyed + state.constructed == 0;
-    }
-
 }
 
 namespace test::format {
@@ -81,26 +73,26 @@ namespace test::core {
     }
 
     auto output::on_unit_error(state result) noexcept -> void {
-        if (!::empty(result.assert)) {
+        if (!(result.total_check_count == 0)) {
             ::repeat(format::space, indentation);
-            ::print(format::test_error, result.assert.error, result.assert.total);
+            ::print(format::test_error, result.check_error_count, result.total_check_count);
         }
-        if (!::empty(result.object)) {
+        if (!(result.destroyed_count + result.constructed_count == 0)) {
             ::repeat(format::space, indentation);
-            ::print(format::resource_error, result.object.destroyed, result.object.constructed,
-                    result.error.destructor, result.error.constructor, result.error.assignment);
+            ::print(format::resource_error, result.destroyed_count, result.constructed_count,
+                result.destructor_error_count, result.constructor_error_count, result.assignment_error_count);
         }
     }
 
     auto output::on_unit_success(state result) noexcept -> void {
-        if (!::empty(result.assert)) {
+        if (!(result.total_check_count == 0)) {
             ::repeat(format::space, indentation);
-            ::print(format::test_success, result.assert.error, result.assert.total);
+            ::print(format::test_success, result.check_error_count, result.total_check_count);
         }
-        if (!::empty(result.object)) {
+        if (!(result.destroyed_count + result.constructed_count == 0)) {
             ::repeat(format::space, indentation);
-            ::print(format::resource_success, result.object.destroyed, result.object.constructed,
-                    result.error.destructor, result.error.constructor, result.error.assignment);
+            ::print(format::resource_success, result.destroyed_count, result.constructed_count,
+                result.destructor_error_count, result.constructor_error_count, result.assignment_error_count);
         }
     }
 
