@@ -2,7 +2,7 @@
 
 int main() {
     {
-        cassert(test::core::code == test::core::exit_code::success);
+        cassert(test::core::registry::on_exit() == test::core::exit_code::success);
     }
     {
         auto registry = test::core::registry{};
@@ -67,6 +67,6 @@ int main() {
             test::core::registry::on_constructor_error();
             test::core::registry::on_operator_error();
         }
-        cassert(test::core::code == test::core::exit_code::failure);
+        cassert(test::core::registry::on_exit() == test::core::exit_code::failure);
     }
 }

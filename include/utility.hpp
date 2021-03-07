@@ -1,6 +1,16 @@
 #ifndef CPPLTF_UTILITY_HPP
 #define CPPLTF_UTILITY_HPP
 
+namespace test {
+
+    using string = const char*;
+
+    using size_type = decltype(sizeof(int));
+
+    using difference_type = decltype(static_cast<int*>(0) - static_cast<int*>(0));
+
+}
+
 namespace test::core {
 
     struct true_type {
@@ -37,10 +47,6 @@ namespace test::core {
 
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
-
-    using string = const char*;
-    using size_type = decltype(sizeof(int));
-    using difference_type = decltype(static_cast<int*>(0) - static_cast<int*>(0));
 
     template <typename T, auto N>
     constexpr auto begin(T (&array)[N]) {
@@ -141,6 +147,30 @@ namespace test::core {
                 return first;
         return last;
     }
+
+    template <typename T, auto N>
+    class array {
+      public:
+        using value_type = T;
+        using reference = T&;
+        using const_reference = const T&;
+        using iterator = T*;
+        using const_iterator = const T*;
+
+      private:
+        T data[N];
+
+      public:
+        constexpr auto operator[](size_type index) noexcept -> reference { return data[index]; }
+        constexpr auto operator[](size_type index) const noexcept -> const_reference { return data[index]; }
+
+      public:
+        constexpr auto begin() noexcept -> iterator { return data; }
+        constexpr auto begin() const noexcept -> const_iterator { return data; }
+        constexpr auto end() noexcept -> iterator { return data + N; }
+        constexpr auto end() const noexcept -> const_iterator { return data + N; }
+        constexpr auto size() const noexcept -> size_type { return N; }
+    };
 
 }
 

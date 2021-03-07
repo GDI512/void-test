@@ -8,19 +8,19 @@ namespace {
     using namespace test;
 
     auto indent() noexcept {
-        ++core::output::indentation;
+        ++core::output::level;
     }
 
     auto outdent() noexcept {
-        --core::output::indentation;
+        --core::output::level;
     }
 
-    auto repeat(core::string text, core::size_type count) noexcept {
+    auto repeat(string text, size_type count) noexcept {
         while (count-- > 0)
             std::fputs(text, stdout);
     }
 
-    auto print(core::string format, ...) noexcept {
+    auto print(string format, ...) noexcept {
         va_list args;
         va_start(args, format);
         std::vprintf(format, args);
@@ -45,54 +45,54 @@ namespace test::format {
 
 namespace test::core {
 
-    size_type output::indentation = 0;
+    size_type output::level = 0;
 
     output::~output() noexcept {
         ::outdent();
     }
 
     output::output(string name) noexcept {
-        ::repeat(format::space, indentation);
+        ::repeat(format::space, level);
         ::print(format::scope, name);
         ::indent();
     }
 
     auto output::on_error(string source) noexcept -> void {
-        ::repeat(format::space, indentation);
+        ::repeat(format::space, level);
         ::print(format::error, source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        ::repeat(format::space, indentation);
+        ::repeat(format::space, level);
         ::print(format::success, source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        ::repeat(format::space, indentation);
+        ::repeat(format::space, level);
         ::print(format::exception, source);
     }
 
-    auto output::on_unit_error(state result) noexcept -> void {
-        if (!(result.total_check_count == 0)) {
-            ::repeat(format::space, indentation);
-            ::print(format::test_error, result.check_error_count, result.total_check_count);
+    auto output::on_unit_error(state_array result) noexcept -> void {
+        if (result[state::checks] != 0) {
+            ::repeat(format::space, level);
+            ::print(format::test_error, result[state::errors], result[state::checks]);
         }
-        if (!(result.destroyed_count + result.constructed_count == 0)) {
-            ::repeat(format::space, indentation);
-            ::print(format::resource_error, result.destroyed_count, result.constructed_count,
-                result.destructor_error_count, result.constructor_error_count, result.assignment_error_count);
+        if (result[state::destructors] + result[state::constructors] != 0) {
+            ::repeat(format::space, level);
+            ::print(format::resource_error, result[state::destructors], result[state::constructors],
+                result[state::destructor_errors], result[state::constructor_errors], result[state::assignment_errors]);
         }
     }
 
-    auto output::on_unit_success(state result) noexcept -> void {
-        if (!(result.total_check_count == 0)) {
-            ::repeat(format::space, indentation);
-            ::print(format::test_success, result.check_error_count, result.total_check_count);
+    auto output::on_unit_success(state_array result) noexcept -> void {
+        if (result[state::checks] != 0) {
+            ::repeat(format::space, level);
+            ::print(format::test_success, result[state::errors], result[state::checks]);
         }
-        if (!(result.destroyed_count + result.constructed_count == 0)) {
-            ::repeat(format::space, indentation);
-            ::print(format::resource_success, result.destroyed_count, result.constructed_count,
-                result.destructor_error_count, result.constructor_error_count, result.assignment_error_count);
+        if (result[state::destructors] + result[state::constructors] != 0) {
+            ::repeat(format::space, level);
+            ::print(format::resource_success, result[state::destructors], result[state::constructors],
+                result[state::destructor_errors], result[state::constructor_errors], result[state::assignment_errors]);
         }
     }
 

@@ -8,7 +8,7 @@ namespace test::core {
 
     class output {
       public:
-        static size_type indentation;
+        static size_type level;
 
       public:
         ~output() noexcept;
@@ -18,8 +18,8 @@ namespace test::core {
         static auto on_error(string source) noexcept -> void;
         static auto on_success(string source) noexcept -> void;
         static auto on_exception(string source) noexcept -> void;
-        static auto on_unit_error(state state) noexcept -> void;
-        static auto on_unit_success(state state) noexcept -> void;
+        static auto on_unit_error(state_array state) noexcept -> void;
+        static auto on_unit_success(state_array state) noexcept -> void;
     };
 
 }

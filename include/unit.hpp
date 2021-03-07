@@ -7,7 +7,7 @@
 namespace test {
 
     template <typename T>
-    auto unit(core::string name, T&& function) noexcept -> int {
+    auto unit(string name, T&& function) noexcept -> int {
         const auto scope = core::output(name);
         const auto registry = core::registry();
         try {

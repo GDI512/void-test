@@ -5,34 +5,42 @@
 
 namespace test::core {
 
-    enum class exit_code : int { success = 0, failure = 1 };
+    using state_array = array<int, 7>;
 
-    struct state {
-        size_type total_check_count;
-        size_type check_error_count;
-        size_type destroyed_count;
-        size_type constructed_count;
-        size_type destructor_error_count;
-        size_type constructor_error_count;
-        size_type assignment_error_count;
+    enum exit_code {
+        success,
+        failure
+    };
+
+    enum state {
+        checks,
+        errors,
+        destructors,
+        constructors,
+        destructor_errors,
+        constructor_errors,
+        assignment_errors
     };
 
     class registry {
       private:
-        static state global;
+        static exit_code code;
+        static state_array global;
 
       private:
-        state snapshot;
+        state_array snapshot;
 
       public:
         ~registry() noexcept;
         registry() noexcept;
 
       public:
+        auto data() noexcept -> state_array;
         auto empty() noexcept -> bool;
         auto status() noexcept -> bool;
 
       public:
+        static auto on_exit() noexcept -> int;
         static auto on_error() noexcept -> void;
         static auto on_success() noexcept -> void;
         static auto on_exception() noexcept -> void;
@@ -42,11 +50,6 @@ namespace test::core {
         static auto on_constructor_error() noexcept -> void;
         static auto on_operator_error() noexcept -> void;
     };
-
-    auto operator-(state left, state right) noexcept -> state;
-    auto operator-=(state& left, state right) noexcept -> state&;
-
-    extern exit_code code;
 
 }
 
