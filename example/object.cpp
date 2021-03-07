@@ -56,9 +56,8 @@ const auto group = test::unit("raii", []{
     //    The format of the output, whether the
     //  message is "(resource ok ...)" or
     //  "(resource error ...)", is "[objects destroyed
-    //  / objects constructed]" followed by
-    //  [destructor errors / constructor errors /
-    //  assignment errors].
+    //  / objects constructed / destructor errors
+    //  / constructor errors / assignment errors]"
     // ================================================
 
     // ================================================
@@ -71,7 +70,7 @@ const auto group = test::unit("raii", []{
     //  since test::object is meant to simulate
     //  complex resources, we get the following error:
     //
-    //      (resource error [33/32] [1/0/1])
+    //      (resource error) [33/32/1/0/1]
     //
     //    What it tells us is that in this unit there
     //  were 33 objects destroyed and 32 objects
@@ -102,7 +101,7 @@ const auto group = test::unit("raii", []{
     //  test::object at the 32nd position to prepare
     //  it for the following copy assignment operation
     //
-    //      (resource ok [33/33] [0/0/0])
+    //      (resource ok) [33/33/0/0/0]
     //
     //  Keep in mind that it is possible to encounter
     //  this type of errors even when the numbers of
@@ -131,7 +130,7 @@ const auto group = test::unit("raii", []{
     //  the code below the output should look like
     //  this:
     //
-    //      (resource error [128/64] [64/0/0])
+    //      (resource error) [128/64/64/0/0]
     //
     // ================================================
 
@@ -145,7 +144,7 @@ const auto group = test::unit("raii", []{
     // ================================================
     //    And the test::counter version:
     //
-    //      (resource error [128/64] [0/0/0])
+    //      (resource error) [128/64/0/0/0]
     //
     // ================================================
 
