@@ -4,9 +4,7 @@
 namespace test {
 
     using string = const char*;
-
     using size_type = decltype(sizeof(int));
-
     using difference_type = decltype(static_cast<int*>(0) - static_cast<int*>(0));
 
 }
@@ -36,6 +34,11 @@ namespace test::core {
         using type = T;
     };
 
+    template <typename T>
+    struct type_identity {
+        using type = T;
+    };
+
     template <typename T, typename U>
     struct is_same : false_type {};
 
@@ -48,71 +51,71 @@ namespace test::core {
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
 
-    template <typename T, auto N>
-    constexpr auto begin(T (&array)[N]) {
-        return static_cast<T*>(array);
+    template <typename value_type, auto size>
+    constexpr auto begin(value_type (&array)[size]) {
+        return static_cast<value_type*>(array);
     }
 
-    template <typename T, auto N>
-    constexpr auto begin(const T (&array)[N]) {
-        return static_cast<const T*>(array);
+    template <typename value_type, auto size>
+    constexpr auto begin(const value_type (&array)[size]) {
+        return static_cast<const value_type*>(array);
     }
 
-    template <typename T>
-    constexpr decltype(auto) begin(T& container) {
+    template <typename value_type>
+    constexpr decltype(auto) begin(value_type& container) {
         return container.begin();
     }
 
-    template <typename T>
-    constexpr decltype(auto) begin(const T& container) {
+    template <typename value_type>
+    constexpr decltype(auto) begin(const value_type& container) {
         return container.begin();
     }
 
-    template <typename T, auto N>
-    constexpr auto end(T (&array)[N]) {
-        return array + N;
+    template <typename value_type, auto size>
+    constexpr auto end(value_type (&array)[size]) {
+        return array + size;
     }
 
-    template <typename T, auto N>
-    constexpr auto end(const T (&array)[N]) {
-        return array + N;
+    template <typename value_type, auto size>
+    constexpr auto end(const value_type (&array)[size]) {
+        return array + size;
     }
 
-    template <typename T>
-    constexpr decltype(auto) end(T& container) {
+    template <typename value_type>
+    constexpr decltype(auto) end(value_type& container) {
         return container.end();
     }
 
-    template <typename T>
-    constexpr decltype(auto) end(const T& container) {
+    template <typename value_type>
+    constexpr decltype(auto) end(const value_type& container) {
         return container.end();
     }
 
-    template <typename T>
-    constexpr decltype(auto) move(T&& value) noexcept {
-        return static_cast<typename remove_reference<T>::type&&>(value);
+    template <typename value_type>
+    constexpr decltype(auto) move(value_type&& value) noexcept {
+        return static_cast<typename remove_reference<value_type>::type&&>(value);
     }
 
-    template <typename T>
-    constexpr decltype(auto) forward(typename remove_reference<T>::type& value) noexcept {
-        return static_cast<T&&>(value);
+    template <typename value_type>
+    constexpr decltype(auto) forward(typename remove_reference<value_type>::type& value) noexcept {
+        return static_cast<value_type&&>(value);
     }
 
-    template <typename T>
-    constexpr decltype(auto) forward(typename remove_reference<T>::type&& value) noexcept {
-        static_assert(!is_lvalue_reference<T>::value);
-        return static_cast<T&&>(value);
+    template <typename value_type>
+    constexpr decltype(auto) forward(typename remove_reference<value_type>::type&& value) noexcept {
+        static_assert(!is_lvalue_reference<value_type>::value);
+        return static_cast<value_type&&>(value);
     }
 
-    template <typename T, typename U>
-    constexpr auto exchange(T& value, U&& replacement) {
+    template <typename value_type, typename other_type>
+    constexpr auto exchange(value_type& value, other_type&& replacement) {
         auto old = core::move(value);
-        value = core::forward<U>(replacement);
+        value = core::forward<other_type>(replacement);
         return old;
     }
 
-    template <typename I, typename F>
-    constexpr auto is_sorted(I first, I last, F&& comparison) {
+    template <typename input, typename invocable>
+    constexpr auto is_sorted(input first, input last, invocable comparison) {
         if (first != last) {
             auto next = first;
             while (++next != last) {
@@ -124,41 +127,41 @@ namespace test::core {
         return true;
     }
 
-    template <typename I, typename F>
-    constexpr auto all_of(I first, I last, F&& predicate) {
+    template <typename input, typename invocable>
+    constexpr auto all_of(input first, input last, invocable predicate) {
         for (; first != last; ++first)
             if (!predicate(*first))
                 return false;
         return true;
     }
 
-    template <typename I, typename O>
-    constexpr auto equal(I first, I last, O other) {
+    template <typename input, typename oinput>
+    constexpr auto equal(input first, input last, oinput other) {
         for (; first != last; ++first, ++other)
             if (*first != *other)
                 return false;
         return true;
     }
 
-    template <typename I, typename T>
-    constexpr auto find(I first, I last, const T& value) {
+    template <typename input, typename value_type>
+    constexpr auto find(input first, input last, const value_type& value) {
         for (; first != last; ++first)
             if (*first == value)
                 return first;
         return last;
     }
 
-    template <typename T, auto N>
+    template <typename type, auto length>
     class array {
       public:
-        using value_type = T;
-        using reference = T&;
-        using const_reference = const T&;
-        using iterator = T*;
-        using const_iterator = const T*;
+        using value_type = type;
+        using reference = type&;
+        using const_reference = const type&;
+        using iterator = type*;
+        using const_iterator = const type*;
 
       private:
-        T data[N];
+        value_type data[length];
 
       public:
         constexpr auto operator[](size_type index) noexcept -> reference { return data[index]; }
@@ -167,15 +170,13 @@ namespace test::core {
       public:
         constexpr auto begin() noexcept -> iterator { return data; }
         constexpr auto begin() const noexcept -> const_iterator { return data; }
-        constexpr auto end() noexcept -> iterator { return data + N; }
-        constexpr auto end() const noexcept -> const_iterator { return data + N; }
-        constexpr auto size() const noexcept -> size_type { return N; }
+        constexpr auto end() noexcept -> iterator { return data + length; }
+        constexpr auto end() const noexcept -> const_iterator { return data + length; }
+        constexpr auto size() const noexcept -> size_type { return length; }
     };
 
     auto on_error(string source) noexcept -> bool;
-
     auto on_success(string source) noexcept -> bool;
-
     auto on_exception(string source) noexcept -> void;
 
 }

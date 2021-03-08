@@ -6,8 +6,8 @@
 
 namespace test {
 
-    template <typename T>
-    auto unit(string name, T&& function) noexcept -> int {
+    template <typename invocable>
+    auto unit(string name, invocable function) noexcept -> int {
         const auto scope = core::output(name);
         const auto registry = core::registry();
         try {
