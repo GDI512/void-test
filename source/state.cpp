@@ -27,28 +27,28 @@ namespace test::core {
 
     registry::~registry() noexcept {
         if (status() && !empty()) {
-            global -= diff();
-        } else if (!status() && !empty()) {
-            global -= diff();
+            global -= difference();
+        } else if (!status()) {
+            global -= difference();
             code = exit_code::failure;
         }
     }
 
     registry::registry() noexcept : snapshot(global) {}
 
-    auto registry::diff() const noexcept -> state_array {
+    auto registry::difference() const noexcept -> state_array {
         return global - snapshot;
     }
 
     auto registry::empty() const noexcept -> bool {
         const auto data = global - snapshot;
-        return data[state::checks] + data[state::constructors] + data[state::destructors] == 0;
+        return data[state::check] + data[state::ctor] + data[state::dtor] + data[state::operr] == 0;
     }
 
     auto registry::status() const noexcept -> bool {
         const auto data = global - snapshot;
-        return data[state::errors] == 0 && data[state::destructors] == data[state::constructors] &&
-            data[state::destructor_errors] + data[state::constructor_errors] + data[state::assignment_errors] == 0;
+        return data[state::error] == 0 && data[state::dtor] == data[state::ctor] &&
+            data[state::dterr] + data[state::cterr] + data[state::operr] == 0;
     }
 
     auto registry::on_exit() noexcept -> int {
@@ -56,37 +56,37 @@ namespace test::core {
     }
 
     auto registry::on_error() noexcept -> void {
-        ++global[state::checks];
-        ++global[state::errors];
+        ++global[state::check];
+        ++global[state::error];
     }
 
     auto registry::on_success() noexcept -> void {
-        ++global[state::checks];
+        ++global[state::check];
     }
 
     auto registry::on_exception() noexcept -> void {
-        ++global[state::checks];
-        ++global[state::errors];
+        ++global[state::check];
+        ++global[state::error];
     }
 
     auto registry::on_destruction() noexcept -> void {
-        ++global[state::destructors];
+        ++global[state::dtor];
     }
 
     auto registry::on_construction() noexcept -> void {
-        ++global[state::constructors];
+        ++global[state::ctor];
     }
 
     auto registry::on_destructor_error() noexcept -> void {
-        ++global[state::destructor_errors];
+        ++global[state::dterr];
     }
 
     auto registry::on_constructor_error() noexcept -> void {
-        ++global[state::constructor_errors];
+        ++global[state::cterr];
     }
 
-    auto registry::on_assignment_error() noexcept -> void {
-        ++global[state::assignment_errors];
+    auto registry::on_operator_error() noexcept -> void {
+        ++global[state::operr];
     }
 
 }

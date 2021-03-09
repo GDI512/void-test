@@ -54,8 +54,8 @@ int main() {
     }
     {
         auto registry = test::core::registry{};
-        test::core::registry::on_assignment_error();
-        cassert(registry.empty());
+        test::core::registry::on_operator_error();
+        cassert(!registry.empty());
         cassert(!registry.status());
     }
     {
@@ -65,7 +65,7 @@ int main() {
             test::core::registry::on_exception();
             test::core::registry::on_destructor_error();
             test::core::registry::on_constructor_error();
-            test::core::registry::on_assignment_error();
+            test::core::registry::on_operator_error();
         }
         cassert(test::core::registry::on_exit() == test::core::exit_code::failure);
     }

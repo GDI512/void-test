@@ -82,7 +82,7 @@ const auto unit = test::unit("assertions", []{
     });
 
     // ================================================
-    //  To turn test::check_* into test::require_*,
+    //  To turn test::check_* into "test::require_*",
     //  you can use the returned value of an assertion
     //  to throw an exception in order to exit out
     //  of the current unit (with an error).

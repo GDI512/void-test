@@ -1,97 +1,110 @@
 #include <output.hpp>
 #include <state.hpp>
-#include <iostream>
+#include <cstdio>
 
 namespace {
 
     using namespace test;
     using namespace test::core;
 
-    struct color {
-        static constexpr auto red = "\033[31m";
-        static constexpr auto green = "\033[32m";
-        static constexpr auto yellow = "\033[93m";
-        static constexpr auto reset = "\033[0m";
+    struct group {
+        struct test {};
+        struct resource {};
     };
 
-    auto indent() noexcept -> void {
+    struct format {
+        struct unit {};
+        struct error {};
+        struct success {};
+        struct exception {};
+        struct test_ok {};
+        struct resource_ok {};
+        struct test_error {};
+        struct resource_error {};
+    };
+
+    auto indent() noexcept {
         ++output::level;
     }
 
-    auto outdent() noexcept -> void {
+    auto outdent() noexcept {
         --output::level;
     }
 
-    auto insert_spaces() noexcept -> void {
-        for (auto count = output::level; count > 0; count--)
-            std::cout << "  ";
+    auto repeat(size_type count, string text = "  ") noexcept {
+        while (count --> 0)
+            std::fputs(text, stdout);
     }
 
-    auto print_unit(string name) noexcept -> void {
-        std::cout << '(' << color::yellow << "unit " << color::reset << name << ")\n";
+    template <typename select>
+    auto empty = 0;
+
+    template <>
+    auto empty<group::test> = [](const state_array& data) noexcept {
+        return data[state::check] == 0;
     };
 
-    auto print_error(string source) noexcept -> void {
-        std::cout << '(' << color::red << "error " << color::reset << source << ")\n";
+    template <>
+    auto empty<group::resource> = [](const state_array& data) noexcept {
+        return data[state::dtor] + data[state::ctor] + data[state::operr] == 0;
     };
 
-    auto print_success(string source) noexcept -> void {
-        std::cout << '(' << color::green << "ok " << color::reset << source << ")\n";
+    template <typename select>
+    auto print = 0;
+
+    template <>
+    auto print<format::unit> = [](string name) noexcept {
+        std::printf("(%sunit%s %s)\n", "\033[93m", "\033[0m", name);
     };
 
-    auto print_exception(string source) noexcept -> void {
-        std::cout << '(' << color::red << "exception " << color::reset << source << ")\n";
+    template <>
+    auto print<format::error> = [](string source) noexcept {
+        std::printf("(%serror%s %s)\n", "\033[31m", "\033[0m", source);
     };
 
-    auto print_test_error(state_array result) noexcept -> void {
-        std::cout << '(' << color::red << "test error " << color::reset;
-        std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
-        std::cout << ")\n";
-    }
+    template <>
+    auto print<format::success> = [](string source) noexcept {
+        std::printf("(%sok%s %s)\n", "\033[32m", "\033[0m", source);
+    };
 
-    auto print_test_success(state_array result) noexcept -> void {
-        std::cout << '(' << color::green << "test ok " << color::reset;
-        std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
-        std::cout << ")\n";
-    }
+    template <>
+    auto print<format::exception> = [](string source) noexcept {
+        std::printf("(%sexception%s %s)\n", "\033[31m", "\033[0m", source);
+    };
 
-    auto print_resource_error(state_array result) noexcept -> void {
-        std::cout << '(' << color::red << "resource error " << color::reset;
-        std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
-        std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
-        std::cout << '/' << result[state::assignment_errors] << ']';
-        std::cout << ")\n";
-    }
-
-    auto print_resource_success(state_array result) noexcept -> void {
-        std::cout << '(' << color::green << "resource ok " << color::reset;
-        std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
-        std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
-        std::cout << '/' << result[state::assignment_errors] << ']';
-        std::cout << ")\n";
-    }
-
-    auto print_exit_error(state_array result) {
-        if (result[state::checks] != 0) {
-            insert_spaces();
-            print_test_error(result);
+    template <>
+    auto print<format::test_ok> = [](const state_array& data) noexcept {
+        if (!empty<group::test>(data)) {
+            std::printf("(%stest ok%s ", "\033[32m", "\033[0m");
+            std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
-        if (result[state::destructors] + result[state::constructors] + result[state::assignment_errors] != 0) {
-            insert_spaces();
-            print_resource_error(result);
-        }
-    }
+    };
 
-    auto print_exit_success(state_array result) {
-        if (result[state::checks] != 0) {
-            insert_spaces();
-            print_test_success(result);
+    template <>
+    auto print<format::test_error> = [](const state_array& data) noexcept {
+        if (!empty<group::test>(data)) {
+            std::printf("(%stest error%s ", "\033[31m", "\033[0m");
+            std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
-        if (result[state::destructors] + result[state::constructors] + result[state::assignment_errors] != 0) {
-            insert_spaces();
-            print_resource_success(result);
+    };
+
+    template <>
+    auto print<format::resource_ok> = [](const state_array& data) noexcept {
+        if (!empty<group::resource>(data)) {
+            std::printf("(%sresource ok%s ", "\033[32m", "\033[0m");
+            std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
+            std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
         }
-    }
+    };
+
+    template <>
+    auto print<format::resource_error> = [](const state_array& data) noexcept {
+        if (!empty<group::resource>(data)) {
+            std::printf("(%sresource error%s ", "\033[31m", "\033[0m");
+            std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
+            std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
+        }
+    };
 
 }
 
@@ -101,33 +114,35 @@ namespace test::core {
 
     output::~output() noexcept {
         if (state.status() && !state.empty()) {
-            print_exit_success(state.diff());
+            print<format::test_ok>(state.difference());
+            print<format::resource_ok>(state.difference());
             outdent();
-        } else if (!state.status() && !state.empty()) {
-            print_exit_error(state.diff());
+        } else if (!state.status()) {
+            print<format::test_error>(state.difference());
+            print<format::resource_error>(state.difference());
             outdent();
         }
     }
 
     output::output(string name, const registry& state) noexcept : state(state) {
-        insert_spaces();
-        print_unit(name);
+        repeat(level);
+        print<format::unit>(name);
         indent();
     }
 
     auto output::on_error(string source) noexcept -> void {
-        insert_spaces();
-        print_error(source);
+        repeat(level);
+        print<format::error>(source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        insert_spaces();
-        print_success(source);
+        repeat(level);
+        print<format::success>(source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        insert_spaces();
-        print_exception(source);
+        repeat(level);
+        print<format::exception>(source);
     }
 
 }

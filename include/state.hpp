@@ -9,7 +9,7 @@ namespace test::core {
 
     enum exit_code { success, failure };
 
-    enum state { checks, errors, destructors, constructors, destructor_errors, constructor_errors, assignment_errors };
+    enum state { check, error, dtor, ctor, dterr, cterr, operr };
 
     class registry {
       private:
@@ -24,9 +24,9 @@ namespace test::core {
         registry() noexcept;
 
       public:
-        auto diff() const noexcept -> state_array;
         auto empty() const noexcept -> bool;
         auto status() const noexcept -> bool;
+        auto difference() const noexcept -> state_array;
 
       public:
         static auto on_exit() noexcept -> int;
@@ -37,7 +37,7 @@ namespace test::core {
         static auto on_construction() noexcept -> void;
         static auto on_destructor_error() noexcept -> void;
         static auto on_constructor_error() noexcept -> void;
-        static auto on_assignment_error() noexcept -> void;
+        static auto on_operator_error() noexcept -> void;
     };
 
 }
