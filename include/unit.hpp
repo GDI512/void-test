@@ -9,7 +9,7 @@ namespace test {
     template <typename invocable>
     auto unit(string name, invocable function) noexcept -> int {
         auto registry = core::registry();
-        auto scope = core::output(name, registry);
+        auto output = core::output(name, registry);
         try {
             function();
         } catch (...) {

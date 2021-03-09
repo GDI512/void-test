@@ -44,38 +44,52 @@ namespace {
     };
 
     auto print_test_error(state_array result) noexcept -> void {
-        if (result[state::checks] != 0) {
-            std::cout << '(' << color::red << "test error " << color::reset;
-            std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
-            std::cout << ")\n";
-        }
+        std::cout << '(' << color::red << "test error " << color::reset;
+        std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
+        std::cout << ")\n";
     }
 
     auto print_test_success(state_array result) noexcept -> void {
-        if (result[state::checks] != 0) {
-            std::cout << '(' << color::green << "test ok " << color::reset;
-            std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
-            std::cout << ")\n";
-        }
+        std::cout << '(' << color::green << "test ok " << color::reset;
+        std::cout << '[' << result[state::errors] << '/' << result[state::checks] << ']';
+        std::cout << ")\n";
     }
 
     auto print_resource_error(state_array result) noexcept -> void {
-        if (result[state::destructors] + result[state::constructors] + result[state::assignment_errors] != 0) {
-            std::cout << '(' << color::red << "resource error " << color::reset;
-            std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
-            std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
-            std::cout << '/' << result[state::assignment_errors] << ']';
-            std::cout << ")\n";
-        }
+        std::cout << '(' << color::red << "resource error " << color::reset;
+        std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
+        std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
+        std::cout << '/' << result[state::assignment_errors] << ']';
+        std::cout << ")\n";
     }
 
     auto print_resource_success(state_array result) noexcept -> void {
+        std::cout << '(' << color::green << "resource ok " << color::reset;
+        std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
+        std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
+        std::cout << '/' << result[state::assignment_errors] << ']';
+        std::cout << ")\n";
+    }
+
+    auto print_exit_error(state_array result) {
+        if (result[state::checks] != 0) {
+            insert_spaces();
+            print_test_error(result);
+        }
         if (result[state::destructors] + result[state::constructors] + result[state::assignment_errors] != 0) {
-            std::cout << '(' << color::green << "resource ok " << color::reset;
-            std::cout << '[' << result[state::destructors] << '/' << result[state::constructors] << "] ";
-            std::cout << '[' << result[state::destructor_errors] << '/' << result[state::constructor_errors];
-            std::cout << '/' << result[state::assignment_errors] << ']';
-            std::cout << ")\n";
+            insert_spaces();
+            print_resource_error(result);
+        }
+    }
+
+    auto print_exit_success(state_array result) {
+        if (result[state::checks] != 0) {
+            insert_spaces();
+            print_test_success(result);
+        }
+        if (result[state::destructors] + result[state::constructors] + result[state::assignment_errors] != 0) {
+            insert_spaces();
+            print_resource_success(result);
         }
     }
 
@@ -87,12 +101,10 @@ namespace test::core {
 
     output::~output() noexcept {
         if (state.status() && !state.empty()) {
-            print_test_success(state.diff());
-            print_resource_success(state.diff());
+            print_exit_success(state.diff());
             outdent();
         } else if (!state.status() && !state.empty()) {
-            print_test_error(state.diff());
-            print_resource_error(state.diff());
+            print_exit_error(state.diff());
             outdent();
         }
     }
