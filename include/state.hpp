@@ -24,9 +24,9 @@ namespace test::core {
         registry() noexcept;
 
       public:
-        auto data() noexcept -> state_array;
-        auto empty() noexcept -> bool;
-        auto status() noexcept -> bool;
+        auto empty() const noexcept -> bool;
+        auto status() const noexcept -> bool;
+        auto result() const noexcept -> state_array;
 
       public:
         static auto on_exit() noexcept -> int;

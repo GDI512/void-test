@@ -26,33 +26,34 @@ namespace test::core {
     state_array registry::global = {};
 
     registry::~registry() noexcept {
-        const auto result = global - snapshot;
-        if (!empty() && status()) {
-            output::on_unit_success(result);
-            global -= result;
-        } else {
-            output::on_unit_error(result);
-            global -= result;
+        if (status() && !empty()) {
+            const auto diff = result();
+            output::on_unit_success(diff);
+            global -= diff;
+        } else if (!status() && !empty()) {
+            const auto diff = result();
+            output::on_unit_error(diff);
+            global -= diff;
             code = exit_code::failure;
         }
     }
 
     registry::registry() noexcept : snapshot(global) {}
 
-    auto registry::data() noexcept -> state_array {
+    auto registry::empty() const noexcept -> bool {
+        const auto data = global - snapshot;
+        return data[state::checks] + data[state::constructors] + data[state::destructors] == 0;
+    }
+
+    auto registry::status() const noexcept -> bool {
+        const auto data = global - snapshot;
+        return data[state::errors] == 0 &&
+            data[state::destructors] == data[state::constructors] &&
+                data[state::destructor_errors] + data[state::constructor_errors] + data[state::assignment_errors] == 0;
+    }
+
+    auto registry::result() const noexcept -> state_array {
         return global - snapshot;
-    }
-
-    auto registry::empty() noexcept -> bool {
-        const auto result = global - snapshot;
-        return result[state::checks] + result[state::constructors] + result[state::destructors] == 0;
-    }
-
-    auto registry::status() noexcept -> bool {
-        const auto result = global - snapshot;
-        return result[state::errors] == 0 &&
-            result[state::destructors] == result[state::constructors] &&
-                result[state::destructor_errors] + result[state::constructor_errors] + result[state::assignment_errors] == 0;
     }
 
     auto registry::on_exit() noexcept -> int {
