@@ -68,29 +68,29 @@ const auto other = test::unit("<other>", []{
 //        (ok check)
 //        (ok check)
 //        (ok check)
-//        (test ok) [0/3]
+//        (test ok [0/3])
 //      (unit <case>)
 //        (error check)
 //        (ok check)
 //        (ok check)
-//        (test error) [1/3]
+//        (test error [1/3])
 //      (error check)
 //      (error check)
 //      (unit <case>)
 //        (ok check)
 //        (ok check)
 //        (error check)
-//        (test error) [1/3]
-//      (test error) [2/2]
+//        (test error [1/3])
+//      (test error [2/2])
 //    (unit <other>)
 //      (unit <case>)
 //        (ok check)
 //        (ok check)
-//        (test ok) [0/2]
+//        (test ok [0/2])
 //      (unit <case>)
 //        (ok check)
 //        (ok check)
-//        (test ok) [0/2]
+//        (test ok [0/2])
 //
 //  The first value in brackets represents the amount of failed
 //  assertions. The second is the total number of assertions

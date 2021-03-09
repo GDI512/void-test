@@ -54,27 +54,32 @@ namespace {
 
     template <>
     auto print<format::unit> = [](string name) noexcept {
+        ::repeat(output::level);
         std::printf("(%sunit%s %s)\n", "\033[93m", "\033[0m", name);
     };
 
     template <>
     auto print<format::error> = [](string source) noexcept {
+        ::repeat(output::level);
         std::printf("(%serror%s %s)\n", "\033[31m", "\033[0m", source);
     };
 
     template <>
     auto print<format::success> = [](string source) noexcept {
+        ::repeat(output::level);
         std::printf("(%sok%s %s)\n", "\033[32m", "\033[0m", source);
     };
 
     template <>
     auto print<format::exception> = [](string source) noexcept {
+        ::repeat(output::level);
         std::printf("(%sexception%s %s)\n", "\033[31m", "\033[0m", source);
     };
 
     template <>
     auto print<format::test_ok> = [](const state_array& data) noexcept {
         if (!empty<group::test>(data)) {
+            ::repeat(output::level);
             std::printf("(%stest ok%s ", "\033[32m", "\033[0m");
             std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
@@ -83,6 +88,7 @@ namespace {
     template <>
     auto print<format::test_error> = [](const state_array& data) noexcept {
         if (!empty<group::test>(data)) {
+            ::repeat(output::level);
             std::printf("(%stest error%s ", "\033[31m", "\033[0m");
             std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
@@ -91,6 +97,7 @@ namespace {
     template <>
     auto print<format::resource_ok> = [](const state_array& data) noexcept {
         if (!empty<group::resource>(data)) {
+            ::repeat(output::level);
             std::printf("(%sresource ok%s ", "\033[32m", "\033[0m");
             std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
             std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
@@ -100,6 +107,7 @@ namespace {
     template <>
     auto print<format::resource_error> = [](const state_array& data) noexcept {
         if (!empty<group::resource>(data)) {
+            ::repeat(output::level);
             std::printf("(%sresource error%s ", "\033[31m", "\033[0m");
             std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
             std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
@@ -125,23 +133,19 @@ namespace test::core {
     }
 
     output::output(string name, const registry& state) noexcept : state(state) {
-        repeat(level);
         print<format::unit>(name);
         indent();
     }
 
     auto output::on_error(string source) noexcept -> void {
-        repeat(level);
         print<format::error>(source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        repeat(level);
         print<format::success>(source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        repeat(level);
         print<format::exception>(source);
     }
 
