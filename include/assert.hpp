@@ -35,9 +35,9 @@ namespace test {
         }
     }
 
-    template <typename input, typename oinput>
-    auto check_equal(input first, input last, oinput other) -> bool {
-        if (core::equal(first, last, other)) {
+    template <typename input, typename other>
+    auto check_equal(input first, input last, other ofirst) -> bool {
+        if (core::equal(first, last, ofirst)) {
             return core::on_success(__func__);
         } else {
             return core::on_error(__func__);
@@ -53,9 +53,9 @@ namespace test {
         }
     }
 
-    template <typename input, typename oinput>
-    auto check_not_equal(input first, input last, oinput other) -> bool {
-        if (!core::equal(first, last, other)) {
+    template <typename input, typename other>
+    auto check_not_equal(input first, input last, other ofirst) -> bool {
+        if (!core::equal(first, last, ofirst)) {
             return core::on_success(__func__);
         } else {
             return core::on_error(__func__);

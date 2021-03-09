@@ -122,31 +122,31 @@ namespace test::core {
 
     output::~output() noexcept {
         if (state.status() && !state.empty()) {
-            print<format::test_ok>(state.difference());
-            print<format::resource_ok>(state.difference());
-            outdent();
+            ::print<format::test_ok>(state.difference());
+            ::print<format::resource_ok>(state.difference());
+            ::outdent();
         } else if (!state.status()) {
-            print<format::test_error>(state.difference());
-            print<format::resource_error>(state.difference());
-            outdent();
+            ::print<format::test_error>(state.difference());
+            ::print<format::resource_error>(state.difference());
+            ::outdent();
         }
     }
 
     output::output(string name, const registry& state) noexcept : state(state) {
-        print<format::unit>(name);
-        indent();
+        ::print<format::unit>(name);
+        ::indent();
     }
 
     auto output::on_error(string source) noexcept -> void {
-        print<format::error>(source);
+        ::print<format::error>(source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        print<format::success>(source);
+        ::print<format::success>(source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        print<format::exception>(source);
+        ::print<format::exception>(source);
     }
 
 }

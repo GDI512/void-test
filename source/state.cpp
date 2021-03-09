@@ -5,14 +5,14 @@ namespace {
 
     using namespace test::core;
 
-    auto operator-(state_array left, state_array right) noexcept -> state_array {
+    auto operator-(state_array left, const state_array& right) noexcept -> state_array {
         auto array = state_array();
         for (auto i = 0u; i < left.size(); i++)
             array[i] = left[i] - right[i];
         return array;
     }
 
-    auto operator-=(state_array& left, state_array right) noexcept -> state_array& {
+    auto operator-=(state_array& left, const state_array& right) noexcept -> state_array& {
         for (auto i = 0u; i < left.size(); i++)
             left[i] -= right[i];
         return left;
