@@ -27,18 +27,18 @@ namespace test::core {
 
     registry::~registry() noexcept {
         if (status() && !empty()) {
-            const auto diff = result();
-            output::on_unit_success(diff);
-            global -= diff;
+            global -= diff();
         } else if (!status() && !empty()) {
-            const auto diff = result();
-            output::on_unit_error(diff);
-            global -= diff;
+            global -= diff();
             code = exit_code::failure;
         }
     }
 
     registry::registry() noexcept : snapshot(global) {}
+
+    auto registry::diff() const noexcept -> state_array {
+        return global - snapshot;
+    }
 
     auto registry::empty() const noexcept -> bool {
         const auto data = global - snapshot;
@@ -47,13 +47,8 @@ namespace test::core {
 
     auto registry::status() const noexcept -> bool {
         const auto data = global - snapshot;
-        return data[state::errors] == 0 &&
-            data[state::destructors] == data[state::constructors] &&
-                data[state::destructor_errors] + data[state::constructor_errors] + data[state::assignment_errors] == 0;
-    }
-
-    auto registry::result() const noexcept -> state_array {
-        return global - snapshot;
+        return data[state::errors] == 0 && data[state::destructors] == data[state::constructors] &&
+            data[state::destructor_errors] + data[state::constructor_errors] + data[state::assignment_errors] == 0;
     }
 
     auto registry::on_exit() noexcept -> int {
@@ -90,7 +85,7 @@ namespace test::core {
         ++global[state::constructor_errors];
     }
 
-    auto registry::on_operator_error() noexcept -> void {
+    auto registry::on_assignment_error() noexcept -> void {
         ++global[state::assignment_errors];
     }
 

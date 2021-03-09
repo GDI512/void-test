@@ -10,16 +10,17 @@ namespace test::core {
       public:
         static size_type level;
 
+      private:
+        registry& state;
+
       public:
         ~output() noexcept;
-        output(string name) noexcept;
+        output(string name, registry& state) noexcept;
 
       public:
         static auto on_error(string source) noexcept -> void;
         static auto on_success(string source) noexcept -> void;
         static auto on_exception(string source) noexcept -> void;
-        static auto on_unit_error(state_array state) noexcept -> void;
-        static auto on_unit_success(state_array state) noexcept -> void;
     };
 
 }

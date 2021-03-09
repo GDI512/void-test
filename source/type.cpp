@@ -47,7 +47,7 @@ namespace test {
 
     auto object::operator=(object&& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            core::registry::on_operator_error();
+            core::registry::on_assignment_error();
         } else {
             number = other.number;
         }
@@ -56,7 +56,7 @@ namespace test {
 
     auto object::operator=(const object& other) noexcept -> object& {
         if (!is_self() || !other.is_self() || is_uninitialized() || other.is_uninitialized()) {
-            core::registry::on_operator_error();
+            core::registry::on_assignment_error();
         } else {
             number = other.number;
         }

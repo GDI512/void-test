@@ -101,7 +101,7 @@ namespace test {
     template <typename invocable, typename... args>
     auto check_throws(invocable&& function, args&&... arguments) -> bool {
         try {
-            function(core::forward<args>(args)...);
+            function(core::forward<args>(arguments)...);
             return core::on_error(__func__);
         } catch (...) {
             return core::on_success(__func__);
@@ -111,7 +111,7 @@ namespace test {
     template <typename invocable, typename... args>
     auto check_nothrows(invocable&& function, args&&... arguments) -> bool {
         try {
-            function(core::forward<args>(args)...);
+            function(core::forward<args>(arguments)...);
             return core::on_success(__func__);
         } catch (...) {
             return core::on_error(__func__);
