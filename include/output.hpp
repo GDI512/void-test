@@ -11,11 +11,11 @@ namespace test::core {
         static size_type level;
 
       private:
-        registry& state;
+        const registry& state;
 
       public:
         ~output() noexcept;
-        output(string name, registry& state) noexcept;
+        output(string name, const registry& state) noexcept;
 
       public:
         static auto on_error(string source) noexcept -> void;

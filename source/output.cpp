@@ -109,7 +109,7 @@ namespace test::core {
         }
     }
 
-    output::output(string name, registry& state) noexcept : state(state) {
+    output::output(string name, const registry& state) noexcept : state(state) {
         insert_spaces();
         print_unit(name);
         indent();
