@@ -1,5 +1,6 @@
 #include <output.hpp>
 #include <state.hpp>
+#include <utility>
 #include <cstdio>
 
 namespace {
@@ -8,19 +9,21 @@ namespace {
     using namespace test::core;
 
     struct group {
-        struct test {};
-        struct resource {};
+        struct test;
+        struct resource;
     };
 
-    struct format {
-        struct unit {};
-        struct error {};
-        struct success {};
-        struct exception {};
-        struct test_ok {};
-        struct resource_ok {};
-        struct test_error {};
-        struct resource_error {};
+    struct msg {
+        struct error;
+        struct exception;
+        struct reserr;
+        struct resok;
+        struct space;
+        struct success;
+        struct testerr;
+        struct testok;
+        struct text;
+        struct unit;
     };
 
     auto indent() noexcept {
@@ -29,11 +32,6 @@ namespace {
 
     auto outdent() noexcept {
         --output::level;
-    }
-
-    auto repeat(size_type count, string text = "  ") noexcept {
-        while (count --> 0)
-            std::fputs(text, stdout);
     }
 
     template <typename select>
@@ -53,64 +51,75 @@ namespace {
     auto print = 0;
 
     template <>
-    auto print<format::unit> = [](string name) noexcept {
-        ::repeat(output::level);
-        std::printf("(%sunit%s %s)\n", "\033[93m", "\033[0m", name);
+    auto print<msg::space> = [](size_type count = output::level) noexcept {
+        while (count --> 0)
+            std::fputs("  ", stdout);
     };
 
     template <>
-    auto print<format::error> = [](string source) noexcept {
-        ::repeat(output::level);
-        std::printf("(%serror%s %s)\n", "\033[31m", "\033[0m", source);
+    auto print<msg::text> = [](string format, auto&&... args) noexcept {
+        std::fprintf(stdout, format, std::forward<decltype(args)>(args)...);
     };
 
     template <>
-    auto print<format::success> = [](string source) noexcept {
-        ::repeat(output::level);
-        std::printf("(%sok%s %s)\n", "\033[32m", "\033[0m", source);
+    auto print<msg::unit> = [](string name) noexcept {
+        print<msg::space>();
+        print<msg::text>("(%sunit%s %s)\n", "\033[93m", "\033[0m", name);
     };
 
     template <>
-    auto print<format::exception> = [](string source) noexcept {
-        ::repeat(output::level);
-        std::printf("(%sexception%s %s)\n", "\033[31m", "\033[0m", source);
+    auto print<msg::error> = [](string source) noexcept {
+        print<msg::space>();
+        print<msg::text>("(%serror%s %s)\n", "\033[31m", "\033[0m", source);
     };
 
     template <>
-    auto print<format::test_ok> = [](const state_array& data) noexcept {
+    auto print<msg::success> = [](string source) noexcept {
+        print<msg::space>();
+        print<msg::text>("(%sok%s %s)\n", "\033[32m", "\033[0m", source);
+    };
+
+    template <>
+    auto print<msg::exception> = [](string source) noexcept {
+        print<msg::space>();
+        print<msg::text>("(%sexception%s %s)\n", "\033[31m", "\033[0m", source);
+    };
+
+    template <>
+    auto print<msg::testok> = [](const state_array& data) noexcept {
         if (!empty<group::test>(data)) {
-            ::repeat(output::level);
-            std::printf("(%stest ok%s ", "\033[32m", "\033[0m");
-            std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
+            print<msg::space>();
+            print<msg::text>("(%stest ok%s ", "\033[32m", "\033[0m");
+            print<msg::text>("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
     };
 
     template <>
-    auto print<format::test_error> = [](const state_array& data) noexcept {
+    auto print<msg::testerr> = [](const state_array& data) noexcept {
         if (!empty<group::test>(data)) {
-            ::repeat(output::level);
-            std::printf("(%stest error%s ", "\033[31m", "\033[0m");
-            std::printf("[%zu/%zu])\n", data[state::error], data[state::check]);
+            print<msg::space>();
+            print<msg::text>("(%stest error%s ", "\033[31m", "\033[0m");
+            print<msg::text>("[%zu/%zu])\n", data[state::error], data[state::check]);
         }
     };
 
     template <>
-    auto print<format::resource_ok> = [](const state_array& data) noexcept {
+    auto print<msg::resok> = [](const state_array& data) noexcept {
         if (!empty<group::resource>(data)) {
-            ::repeat(output::level);
-            std::printf("(%sresource ok%s ", "\033[32m", "\033[0m");
-            std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
-            std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
+            print<msg::space>();
+            print<msg::text>("(%sresource ok%s ", "\033[32m", "\033[0m");
+            print<msg::text>("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
+            print<msg::text>("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
         }
     };
 
     template <>
-    auto print<format::resource_error> = [](const state_array& data) noexcept {
+    auto print<msg::reserr> = [](const state_array& data) noexcept {
         if (!empty<group::resource>(data)) {
-            ::repeat(output::level);
-            std::printf("(%sresource error%s ", "\033[31m", "\033[0m");
-            std::printf("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
-            std::printf("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
+            print<msg::space>();
+            print<msg::text>("(%sresource error%s ", "\033[31m", "\033[0m");
+            print<msg::text>("[%zu/%zu] ", data[state::dtor], data[state::ctor]);
+            print<msg::text>("[%zu/%zu/%zu])\n", data[state::dterr], data[state::cterr], data[state::operr]);
         }
     };
 
@@ -122,31 +131,31 @@ namespace test::core {
 
     output::~output() noexcept {
         if (state.status() && !state.empty()) {
-            ::print<format::test_ok>(state.difference());
-            ::print<format::resource_ok>(state.difference());
-            ::outdent();
+            print<msg::testok>(state.difference());
+            print<msg::resok>(state.difference());
+            outdent();
         } else if (!state.status()) {
-            ::print<format::test_error>(state.difference());
-            ::print<format::resource_error>(state.difference());
-            ::outdent();
+            print<msg::testerr>(state.difference());
+            print<msg::reserr>(state.difference());
+            outdent();
         }
     }
 
     output::output(string name, const registry& state) noexcept : state(state) {
-        ::print<format::unit>(name);
-        ::indent();
+        print<msg::unit>(name);
+        indent();
     }
 
     auto output::on_error(string source) noexcept -> void {
-        ::print<format::error>(source);
+        print<msg::error>(source);
     }
 
     auto output::on_success(string source) noexcept -> void {
-        ::print<format::success>(source);
+        print<msg::success>(source);
     }
 
     auto output::on_exception(string source) noexcept -> void {
-        ::print<format::exception>(source);
+        print<msg::exception>(source);
     }
 
 }

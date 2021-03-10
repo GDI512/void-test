@@ -3,14 +3,15 @@
 
 #include <cppltf.hpp>
 #include <cstdlib>
+#include <cstring>
 #include <cstdio>
 
 inline auto stop(int code) noexcept {
-    exit(code);
+    std::exit(code);
 }
 
 inline auto print(int line, const char* macro) noexcept {
-    printf("Line: %i %s\n", line, macro);
+    std::printf("Line: %i %s\n", line, macro);
 }
 
 #define cassert(x)             \
