@@ -6,9 +6,6 @@
 
 namespace test {
 
-    template <typename T>
-    using type_identity = typename core::type_identity<T>::type;
-
     inline auto check(bool value) -> bool {
         if (value) {
             return core::on_success(__func__);
@@ -26,8 +23,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_equal(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_equal(const value_type& left, const other_type& right) -> bool {
         if (left == right) {
             return core::on_success(__func__);
         } else {
@@ -44,8 +41,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_not_equal(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_not_equal(const value_type& left, const other_type& right) -> bool {
         if (left != right) {
             return core::on_success(__func__);
         } else {
@@ -62,8 +59,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_less(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_less(const value_type& left, const other_type& right) -> bool {
         if (left < right) {
             return core::on_success(__func__);
         } else {
@@ -71,8 +68,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_not_less(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_not_less(const value_type& left, const other_type& right) -> bool {
         if (left >= right) {
             return core::on_success(__func__);
         } else {
@@ -80,8 +77,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_greater(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_greater(const value_type& left, const other_type& right) -> bool {
         if (left > right) {
             return core::on_success(__func__);
         } else {
@@ -89,8 +86,8 @@ namespace test {
         }
     }
 
-    template <typename value_type>
-    auto check_not_greater(const value_type& left, const type_identity<value_type>& right) -> bool {
+    template <typename value_type, typename other_type>
+    auto check_not_greater(const value_type& left, const other_type& right) -> bool {
         if (left <= right) {
             return core::on_success(__func__);
         } else {

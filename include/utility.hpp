@@ -34,11 +34,6 @@ namespace test::core {
         using type = T;
     };
 
-    template <typename T>
-    struct type_identity {
-        using type = T;
-    };
-
     template <typename T, typename U>
     struct is_same : false_type {};
 
