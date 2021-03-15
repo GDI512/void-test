@@ -11,7 +11,8 @@ Because *cppltf* defines its own main function, it is very easy to use and
 does not require more setup than what can be seen in the example below.
 
 ```c++
-#include <cppltf.hpp>
+#include <assert.hpp>   // all checks and test::unit
+#include <object.hpp>   // test::counter and test::object
 
 const auto group = test::unit("raii", []{
 

@@ -1,10 +1,10 @@
 // ================================================================
 //    This file contains examples of all available assertions.
-//  In <cppltf> every assertion is defined as a function returning
+//  In cppltf every assertion is defined as a function returning
 //  true on success and false on failure.
 // ================================================================
 
-#include <cppltf.hpp>
+#include <assert.hpp>
 
 const auto unit = test::unit("assertions", []{
 

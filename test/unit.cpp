@@ -4,11 +4,11 @@ int main() {
     {
         test::unit("unit", [] { test::check(true); });
         test::unit("unit", [] { test::check_equal(0, 0); });
-        cassert(test::core::registry::on_exit() == test::core::exit_code::success);
+        cassert(test::registry::on_exit() == test::exit_success);
     }
     {
         test::unit("unit", [] { test::check(false); });
         test::unit("unit", [] { test::check_equal(0, 0); });
-        cassert(test::core::registry::on_exit() == test::core::exit_code::failure);
+        cassert(test::registry::on_exit() == test::exit_failure);
     }
 }

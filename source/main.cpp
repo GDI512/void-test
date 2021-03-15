@@ -3,5 +3,5 @@
 using namespace test;
 
 int main() {
-    return core::registry::on_exit();
+    return registry::on_exit();
 }

@@ -15,7 +15,8 @@
 //  used without running the <cppltf> test suite.
 // ================================================================
 
-#include <cppltf.hpp>
+#include <assert.hpp>
+#include <object.hpp>
 #include <vector>
 #include <new>
 

@@ -4,135 +4,150 @@
 #include "state.hpp"
 #include "utility.hpp"
 
+#define scope __func__
+
 namespace test {
 
-    inline auto check(bool value) -> bool {
+    template <typename invocable>
+    auto unit(string name, invocable function) noexcept {
+        const auto context = registry(name);
+        try {
+            function();
+        } catch (...) {
+            registry::on_exception();
+        }
+        return 0;
+    }
+
+    inline auto check(bool value) {
         if (value) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename input, typename invocable>
-    auto check(input first, input last, invocable predicate) -> bool {
-        if (core::all_of(first, last, predicate)) {
-            return core::on_success(__func__);
+    auto check(input first, input last, invocable predicate) {
+        if (cpp::all_of(first, last, predicate)) {
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_equal(const value_type& left, const other_type& right) -> bool {
+    auto check_equal(const value_type& left, const other_type& right) {
         if (left == right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename input, typename other>
-    auto check_equal(input first, input last, other ofirst) -> bool {
-        if (core::equal(first, last, ofirst)) {
-            return core::on_success(__func__);
+    auto check_equal(input first, input last, other ofirst) {
+        if (cpp::equal(first, last, ofirst)) {
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_not_equal(const value_type& left, const other_type& right) -> bool {
+    auto check_not_equal(const value_type& left, const other_type& right) {
         if (left != right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename input, typename other>
-    auto check_not_equal(input first, input last, other ofirst) -> bool {
-        if (!core::equal(first, last, ofirst)) {
-            return core::on_success(__func__);
+    auto check_not_equal(input first, input last, other ofirst) {
+        if (!cpp::equal(first, last, ofirst)) {
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_less(const value_type& left, const other_type& right) -> bool {
+    auto check_less(const value_type& left, const other_type& right) {
         if (left < right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_not_less(const value_type& left, const other_type& right) -> bool {
+    auto check_not_less(const value_type& left, const other_type& right) {
         if (left >= right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_greater(const value_type& left, const other_type& right) -> bool {
+    auto check_greater(const value_type& left, const other_type& right) {
         if (left > right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename value_type, typename other_type>
-    auto check_not_greater(const value_type& left, const other_type& right) -> bool {
+    auto check_not_greater(const value_type& left, const other_type& right) {
         if (left <= right) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename invocable, typename... args>
-    auto check_throws(invocable&& function, args&&... arguments) -> bool {
+    auto check_throws(invocable&& function, args&&... arguments) {
         try {
-            function(core::forward<args>(arguments)...);
-            return core::on_error(__func__);
+            function(cpp::forward<args>(arguments)...);
+            return registry::on_error(scope);
         } catch (...) {
-            return core::on_success(__func__);
+            return registry::on_success(scope);
         }
     }
 
     template <typename invocable, typename... args>
-    auto check_nothrows(invocable&& function, args&&... arguments) -> bool {
+    auto check_nothrows(invocable&& function, args&&... arguments) {
         try {
-            function(core::forward<args>(arguments)...);
-            return core::on_success(__func__);
+            function(cpp::forward<args>(arguments)...);
+            return registry::on_success(scope);
         } catch (...) {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename input, typename invocable>
-    auto check_sorted(input first, input last, invocable compare) -> bool {
-        if (core::is_sorted(first, last, compare)) {
-            return core::on_success(__func__);
+    auto check_sorted(input first, input last, invocable compare) {
+        if (cpp::is_sorted(first, last, compare)) {
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
     template <typename input, typename value_type>
-    auto check_contains(input first, input last, const value_type& value) -> bool {
-        if (core::find(first, last, value) != last) {
-            return core::on_success(__func__);
+    auto check_contains(input first, input last, const value_type& value) {
+        if (cpp::find(first, last, value) != last) {
+            return registry::on_success(scope);
         } else {
-            return core::on_error(__func__);
+            return registry::on_error(scope);
         }
     }
 
 }
+
+#undef scope
 
 #endif

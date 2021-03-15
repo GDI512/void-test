@@ -13,7 +13,7 @@
 //  multiple translation units
 // ================================================================
 
-#include <cppltf.hpp>
+#include <assert.hpp>
 
 const auto group = test::unit("<group>", []{
 
