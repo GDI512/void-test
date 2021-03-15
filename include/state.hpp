@@ -5,75 +5,32 @@
 
 namespace test {
 
+    extern int scope_nesting;
+
     constexpr auto exit_failure = 1;
     constexpr auto exit_success = 0;
 
-    class state;
-
-    class output {
-      private:
-        static int level;
-
-      public:
-        ~output() noexcept;
-        output(string name) noexcept;
-        output(output&& other) = delete;
-        output(const output& other) = delete;
-
-      public:
-        auto operator=(output&& other) -> output& = delete;
-        auto operator=(const output& other) -> output& = delete;
-
-      public:
-        static auto on_error(string source) noexcept -> void;
-        static auto on_success(string source) noexcept -> void;
-        static auto on_exception() noexcept -> void;
-        static auto on_rollback(state snapshot, bool is_ok) noexcept -> void;
-    };
-
-    class state {
-      friend class output;
-
-      private:
-        static int code;
-        static state global;
-
-      private:
-        int error_count = 0;
-        int check_count = 0;
-        int destroyed_count = 0;
-        int constructed_count = 0;
-        int destructor_error_count = 0;
-        int constructor_error_count = 0;
-        int operator_error_count = 0;
-
-      public:
-        auto operator-(state other) noexcept -> state;
-        auto operator-=(state other) noexcept -> state&;
-
-      public:
-        auto is_ok() noexcept -> bool;
-        auto is_empty() noexcept -> bool;
-
-      public:
-        static auto get() noexcept -> state;
-        static auto on_exit() noexcept -> int;
-        static auto on_exit(int value) noexcept -> void;
-        static auto on_error() noexcept -> void;
-        static auto on_success() noexcept -> void;
-        static auto on_exception() noexcept -> void;
-        static auto on_destruction() noexcept -> void;
-        static auto on_construction() noexcept -> void;
-        static auto on_destructor_error() noexcept -> void;
-        static auto on_constructor_error() noexcept -> void;
-        static auto on_operator_error() noexcept -> void;
-        static auto on_rollback(state snapshot) noexcept -> void;
+    struct state {
+        struct test {
+            int error_count = 0;
+            int total_count = 0;
+        } check;
+        struct resource {
+            int destructor_count = 0;
+            int constructor_count = 0;
+            int destructor_error_count = 0;
+            int constructor_error_count = 0;
+            int operator_error_count = 0;
+        } object;
     };
 
     class registry {
+      public:
+        static int exit;
+        static state global;
+
       private:
         state snapshot;
-        output printer;
 
       public:
         ~registry() noexcept;
@@ -86,20 +43,62 @@ namespace test {
         auto operator=(const registry& other) -> registry& = delete;
 
       public:
-        auto is_ok() noexcept -> bool;
-        auto is_empty() noexcept -> bool;
-
-      public:
-        static auto on_exit() noexcept -> int;
-        static auto on_error(string source) noexcept -> bool;
-        static auto on_success(string source) noexcept -> bool;
-        static auto on_exception() noexcept -> void;
-        static auto on_destruction() noexcept -> void;
-        static auto on_construction() noexcept -> void;
-        static auto on_destructor_error() noexcept -> void;
-        static auto on_constructor_error() noexcept -> void;
-        static auto on_operator_error() noexcept -> void;
+        auto good() const noexcept -> bool;
+        auto empty() const noexcept -> bool;
+        auto result() const noexcept -> state;
+        auto save() noexcept -> void;
+        auto restore() noexcept -> void;
     };
+
+    auto print_unit(string name) noexcept -> void;
+
+    auto print_error(string source) noexcept -> void;
+
+    auto print_success(string source) noexcept -> void;
+
+    auto print_exception(string source) noexcept -> void;
+
+    auto print_unit_error(state::test data) noexcept -> void;
+
+    auto print_unit_success(state::test data) noexcept -> void;
+
+    auto print_unit_error(state::resource data) noexcept -> void;
+
+    auto print_unit_success(state::resource data) noexcept -> void;
+
+    auto report_error() noexcept -> void;
+
+    auto report_success() noexcept -> void;
+
+    auto report_exception() noexcept -> void;
+
+    auto report_destruction() noexcept -> void;
+
+    auto report_construction() noexcept -> void;
+
+    auto report_destructor_error() noexcept -> void;
+
+    auto report_constructor_error() noexcept -> void;
+
+    auto report_operator_error() noexcept -> void;
+
+    auto on_exit() noexcept -> int;
+
+    auto on_error(string source) noexcept -> bool;
+
+    auto on_success(string source) noexcept -> bool;
+
+    auto on_exception(string source) noexcept -> void;
+
+    auto on_destruction() noexcept -> void;
+
+    auto on_construction() noexcept -> void;
+
+    auto on_destructor_error() noexcept -> void;
+
+    auto on_constructor_error() noexcept -> void;
+
+    auto on_operator_error() noexcept -> void;
 
 }
 

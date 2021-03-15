@@ -102,7 +102,7 @@ const auto group = test::unit("raii", []{
     //  test::object at the 32nd position to prepare
     //  it for the following copy assignment operation
     //
-    //      (resource ok [33/33 [0/0/0])
+    //      (resource ok [33/33] [0/0/0])
     //
     //  Keep in mind that it is possible to encounter
     //  this type of errors even when the numbers of
