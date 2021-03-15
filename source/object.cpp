@@ -1,11 +1,12 @@
 #include <object.hpp>
 #include <state.hpp>
+#include <cstdint>
 
 namespace test {
 
-    constexpr auto invalid_pointer_value = 0x7FFFFFFF;
-    constexpr auto initialized_memory_value = 0x7FFFFFFF;
-    constexpr auto uninitialized_memory_value = 0x00000000;
+    constexpr auto invalid_pointer_value = static_cast<std::intptr_t>(0x7FFFFFFF);
+    constexpr auto initialized_memory_value = static_cast<std::int32_t>(0x7FFFFFFF);
+    constexpr auto uninitialized_memory_value = static_cast<std::int32_t>(0x00000000);
 
     object::~object() noexcept {
         registry::on_destruction();
