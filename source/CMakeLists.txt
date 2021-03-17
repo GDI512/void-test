@@ -4,7 +4,6 @@ set (SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set (HEADER_DIR ${PROJECT_SOURCE_DIR}/include)
 
 file (GLOB SOURCE CONFIGURE_DEPENDS ${SOURCE_DIR}/*.cpp)
-file (GLOB HEADER CONFIGURE_DEPENDS ${HEADER_DIR}/*.hpp)
 
 add_library (cppltf STATIC)
 target_sources (cppltf PRIVATE ${SOURCE})
