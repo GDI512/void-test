@@ -1,34 +1,37 @@
 // ================================================================
-//  Source file containing tests related to special types. Most of
-//  the assertions are here to ensure that the undefined behavior
-//  test::object is based on does not break it. The omplete list
-//  of tests is as follows:
-//    1.
-//    2.
-//    3.
-//    4.
-//    5.
-//    6.
-//    7.
-//    8.
-//    9.
-//   10.
-//   11.
-//   12.
-//   13.
-//   14.
-//   15.
-//   16.
-//   17.
-//   18.
-//   19.
-//   20.
-//   21.
-//   22.
-//   23.
-//   24.
-//   25.
-//   26.
+//  Description:
+//      Source file containing tests related to special types.
+//      Most of the assertions are here to ensure that the
+//      undefined behavior test::object is based on does not break
+//      that thing.
+//
+//  Content:
+//        1.
+//        2.
+//        3.
+//        4.
+//        5.
+//        6.
+//        7.
+//        8.
+//        9.
+//       10.
+//       11.
+//       12.
+//       13.
+//       14.
+//       15.
+//       16.
+//       17.
+//       18.
+//       19.
+//       20.
+//       21.
+//       22.
+//       23.
+//       24.
+//       25.
+//       26.
 // ================================================================
 
 #include "common.hpp"
