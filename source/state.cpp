@@ -161,36 +161,36 @@ namespace {
     template <>
     auto print<message::unit>(string name) noexcept {
         output(format<message::unit>, name);
-    };
+    }
 
     template <>
     auto print<message::error>(string source) noexcept {
         output(format<message::error>, source);
-    };
+    }
 
     template <>
     auto print<message::success>(string source) noexcept {
         output(format<message::success>, source);
-    };
+    }
 
     template <>
     auto print<message::exception>() noexcept {
          output(format<message::exception>);
-    };
+    }
 
     template <>
     auto print<message::unit_error>(state::test data) noexcept {
         if (!is_ok(data)) {
             output(format<message::test_error>, data.error_count, data.total_count);
         }
-    };
+    }
 
     template <>
     auto print<message::unit_success>(state::test data) noexcept {
         if (is_ok(data) && !is_empty(data)) {
             output(format<message::test_success>, data.error_count, data.total_count);
         }
-    };
+    }
 
     template <>
     auto print<message::unit_error>(state::resource data) noexcept {
@@ -198,7 +198,7 @@ namespace {
             output(format<message::resource_error>, data.destructor_count, data.constructor_count,
                 data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
         }
-    };
+    }
 
     template <>
     auto print<message::unit_success>(state::resource data) noexcept {
@@ -206,7 +206,7 @@ namespace {
             output(format<message::resource_success>, data.destructor_count, data.constructor_count,
                 data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
         }
-    };
+    }
 
 }
 
