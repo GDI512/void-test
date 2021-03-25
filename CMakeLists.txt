@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.15)
 
-project (cppltf VERSION 0.4.0 LANGUAGES CXX)
+project (cppltf VERSION 0.5.0 LANGUAGES CXX)
 
 enable_testing ()
 
