@@ -6,11 +6,11 @@ namespace {
 
     using namespace test;
 
-    auto good(state::test data) noexcept {
+    auto ok(state::test data) noexcept {
         return data.error_count == 0;
     }
 
-    auto good(state::resource data) noexcept {
+    auto ok(state::resource data) noexcept {
         return data.destructor_count == data.constructor_count &&
             data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
     }
@@ -90,21 +90,21 @@ namespace {
     }
 
     auto print_unit_error(state::test data) noexcept {
-        if (!good(data)) {
+        if (!ok(data)) {
             repeat("  ", scope_level);
             print("(\033[31mtest error\033[0m [%i/%i])\n", data.error_count, data.total_count);
         }
     }
 
     auto print_unit_success(state::test data) noexcept {
-        if (good(data) && !empty(data)) {
+        if (ok(data) && !empty(data)) {
             repeat("  ", scope_level);
             print("(\033[32mtest ok\033[0m [%i/%i])\n", data.error_count, data.total_count);
         }
     }
 
     auto print_unit_error(state::resource data) noexcept {
-        if (!good(data)) {
+        if (!ok(data)) {
             repeat("  ", scope_level);
             print("(\033[31mresource error\033[0m [%i/%i] ", data.destructor_count, data.constructor_count);
             print("[%i/%i/%i])\n", data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
@@ -112,7 +112,7 @@ namespace {
     }
 
     auto print_unit_success(state::resource data) noexcept {
-        if (good(data) && !empty(data)) {
+        if (ok(data) && !empty(data)) {
             repeat("  ", scope_level);
             print("(\033[32mresource ok\033[0m [%i/%i] ", data.destructor_count, data.constructor_count);
             print("[%i/%i/%i])\n", data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
@@ -154,12 +154,12 @@ namespace test {
     state global = {};
 
     registry::~registry() noexcept {
-        const auto diff = result();
-        if (good() && !empty()) {
+        const auto diff = difference();
+        if (ok() && !empty()) {
             print_unit_success(diff.check);
             print_unit_success(diff.object);
             restore();
-        } else if (!good()) {
+        } else if (!ok()) {
             print_unit_error(diff.check);
             print_unit_error(diff.object);
             restore();
@@ -172,20 +172,6 @@ namespace test {
         save();
     }
 
-    auto registry::good() const noexcept -> bool {
-        const auto data = result();
-        return ::good(data.check) && ::good(data.object);
-    }
-
-    auto registry::empty() const noexcept -> bool {
-        const auto data = result();
-        return ::empty(data.check) && ::empty(data.object);
-    }
-
-    auto registry::result() const noexcept -> state {
-        return global - snapshot;
-    }
-
     auto registry::save() noexcept -> void {
         snapshot = global;
         scope_level++;
@@ -194,6 +180,20 @@ namespace test {
     auto registry::restore() noexcept -> void {
         global = snapshot;
         scope_level--;
+    }
+
+    auto registry::ok() const noexcept -> bool {
+        const auto data = difference();
+        return ::ok(data.check) && ::ok(data.object);
+    }
+
+    auto registry::empty() const noexcept -> bool {
+        const auto data = difference();
+        return ::empty(data.check) && ::empty(data.object);
+    }
+
+    auto registry::difference() const noexcept -> state {
+        return global - snapshot;
     }
 
     auto on_exit() noexcept -> integer {

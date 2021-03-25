@@ -41,11 +41,11 @@ namespace test {
         auto operator=(const registry& other) -> registry& = delete;
 
       public:
-        auto good() const noexcept -> bool;
-        auto empty() const noexcept -> bool;
-        auto result() const noexcept -> state;
         auto save() noexcept -> void;
         auto restore() noexcept -> void;
+        auto ok() const noexcept -> bool;
+        auto empty() const noexcept -> bool;
+        auto difference() const noexcept -> state;
     };
 
     auto on_error(string source) noexcept -> bool;

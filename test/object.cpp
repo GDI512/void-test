@@ -1,39 +1,3 @@
-// ================================================================
-//  Description:
-//      Source file containing tests related to special types.
-//      Most of the assertions are here to ensure that the
-//      undefined behavior test::object is based on does not break
-//      that thing.
-//
-//  Content:
-//        1.
-//        2.
-//        3.
-//        4.
-//        5.
-//        6.
-//        7.
-//        8.
-//        9.
-//       10.
-//       11.
-//       12.
-//       13.
-//       14.
-//       15.
-//       16.
-//       17.
-//       18.
-//       19.
-//       20.
-//       21.
-//       22.
-//       23.
-//       24.
-//       25.
-//       26.
-// ================================================================
-
 #include "common.hpp"
 
 #include <utility>
@@ -67,7 +31,7 @@ int main() {
         {
             auto instance = test::object{};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 5.
         auto context = test::registry("");
@@ -75,7 +39,7 @@ int main() {
             auto instance = test::object{};
             instance.~object();
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 6.
         auto context = test::registry("");
@@ -83,7 +47,7 @@ int main() {
             auto instance = test::object{};
             new (&instance) test::object{};
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 7.
         auto context = test::registry("");
@@ -91,7 +55,7 @@ int main() {
             auto instance = test::object{};
             auto other = test::object{instance};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 8.
         auto context = test::registry("");
@@ -99,7 +63,7 @@ int main() {
             auto instance = test::object{};
             auto other = test::object{std::move(instance)};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 9.
         auto context = test::registry("");
@@ -108,7 +72,7 @@ int main() {
             instance.~object();
             auto other = test::object{instance};
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 10.
         auto context = test::registry("");
@@ -117,7 +81,7 @@ int main() {
             instance.~object();
             auto other = test::object{std::move(instance)};
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 11.
         auto context = test::registry("");
@@ -126,7 +90,7 @@ int main() {
             auto other = test::object{};
             instance = other;
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 12.
         auto context = test::registry("");
@@ -135,7 +99,7 @@ int main() {
             auto other = test::object{};
             instance = std::move(other);
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 13.
         auto context = test::registry("");
@@ -145,7 +109,7 @@ int main() {
             instance.~object();
             instance = other;
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 14.
         auto context = test::registry("");
@@ -155,7 +119,7 @@ int main() {
             instance.~object();
             instance = std::move(other);
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 15.
         auto context = test::registry("");
@@ -165,7 +129,7 @@ int main() {
             other.~object();
             instance = other;
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 16.
         auto context = test::registry("");
@@ -175,7 +139,7 @@ int main() {
             other.~object();
             instance = std::move(other);
         }
-        cassert(!context.good());
+        cassert(!context.ok());
     }
     { // 17.
         auto context = test::registry("");
@@ -219,7 +183,7 @@ int main() {
         {
             auto instance = test::counter{};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 23.
         auto context = test::registry("");
@@ -227,7 +191,7 @@ int main() {
             auto instance = test::counter{};
             auto other = test::counter{instance};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 24.
         auto context = test::registry("");
@@ -235,7 +199,7 @@ int main() {
             auto instance = test::counter{};
             auto other = test::counter{std::move(instance)};
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 25.
         auto context = test::registry("");
@@ -244,7 +208,7 @@ int main() {
             auto other = test::counter{};
             instance = other;
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
     { // 26.
         auto context = test::registry("");
@@ -253,6 +217,6 @@ int main() {
             auto other = test::counter{};
             instance = std::move(other);
         }
-        cassert(context.good());
+        cassert(context.ok());
     }
 }

@@ -1,31 +1,3 @@
-// ================================================================
-//  Description:
-//      Source file containing tests related to assertions exposed
-//      in the API. All assertions return true on success and
-//      false on failure.
-//
-//  Content:
-//        1. Simple bool assertion
-//        2. Generic range-based assertion using forward iterators
-//        3. Equality assertion
-//        4. Range-based equality assertion using forward
-//           iterators
-//        6. Inequality assertion
-//        7. Range-based inequality assertion using forward
-//           iterators
-//        9. Less-than assertion
-//       10. Not-less-than assertion
-//       11. Greater-than assertion
-//       12. Not-greater-than assertion
-//       13. Assertion that ensures the function argument throws
-//       14. Assertion that ensures the function argument does not
-//           throw
-//       15. Assertion that checks if the given range (delimited
-//           by forward iterators) is sorted
-//       16. Assertion that checks if the given range (delimited
-//           by forward iterators) contains the specified element
-// ================================================================
-
 #include "common.hpp"
 
 #include <forward_list>
