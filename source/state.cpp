@@ -24,6 +24,57 @@ namespace {
         operator_error
     };
 
+    auto output(string fmt, ...) noexcept {
+        va_list args;
+        for (auto count = scope_level; count > 0; count--)
+            std::fputs("  ", stdout);
+        va_start(args, fmt);
+        std::vprintf(fmt, args);
+        va_end(args);
+    }
+
+    auto is_ok(state::test data) noexcept {
+        return data.error_count == 0;
+    }
+
+    auto is_ok(state::resource data) noexcept {
+        return data.destructor_count == data.constructor_count &&
+            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
+    }
+
+    auto is_empty(state::test data) noexcept {
+        return data.total_count + data.error_count == 0;
+    }
+
+    auto is_empty(state::resource data) noexcept {
+        return data.destructor_count + data.constructor_count == 0 &&
+            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
+    }
+
+    auto operator-(state::test left, state::test right) noexcept {
+        return state::test {
+            left.error_count - right.error_count,
+            left.total_count - right.total_count
+        };
+    }
+
+    auto operator-(state::resource left, state::resource right) noexcept {
+        return state::resource {
+            left.destructor_count - right.destructor_count,
+            left.constructor_count - right.constructor_count,
+            left.destructor_error_count - right.destructor_error_count,
+            left.constructor_error_count - right.constructor_error_count,
+            left.operator_error_count - right.operator_error_count
+        };
+    }
+
+    auto operator-(state left, state right) noexcept {
+        return state {
+            left.check - right.check,
+            left.object - right.object
+        };
+    }
+
     template <message select>
     constexpr auto format = nullptr;
 
@@ -50,57 +101,6 @@ namespace {
 
     template <>
     constexpr auto format<message::resource_success> = "(\033[32mresource ok\033[0m [%i/%i] [%i/%i/%i])\n";
-
-    auto is_ok(state::test data) noexcept {
-        return data.error_count == 0;
-    }
-
-    auto is_ok(state::resource data) noexcept {
-        return data.destructor_count == data.constructor_count &&
-            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
-    }
-
-    auto is_empty(state::test data) noexcept {
-        return data.total_count + data.error_count == 0;
-    }
-
-    auto is_empty(state::resource data) noexcept {
-        return data.destructor_count + data.constructor_count == 0 &&
-            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
-    }
-
-    auto output(string format, ...) noexcept {
-        va_list args;
-        for (auto count = scope_level; count > 0; count--)
-            std::fputs("  ", stdout);
-        va_start(args, format);
-        std::vprintf(format, args);
-        va_end(args);
-    }
-
-    auto operator-(state::test left, state::test right) noexcept {
-        return state::test {
-            left.error_count - right.error_count,
-            left.total_count - right.total_count
-        };
-    }
-
-    auto operator-(state::resource left, state::resource right) noexcept {
-        return state::resource {
-            left.destructor_count - right.destructor_count,
-            left.constructor_count - right.constructor_count,
-            left.destructor_error_count - right.destructor_error_count,
-            left.constructor_error_count - right.constructor_error_count,
-            left.operator_error_count - right.operator_error_count
-        };
-    }
-
-    auto operator-(state left, state right) noexcept {
-        return state {
-            left.check - right.check,
-            left.object - right.object
-        };
-    }
 
     template <message select>
     auto report() noexcept = delete;
