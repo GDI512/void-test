@@ -3,5 +3,5 @@
 using namespace test;
 
 int main() {
-    return on_exit();
+    return exit_code;
 }

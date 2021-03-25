@@ -8,13 +8,13 @@
 
 namespace test {
 
-    template <typename invocable>
-    auto unit(string name, invocable function) noexcept {
+    template <typename F>
+    auto unit(string name, F function) noexcept {
         const auto context = registry(name);
         try {
             function();
         } catch (...) {
-            on_exception(name);
+            on_exception();
         }
         return 0;
     }
@@ -27,8 +27,8 @@ namespace test {
         }
     }
 
-    template <typename input, typename invocable>
-    auto check(input first, input last, invocable predicate) {
+    template <typename I, typename F>
+    auto check(I first, I last, F predicate) {
         if (cpp::all_of(first, last, predicate)) {
             return on_success(scope);
         } else {
@@ -36,8 +36,8 @@ namespace test {
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_equal(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_equal(const T& left, const U& right) {
         if (left == right) {
             return on_success(scope);
         } else {
@@ -45,17 +45,17 @@ namespace test {
         }
     }
 
-    template <typename input, typename other>
-    auto check_equal(input first, input last, other ofirst) {
-        if (cpp::equal(first, last, ofirst)) {
+    template <typename I, typename J>
+    auto check_equal(I first, I last, J other) {
+        if (cpp::equal(first, last, other)) {
             return on_success(scope);
         } else {
             return on_error(scope);
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_not_equal(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_not_equal(const T& left, const U& right) {
         if (left != right) {
             return on_success(scope);
         } else {
@@ -63,17 +63,17 @@ namespace test {
         }
     }
 
-    template <typename input, typename other>
-    auto check_not_equal(input first, input last, other ofirst) {
-        if (!cpp::equal(first, last, ofirst)) {
+    template <typename I, typename J>
+    auto check_not_equal(I first, I last, J other) {
+        if (!cpp::equal(first, last, other)) {
             return on_success(scope);
         } else {
             return on_error(scope);
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_less(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_less(const T& left, const U& right) {
         if (left < right) {
             return on_success(scope);
         } else {
@@ -81,8 +81,8 @@ namespace test {
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_not_less(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_not_less(const T& left, const U& right) {
         if (left >= right) {
             return on_success(scope);
         } else {
@@ -90,8 +90,8 @@ namespace test {
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_greater(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_greater(const T& left, const U& right) {
         if (left > right) {
             return on_success(scope);
         } else {
@@ -99,8 +99,8 @@ namespace test {
         }
     }
 
-    template <typename value_type, typename other_type>
-    auto check_not_greater(const value_type& left, const other_type& right) {
+    template <typename T, typename U>
+    auto check_not_greater(const T& left, const U& right) {
         if (left <= right) {
             return on_success(scope);
         } else {
@@ -108,28 +108,28 @@ namespace test {
         }
     }
 
-    template <typename invocable, typename... args>
-    auto check_throws(invocable&& function, args&&... arguments) {
+    template <typename F, typename... V>
+    auto check_throws(F&& function, V&&... arguments) {
         try {
-            function(cpp::forward<args>(arguments)...);
+            function(cpp::forward<V>(arguments)...);
             return on_error(scope);
         } catch (...) {
             return on_success(scope);
         }
     }
 
-    template <typename invocable, typename... args>
-    auto check_nothrows(invocable&& function, args&&... arguments) {
+    template <typename F, typename... V>
+    auto check_nothrows(F&& function, V&&... arguments) {
         try {
-            function(cpp::forward<args>(arguments)...);
+            function(cpp::forward<V>(arguments)...);
             return on_success(scope);
         } catch (...) {
             return on_error(scope);
         }
     }
 
-    template <typename input, typename invocable>
-    auto check_sorted(input first, input last, invocable compare) {
+    template <typename I, typename F>
+    auto check_sorted(I first, I last, F compare) {
         if (cpp::is_sorted(first, last, compare)) {
             return on_success(scope);
         } else {
@@ -137,8 +137,8 @@ namespace test {
         }
     }
 
-    template <typename input, typename value_type>
-    auto check_contains(input first, input last, const value_type& value) {
+    template <typename I, typename T>
+    auto check_contains(I first, I last, const T& value) {
         if (cpp::find(first, last, value) != last) {
             return on_success(scope);
         } else {

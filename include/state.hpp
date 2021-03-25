@@ -5,30 +5,28 @@
 
 namespace test {
 
-    extern int scope_nesting;
-
     constexpr auto exit_failure = 1;
     constexpr auto exit_success = 0;
 
-    struct state {
+    extern integer exit_code;
+
+    extern integer scope_level;
+
+    extern struct state {
         struct test {
-            int error_count = 0;
-            int total_count = 0;
+            integer error_count;
+            integer total_count;
         } check;
         struct resource {
-            int destructor_count = 0;
-            int constructor_count = 0;
-            int destructor_error_count = 0;
-            int constructor_error_count = 0;
-            int operator_error_count = 0;
+            integer destructor_count;
+            integer constructor_count;
+            integer destructor_error_count;
+            integer constructor_error_count;
+            integer operator_error_count;
         } object;
-    };
+    } global;
 
     class registry {
-      public:
-        static int exit;
-        static state global;
-
       private:
         state snapshot;
 
@@ -50,49 +48,15 @@ namespace test {
         auto restore() noexcept -> void;
     };
 
-    auto print_unit(string name) noexcept -> void;
-
-    auto print_error(string source) noexcept -> void;
-
-    auto print_success(string source) noexcept -> void;
-
-    auto print_exception(string source) noexcept -> void;
-
-    auto print_unit_error(state::test data) noexcept -> void;
-
-    auto print_unit_success(state::test data) noexcept -> void;
-
-    auto print_unit_error(state::resource data) noexcept -> void;
-
-    auto print_unit_success(state::resource data) noexcept -> void;
-
-    auto report_error() noexcept -> void;
-
-    auto report_success() noexcept -> void;
-
-    auto report_exception() noexcept -> void;
-
-    auto report_destruction() noexcept -> void;
-
-    auto report_construction() noexcept -> void;
-
-    auto report_destructor_error() noexcept -> void;
-
-    auto report_constructor_error() noexcept -> void;
-
-    auto report_operator_error() noexcept -> void;
-
-    auto on_exit() noexcept -> int;
-
     auto on_error(string source) noexcept -> bool;
 
     auto on_success(string source) noexcept -> bool;
 
-    auto on_exception(string source) noexcept -> void;
+    auto on_exception() noexcept -> void;
 
-    auto on_destruction() noexcept -> void;
+    auto on_destructor() noexcept -> void;
 
-    auto on_construction() noexcept -> void;
+    auto on_constructor() noexcept -> void;
 
     auto on_destructor_error() noexcept -> void;
 

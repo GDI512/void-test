@@ -9,7 +9,7 @@ namespace test {
     constexpr auto uninitialized_memory_value = static_cast<std::int32_t>(0x00000000);
 
     object::~object() noexcept {
-        on_destruction();
+        on_destructor();
         if (!is_initialized() || !is_self()) {
             on_destructor_error();
         }
@@ -17,31 +17,31 @@ namespace test {
         value = uninitialized_memory_value;
     }
 
-    object::object(int number) noexcept : number(number), self(this) {
-        on_construction();
+    object::object(integer number) noexcept : self(this), number(number) {
+        on_constructor();
         if (is_initialized()) {
             on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
-    object::object(object&& other) noexcept : number(other.number), self(this) {
-        on_construction();
+    object::object(object&& other) noexcept : self(this), number(other.number) {
+        on_constructor();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
-    object::object(const object& other) noexcept : number(other.number), self(this) {
-        on_construction();
+    object::object(const object& other) noexcept : self(this), number(other.number) {
+        on_constructor();
         if (is_initialized() || !other.is_self() || other.is_uninitialized()) {
             on_constructor_error();
         }
         value = initialized_memory_value;
     }
 
-    object::operator int() const noexcept {
+    object::operator integer() const noexcept {
         return number;
     }
 
@@ -76,22 +76,22 @@ namespace test {
     }
 
     counter::~counter() noexcept {
-        on_destruction();
+        on_destructor();
     }
 
-    counter::counter(int number) noexcept : number(number) {
-        on_construction();
+    counter::counter(integer number) noexcept : number(number) {
+        on_constructor();
     }
 
     counter::counter(counter&& other) noexcept : number(other.number) {
-        on_construction();
+        on_constructor();
     }
 
     counter::counter(const counter& other) noexcept : number(other.number) {
-        on_construction();
+        on_constructor();
     }
 
-    counter::operator int() const noexcept {
+    counter::operator integer() const noexcept {
         return number;
     }
 
