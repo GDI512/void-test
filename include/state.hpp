@@ -8,11 +8,7 @@ namespace test {
     constexpr auto exit_failure = 1;
     constexpr auto exit_success = 0;
 
-    extern integer exit_code;
-
-    extern integer scope_level;
-
-    extern struct state {
+    struct state {
         struct test {
             integer error_count;
             integer total_count;
@@ -24,7 +20,7 @@ namespace test {
             integer constructor_error_count;
             integer operator_error_count;
         } object;
-    } global;
+    };
 
     class registry {
       private:
@@ -47,6 +43,10 @@ namespace test {
         auto empty() const noexcept -> bool;
         auto difference() const noexcept -> state;
     };
+
+    extern state global;
+    extern integer exit_code;
+    extern integer scope_level;
 
     auto on_error(string source) noexcept -> bool;
 
