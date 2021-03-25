@@ -7,9 +7,9 @@ namespace test {
 
     class object {
       private:
-        object* self;
-        integer value;
-        integer number;
+        volatile object* self;
+        volatile integer value;
+        volatile integer number;
 
       public:
         ~object() noexcept;
