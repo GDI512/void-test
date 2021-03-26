@@ -39,30 +39,48 @@ namespace test {
       public:
         auto save() noexcept -> void;
         auto restore() noexcept -> void;
-        auto ok() const noexcept -> bool;
         auto empty() const noexcept -> bool;
+        auto status() const noexcept -> bool;
         auto difference() const noexcept -> state;
     };
 
     extern state global;
     extern integer exit_code;
-    extern integer scope_level;
 
-    auto on_error(string source) noexcept -> bool;
+    auto empty(state::test data) noexcept -> bool;
 
-    auto on_success(string source) noexcept -> bool;
+    auto empty(state::resource data) noexcept -> bool;
 
-    auto on_exception() noexcept -> void;
+    auto status(state::test data) noexcept -> bool;
 
-    auto on_destructor() noexcept -> void;
+    auto status(state::resource data) noexcept -> bool;
 
-    auto on_constructor() noexcept -> void;
+    template <message select>
+    auto report() noexcept -> void = delete;
 
-    auto on_destructor_error() noexcept -> void;
+    template <>
+    auto report<message::error>() noexcept -> void;
 
-    auto on_constructor_error() noexcept -> void;
+    template <>
+    auto report<message::success>() noexcept -> void;
 
-    auto on_operator_error() noexcept -> void;
+    template <>
+    auto report<message::exception>() noexcept -> void;
+
+    template <>
+    auto report<message::destructor>() noexcept -> void;
+
+    template <>
+    auto report<message::constructor>() noexcept -> void;
+
+    template <>
+    auto report<message::destructor_error>() noexcept -> void;
+
+    template <>
+    auto report<message::constructor_error>() noexcept -> void;
+
+    template <>
+    auto report<message::operator_error>() noexcept -> void;
 
 }
 

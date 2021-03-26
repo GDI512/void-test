@@ -5,57 +5,57 @@
 int main() {
     {
         const auto context = test::registry("");
-        test::on_error("");
-        cassert(!context.ok());
+        test::report<test::message::error>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_success("");
-        cassert(context.ok());
+        test::report<test::message::success>();
         cassert(!context.empty());
+        cassert(context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_exception();
-        cassert(!context.ok());
+        test::report<test::message::exception>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_destructor();
-        cassert(!context.ok());
+        test::report<test::message::destructor>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_constructor();
-        cassert(!context.ok());
+        test::report<test::message::constructor>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_destructor();
-        test::on_constructor();
-        cassert(context.ok());
+        test::report<test::message::destructor>();
+        test::report<test::message::constructor>();
         cassert(!context.empty());
+        cassert(context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_destructor_error();
-        cassert(!context.ok());
+        test::report<test::message::destructor_error>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_constructor_error();
-        cassert(!context.ok());
+        test::report<test::message::constructor_error>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::on_operator_error();
-        cassert(!context.ok());
+        test::report<test::message::operator_error>();
         cassert(!context.empty());
+        cassert(!context.status());
     }
 }

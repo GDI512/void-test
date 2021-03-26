@@ -31,7 +31,7 @@ int main() {
         {
             auto instance = test::object{};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -39,7 +39,7 @@ int main() {
             auto instance = test::object{};
             instance.~object();
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -47,7 +47,7 @@ int main() {
             auto instance = test::object{};
             new (&instance) test::object{};
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -55,7 +55,7 @@ int main() {
             auto instance = test::object{};
             auto other = test::object{instance};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -63,7 +63,7 @@ int main() {
             auto instance = test::object{};
             auto other = test::object{std::move(instance)};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -72,7 +72,7 @@ int main() {
             instance.~object();
             auto other = test::object{instance};
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -81,7 +81,7 @@ int main() {
             instance.~object();
             auto other = test::object{std::move(instance)};
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -90,7 +90,7 @@ int main() {
             auto other = test::object{};
             instance = other;
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -99,7 +99,7 @@ int main() {
             auto other = test::object{};
             instance = std::move(other);
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -109,7 +109,7 @@ int main() {
             instance.~object();
             instance = other;
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -119,7 +119,7 @@ int main() {
             instance.~object();
             instance = std::move(other);
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -129,7 +129,7 @@ int main() {
             other.~object();
             instance = other;
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -139,7 +139,7 @@ int main() {
             other.~object();
             instance = std::move(other);
         }
-        cassert(!context.ok());
+        cassert(!context.status());
     }
     {
         auto context = test::registry("");
@@ -183,7 +183,7 @@ int main() {
         {
             auto instance = test::counter{};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -191,7 +191,7 @@ int main() {
             auto instance = test::counter{};
             auto other = test::counter{instance};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -199,7 +199,7 @@ int main() {
             auto instance = test::counter{};
             auto other = test::counter{std::move(instance)};
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -208,7 +208,7 @@ int main() {
             auto other = test::counter{};
             instance = other;
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
     {
         auto context = test::registry("");
@@ -217,6 +217,6 @@ int main() {
             auto other = test::counter{};
             instance = std::move(other);
         }
-        cassert(context.ok());
+        cassert(context.status());
     }
 }

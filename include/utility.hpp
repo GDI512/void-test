@@ -35,6 +35,24 @@ namespace test {
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
 
+    enum class message {
+        unit,
+        unit_error,
+        unit_success,
+        test_error,
+        test_success,
+        resource_error,
+        resource_success,
+        error,
+        success,
+        exception,
+        destructor,
+        constructor,
+        destructor_error,
+        constructor_error,
+        operator_error
+    };
+
 }
 
 namespace test::cpp {
