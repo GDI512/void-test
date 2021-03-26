@@ -24,15 +24,6 @@ namespace {
         operator_error
     };
 
-    auto output(string fmt, ...) noexcept {
-        va_list args;
-        for (auto count = scope_level; count > 0; count--)
-            std::fputs("  ", stdout);
-        va_start(args, fmt);
-        std::vprintf(fmt, args);
-        va_end(args);
-    }
-
     auto is_ok(state::test data) noexcept {
         return data.error_count == 0;
     }
@@ -49,30 +40,6 @@ namespace {
     auto is_empty(state::resource data) noexcept {
         return data.destructor_count + data.constructor_count == 0 &&
             data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
-    }
-
-    auto operator-(state::test left, state::test right) noexcept {
-        return state::test {
-            left.error_count - right.error_count,
-            left.total_count - right.total_count
-        };
-    }
-
-    auto operator-(state::resource left, state::resource right) noexcept {
-        return state::resource {
-            left.destructor_count - right.destructor_count,
-            left.constructor_count - right.constructor_count,
-            left.destructor_error_count - right.destructor_error_count,
-            left.constructor_error_count - right.constructor_error_count,
-            left.operator_error_count - right.operator_error_count
-        };
-    }
-
-    auto operator-(state left, state right) noexcept {
-        return state {
-            left.check - right.check,
-            left.object - right.object
-        };
     }
 
     template <message select>
@@ -160,42 +127,56 @@ namespace {
 
     template <>
     auto print<message::unit>(string name) noexcept {
-        output(format<message::unit>, name);
+        for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+        std::printf(format<message::unit>, name);
     }
 
     template <>
     auto print<message::error>(string source) noexcept {
-        output(format<message::error>, source);
+        for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+        std::printf(format<message::error>, source);
     }
 
     template <>
     auto print<message::success>(string source) noexcept {
-        output(format<message::success>, source);
+        for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+        std::printf(format<message::success>, source);
     }
 
     template <>
     auto print<message::exception>() noexcept {
-         output(format<message::exception>);
+        for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+         std::printf(format<message::exception>);
     }
 
     template <>
     auto print<message::unit_error>(state::test data) noexcept {
         if (!is_ok(data)) {
-            output(format<message::test_error>, data.error_count, data.total_count);
+            for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+            std::printf(format<message::test_error>, data.error_count, data.total_count);
         }
     }
 
     template <>
     auto print<message::unit_success>(state::test data) noexcept {
         if (is_ok(data) && !is_empty(data)) {
-            output(format<message::test_success>, data.error_count, data.total_count);
+            for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+            std::printf(format<message::test_success>, data.error_count, data.total_count);
         }
     }
 
     template <>
     auto print<message::unit_error>(state::resource data) noexcept {
         if (!is_ok(data)) {
-            output(format<message::resource_error>, data.destructor_count, data.constructor_count,
+            for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+            std::printf(format<message::resource_error>, data.destructor_count, data.constructor_count,
                 data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
         }
     }
@@ -203,9 +184,35 @@ namespace {
     template <>
     auto print<message::unit_success>(state::resource data) noexcept {
         if (is_ok(data) && !is_empty(data)) {
-            output(format<message::resource_success>, data.destructor_count, data.constructor_count,
+            for (auto count = scope_level; count > 0; count--)
+                std::fputs("  ", stdout);
+            std::printf(format<message::resource_success>, data.destructor_count, data.constructor_count,
                 data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
         }
+    }
+
+    auto operator-(state::test left, state::test right) noexcept {
+        return state::test {
+            left.error_count - right.error_count,
+            left.total_count - right.total_count
+        };
+    }
+
+    auto operator-(state::resource left, state::resource right) noexcept {
+        return state::resource {
+            left.destructor_count - right.destructor_count,
+            left.constructor_count - right.constructor_count,
+            left.destructor_error_count - right.destructor_error_count,
+            left.constructor_error_count - right.constructor_error_count,
+            left.operator_error_count - right.operator_error_count
+        };
+    }
+
+    auto operator-(state left, state right) noexcept {
+        return state {
+            left.check - right.check,
+            left.object - right.object
+        };
     }
 
 }
@@ -223,10 +230,10 @@ namespace test {
             print<message::unit_success>(result.object);
             restore();
         } else if (!ok()) {
+            exit_code = exit_failure;
             print<message::unit_error>(result.check);
             print<message::unit_error>(result.object);
             restore();
-            exit_code = exit_failure;
         }
     }
 
