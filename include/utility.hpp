@@ -1,7 +1,33 @@
+// ========================== utility.hpp =========================
+//
+//  Part of the cppltf library, under the BSD-3-Clause License.
+//  See https://github.com/GDI512/cppltf/blob/master/LICENSE for
+//  license information.
+//
+// ================================================================
+
 #ifndef CPPLTF_UTILITY_HPP
 #define CPPLTF_UTILITY_HPP
 
 namespace test {
+
+    enum class message {
+        unit,
+        unit_error,
+        unit_success,
+        test_error,
+        test_success,
+        resource_error,
+        resource_success,
+        error,
+        success,
+        exception,
+        destructor,
+        constructor,
+        destructor_error,
+        constructor_error,
+        operator_error
+    };
 
     using string = const char*;
     using integer = int;
@@ -34,24 +60,6 @@ namespace test {
 
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
-
-    enum class message {
-        unit,
-        unit_error,
-        unit_success,
-        test_error,
-        test_success,
-        resource_error,
-        resource_success,
-        error,
-        success,
-        exception,
-        destructor,
-        constructor,
-        destructor_error,
-        constructor_error,
-        operator_error
-    };
 
 }
 

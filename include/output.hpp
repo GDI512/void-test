@@ -1,3 +1,11 @@
+// ========================== output.hpp ==========================
+//
+//  Part of the cppltf library, under the BSD-3-Clause License.
+//  See https://github.com/GDI512/cppltf/blob/master/LICENSE for
+//  license information.
+//
+// ================================================================
+
 #ifndef CPPLTF_OUTPUT_HPP
 #define CPPLTF_OUTPUT_HPP
 
