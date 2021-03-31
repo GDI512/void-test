@@ -98,37 +98,25 @@ namespace test {
             data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
     }
 
-    auto on_error(string source) noexcept -> bool {
-        report<message::error>();
+    template <>
+    auto report<message::error>(string source) noexcept -> bool {
+        global_state.check.error_count++;
+        global_state.check.total_count++;
         display<message::error>(source);
         return false;
     }
 
-    auto on_success(string source) noexcept -> bool {
-        report<message::success>();
+    template <>
+    auto report<message::success>(string source) noexcept -> bool {
+        global_state.check.total_count++;
         display<message::success>(source);
         return true;
-    }
-
-    auto on_exception() noexcept -> void {
-        report<message::exception>();
-        display<message::exception>();
-    }
-
-    template <>
-    auto report<message::error>() noexcept -> void {
-        global_state.check.error_count++;
-        global_state.check.total_count++;
-    }
-
-    template <>
-    auto report<message::success>() noexcept -> void {
-        global_state.check.total_count++;
     }
 
     template <>
     auto report<message::exception>() noexcept -> void {
         global_state.check.error_count++;
+        display<message::exception>();
     }
 
     template <>

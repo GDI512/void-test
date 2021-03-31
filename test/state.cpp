@@ -5,13 +5,13 @@
 int main() {
     {
         const auto context = test::registry("");
-        test::report<test::message::error>();
+        cassert(!test::report<test::message::error>(""));
         cassert(!context.empty());
         cassert(!context.status());
     }
     {
         const auto context = test::registry("");
-        test::report<test::message::success>();
+        cassert(test::report<test::message::success>(""));
         cassert(!context.empty());
         cassert(context.status());
     }
@@ -55,24 +55,6 @@ int main() {
     {
         const auto context = test::registry("");
         test::report<test::message::operator_error>();
-        cassert(!context.empty());
-        cassert(!context.status());
-    }
-    {
-        const auto context = test::registry("");
-        cassert(!test::on_error(""));
-        cassert(!context.empty());
-        cassert(!context.status());
-    }
-    {
-        const auto context = test::registry("");
-        cassert(test::on_success(""));
-        cassert(!context.empty());
-        cassert(context.status());
-    }
-    {
-        const auto context = test::registry("");
-        test::on_exception();
         cassert(!context.empty());
         cassert(!context.status());
     }

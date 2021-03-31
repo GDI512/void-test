@@ -55,20 +55,17 @@ namespace test {
 
     auto is_empty(state::resource data) noexcept -> bool;
 
-    auto on_error(string source) noexcept -> bool;
-
-    auto on_success(string source) noexcept -> bool;
-
-    auto on_exception() noexcept -> void;
-
     template <message select>
     auto report() noexcept -> void = delete;
 
-    template <>
-    auto report<message::error>() noexcept -> void;
+    template <message select>
+    auto report(string source) noexcept -> bool = delete;
 
     template <>
-    auto report<message::success>() noexcept -> void;
+    auto report<message::error>(string source) noexcept -> bool;
+
+    template <>
+    auto report<message::success>(string source) noexcept -> bool;
 
     template <>
     auto report<message::exception>() noexcept -> void;
