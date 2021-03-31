@@ -9,153 +9,141 @@
 
 namespace test {
 
-    template <message select>
-    auto action(string) noexcept -> bool = delete;
-
-    template <>
-    auto action<message::error>(string source) noexcept -> bool;
-
-    template <>
-    auto action<message::success>(string source) noexcept -> bool;
-
-    template <>
-    auto action<message::exception>(string source) noexcept -> bool;
-
-    template <typename F>
-    auto unit(string name, F function) noexcept {
+    template <typename invocable>
+    auto unit(string name, invocable function) noexcept {
         const auto context = registry(name);
         try {
             function();
         } catch (...) {
-            action<message::exception>(name);
+            on_exception();
         }
         return 0;
     }
 
     inline auto check(bool value) {
         if (value) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename I, typename F>
-    auto check(I first, I last, F predicate) {
+    template <typename input, typename invocable>
+    auto check(input first, input last, invocable predicate) {
         if (cpp::all_of(first, last, predicate)) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_equal(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_equal(const value_type& left, const other_type& right) {
         if (left == right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename I, typename J>
-    auto check_equal(I first, I last, J other) {
-        if (cpp::equal(first, last, other)) {
-            return action<message::success>(scope);
+    template <typename input, typename other>
+    auto check_equal(input first, input last, other start) {
+        if (cpp::equal(first, last, start)) {
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_equal(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_equal(const value_type& left, const other_type& right) {
         if (left != right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename I, typename J>
-    auto check_not_equal(I first, I last, J other) {
-        if (!cpp::equal(first, last, other)) {
-            return action<message::success>(scope);
+    template <typename input, typename other>
+    auto check_not_equal(input first, input last, other start) {
+        if (!cpp::equal(first, last, start)) {
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_less(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_less(const value_type& left, const other_type& right) {
         if (left < right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_less(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_less(const value_type& left, const other_type& right) {
         if (left >= right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_greater(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_greater(const value_type& left, const other_type& right) {
         if (left > right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename T, typename U>
-    auto check_not_greater(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_greater(const value_type& left, const other_type& right) {
         if (left <= right) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename F, typename... V>
-    auto check_throws(F&& function, V&&... arguments) {
+    template <typename invocable, typename... args>
+    auto check_throws(invocable&& function, args&&... arguments) {
         try {
-            function(cpp::forward<V>(arguments)...);
-            return action<message::error>(scope);
+            function(cpp::forward<args>(arguments)...);
+            return on_error(scope);
         } catch (...) {
-            return action<message::success>(scope);
+            return on_success(scope);
         }
     }
 
-    template <typename F, typename... V>
-    auto check_nothrows(F&& function, V&&... arguments) {
+    template <typename invocable, typename... args>
+    auto check_nothrows(invocable&& function, args&&... arguments) {
         try {
-            function(cpp::forward<V>(arguments)...);
-            return action<message::success>(scope);
+            function(cpp::forward<args>(arguments)...);
+            return on_success(scope);
         } catch (...) {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename I, typename F>
-    auto check_sorted(I first, I last, F compare) {
+    template <typename input, typename invocable>
+    auto check_sorted(input first, input last, invocable compare) {
         if (cpp::is_sorted(first, last, compare)) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 
-    template <typename I, typename T>
-    auto check_contains(I first, I last, const T& value) {
+    template <typename input, typename value_type>
+    auto check_contains(input first, input last, const value_type& value) {
         if (cpp::find(first, last, value) != last) {
-            return action<message::success>(scope);
+            return on_success(scope);
         } else {
-            return action<message::error>(scope);
+            return on_error(scope);
         }
     }
 

@@ -9,40 +9,40 @@ namespace test {
     extern integer scope_level;
 
     template <message select>
-    auto print() noexcept -> void = delete;
+    auto display() noexcept -> void = delete;
 
     template <message select>
-    auto print(string) noexcept -> void = delete;
+    auto display(string) noexcept -> void = delete;
 
     template <message select>
-    auto print(state::test) noexcept -> void = delete;
+    auto display(state::test) noexcept -> void = delete;
 
     template <message select>
-    auto print(state::resource) noexcept -> void = delete;
+    auto display(state::resource) noexcept -> void = delete;
 
     template <>
-    auto print<message::unit>(string name) noexcept -> void;
+    auto display<message::unit>(string name) noexcept -> void;
 
     template <>
-    auto print<message::error>(string source) noexcept -> void;
+    auto display<message::error>(string source) noexcept -> void;
 
     template <>
-    auto print<message::success>(string source) noexcept -> void;
+    auto display<message::success>(string source) noexcept -> void;
 
     template <>
-    auto print<message::exception>() noexcept -> void;
+    auto display<message::exception>() noexcept -> void;
 
     template <>
-    auto print<message::unit_error>(state::test data) noexcept -> void;
+    auto display<message::unit_error>(state::test data) noexcept -> void;
 
     template <>
-    auto print<message::unit_success>(state::test data) noexcept -> void;
+    auto display<message::unit_success>(state::test data) noexcept -> void;
 
     template <>
-    auto print<message::unit_error>(state::resource data) noexcept -> void;
+    auto display<message::unit_error>(state::resource data) noexcept -> void;
 
     template <>
-    auto print<message::unit_success>(state::resource data) noexcept -> void;
+    auto display<message::unit_success>(state::resource data) noexcept -> void;
 
 }
 

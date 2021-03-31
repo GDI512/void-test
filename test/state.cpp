@@ -58,4 +58,22 @@ int main() {
         cassert(!context.empty());
         cassert(!context.status());
     }
+    {
+        const auto context = test::registry("");
+        cassert(!test::on_error(""));
+        cassert(!context.empty());
+        cassert(!context.status());
+    }
+    {
+        const auto context = test::registry("");
+        cassert(test::on_success(""));
+        cassert(!context.empty());
+        cassert(context.status());
+    }
+    {
+        const auto context = test::registry("");
+        test::on_exception();
+        cassert(!context.empty());
+        cassert(!context.status());
+    }
 }

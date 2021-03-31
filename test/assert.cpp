@@ -5,24 +5,6 @@
 
 int main() {
     {
-        const auto context = test::registry("");
-        cassert(!test::action<test::message::error>(""));
-        cassert(!context.empty());
-        cassert(!context.status());
-    }
-    {
-        const auto context = test::registry("");
-        cassert(test::action<test::message::success>(""));
-        cassert(!context.empty());
-        cassert(context.status());
-    }
-    {
-        const auto context = test::registry("");
-        cassert(!test::action<test::message::exception>(""));
-        cassert(!context.empty());
-        cassert(!context.status());
-    }
-    {
         cassert(test::check(true));
         cassert(!test::check(false));
     }

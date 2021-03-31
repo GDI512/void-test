@@ -34,109 +34,126 @@ namespace {
 
 namespace test {
 
-    state global = {};
+    state global_state = {};
     integer exit_code = exit_success;
 
     registry::~registry() noexcept {
-        const auto result = difference();
+        const auto difference = result();
         if (status() && !empty()) {
-            print<message::unit_success>(result.check);
-            print<message::unit_success>(result.object);
+            display<message::unit_success>(difference.check);
+            display<message::unit_success>(difference.object);
             restore();
         } else if (!status()) {
             exit_code = exit_failure;
-            print<message::unit_error>(result.check);
-            print<message::unit_error>(result.object);
+            display<message::unit_error>(difference.check);
+            display<message::unit_error>(difference.object);
             restore();
         }
     }
 
     registry::registry(string scope) noexcept {
-        print<message::unit>(scope);
+        display<message::unit>(scope);
         save();
     }
 
     auto registry::save() noexcept -> void {
-        snapshot = global;
+        snapshot = global_state;
         scope_level++;
     }
 
     auto registry::restore() noexcept -> void {
-        global = snapshot;
+        global_state = snapshot;
         scope_level--;
     }
 
     auto registry::empty() const noexcept -> bool {
-        const auto result = difference();
-        return test::empty(result.check) && test::empty(result.object);
+        const auto difference = result();
+        return is_empty(difference.check) && is_empty(difference.object);
     }
 
     auto registry::status() const noexcept -> bool {
-        const auto result = difference();
-        return test::status(result.check) && test::status(result.object);
+        const auto difference = result();
+        return is_ok(difference.check) && is_ok(difference.object);
     }
 
-    auto registry::difference() const noexcept -> state {
-        return global - snapshot;
+    auto registry::result() const noexcept -> state {
+        return global_state - snapshot;
     }
 
-    auto empty(state::test data) noexcept -> bool {
-        return data.total_count + data.error_count == 0;
-    }
-
-    auto empty(state::resource data) noexcept -> bool {
-        return data.destructor_count + data.constructor_count == 0 &&
-            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
-    }
-
-    auto status(state::test data) noexcept -> bool {
+    auto is_ok(state::test data) noexcept -> bool {
         return data.error_count == 0;
     }
 
-    auto status(state::resource data) noexcept -> bool {
+    auto is_ok(state::resource data) noexcept -> bool {
         return data.destructor_count == data.constructor_count &&
             data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
     }
 
+    auto is_empty(state::test data) noexcept -> bool {
+        return data.total_count + data.error_count == 0;
+    }
+
+    auto is_empty(state::resource data) noexcept -> bool {
+        return data.destructor_count + data.constructor_count == 0 &&
+            data.destructor_error_count + data.constructor_error_count + data.operator_error_count == 0;
+    }
+
+    auto on_error(string source) noexcept -> bool {
+        report<message::error>();
+        display<message::error>(source);
+        return false;
+    }
+
+    auto on_success(string source) noexcept -> bool {
+        report<message::success>();
+        display<message::success>(source);
+        return true;
+    }
+
+    auto on_exception() noexcept -> void {
+        report<message::exception>();
+        display<message::exception>();
+    }
+
     template <>
     auto report<message::error>() noexcept -> void {
-        global.check.error_count++;
-        global.check.total_count++;
+        global_state.check.error_count++;
+        global_state.check.total_count++;
     }
 
     template <>
     auto report<message::success>() noexcept -> void {
-        global.check.total_count++;
+        global_state.check.total_count++;
     }
 
     template <>
     auto report<message::exception>() noexcept -> void {
-        global.check.error_count++;
+        global_state.check.error_count++;
     }
 
     template <>
     auto report<message::destructor>() noexcept -> void {
-        global.object.destructor_count++;
+        global_state.object.destructor_count++;
     }
 
     template <>
     auto report<message::constructor>() noexcept -> void {
-        global.object.constructor_count++;
+        global_state.object.constructor_count++;
     }
 
     template <>
     auto report<message::destructor_error>() noexcept -> void {
-        global.object.destructor_error_count++;
+        global_state.object.destructor_error_count++;
     }
 
     template <>
     auto report<message::constructor_error>() noexcept -> void {
-        global.object.constructor_error_count++;
+        global_state.object.constructor_error_count++;
     }
 
     template <>
     auto report<message::operator_error>() noexcept -> void {
-        global.object.operator_error_count++;
+        global_state.object.operator_error_count++;
     }
 
 }

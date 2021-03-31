@@ -22,6 +22,9 @@ namespace test {
         } object;
     };
 
+    extern state global_state;
+    extern integer exit_code;
+
     class registry {
       private:
         state snapshot;
@@ -41,19 +44,22 @@ namespace test {
         auto restore() noexcept -> void;
         auto empty() const noexcept -> bool;
         auto status() const noexcept -> bool;
-        auto difference() const noexcept -> state;
+        auto result() const noexcept -> state;
     };
 
-    extern state global;
-    extern integer exit_code;
+    auto is_ok(state::test data) noexcept -> bool;
 
-    auto empty(state::test data) noexcept -> bool;
+    auto is_ok(state::resource data) noexcept -> bool;
 
-    auto empty(state::resource data) noexcept -> bool;
+    auto is_empty(state::test data) noexcept -> bool;
 
-    auto status(state::test data) noexcept -> bool;
+    auto is_empty(state::resource data) noexcept -> bool;
 
-    auto status(state::resource data) noexcept -> bool;
+    auto on_error(string source) noexcept -> bool;
+
+    auto on_success(string source) noexcept -> bool;
+
+    auto on_exception() noexcept -> void;
 
     template <message select>
     auto report() noexcept -> void = delete;
