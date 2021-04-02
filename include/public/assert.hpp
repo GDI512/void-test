@@ -9,9 +9,9 @@
 #ifndef CPPLTF_ASSERT_HPP
 #define CPPLTF_ASSERT_HPP
 
-#include "state.hpp"
-#include "output.hpp"
-#include "utility.hpp"
+#include "../private/state.hpp"
+#include "../private/output.hpp"
+#include "../private/utility.hpp"
 
 #define scope __func__
 

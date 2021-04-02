@@ -9,7 +9,7 @@
 #ifndef CPPLTF_TYPE_HPP
 #define CPPLTF_TYPE_HPP
 
-#include "utility.hpp"
+#include "../private/utility.hpp"
 
 namespace test {
 

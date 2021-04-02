@@ -6,8 +6,8 @@
 //
 // ================================================================
 
-#include <object.hpp>
-#include <state.hpp>
+#include <public/object.hpp>
+#include <private/state.hpp>
 #include <cstdint>
 
 namespace test {

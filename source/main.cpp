@@ -6,7 +6,7 @@
 //
 // ================================================================
 
-#include <state.hpp>
+#include <private/state.hpp>
 
 using namespace test;
 

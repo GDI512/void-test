@@ -6,8 +6,8 @@
 //
 // ================================================================
 
-#include <output.hpp>
-#include <state.hpp>
+#include <private/output.hpp>
+#include <private/state.hpp>
 #include <cstdarg>
 #include <cstdio>
 

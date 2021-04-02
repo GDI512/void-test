@@ -6,9 +6,9 @@
 //
 // ================================================================
 
-#include <utility.hpp>
-#include <output.hpp>
-#include <state.hpp>
+#include <private/utility.hpp>
+#include <private/output.hpp>
+#include <private/state.hpp>
 
 namespace {
 
