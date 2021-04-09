@@ -95,6 +95,7 @@ const auto group = test::unit("raii", []{
             array[i] = array[i - 1];
         for (auto i = 0; i < 33; i++)
             array[i].~object();
+        ::operator delete(array);
     });
 
     // ================================================
@@ -122,6 +123,7 @@ const auto group = test::unit("raii", []{
             array[i] = array[i - 1];
         for (auto i = 0; i < 33; i++)
             array[i].~object();
+        ::operator delete(array);
     });
 
     // ================================================
