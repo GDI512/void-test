@@ -1,13 +1,14 @@
 // ========================== object.cpp ==========================
 //
-//  Part of the cppltf library, under the BSD-3-Clause License.
-//  See https://github.com/GDI512/cppltf/blob/master/LICENSE for
+//  Part of the citrine library, under the BSD-3-Clause License.
+//  See https://github.com/GDI512/citrine/blob/master/LICENSE for
 //  license information.
 //
 // ================================================================
 
 #include <public/object.hpp>
 #include <private/state.hpp>
+
 #include <cstdint>
 
 namespace test {

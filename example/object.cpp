@@ -1,6 +1,6 @@
 // ================================================================
 //    Because testing container classes for proper resource
-//  management tends to be particularly frustrating, <cppltf>
+//  management tends to be particularly frustrating, citrine
 //  defines two auxiliary types for this exact purpose -
 //  test::counter and test::object.
 //    The test::counter class (the safer option) increments a
@@ -12,7 +12,7 @@
 //  constructor calls over constructed objects and copy/move
 //  constructions from uninitialized memory. Because of the way
 //  it is implemented, it relies heavily on UB and should not be
-//  used without running the <cppltf> test suite.
+//  used without running the citrine test suite.
 // ================================================================
 
 #include <assert.hpp>

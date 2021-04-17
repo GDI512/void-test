@@ -2,7 +2,7 @@
 //    The test::unit function is used for grouping assertions and
 //  other test-related code into logical units. It accepts a
 //  string which is printed to stdout and a function object
-//  to be executed in its context. Because <cppltf> defines its
+//  to be executed in its context. Because citrine defines its
 //  own entry point, test::unit also returns a placeholder integer
 //  that makes it possible to define tests by dynamically
 //  initializing global variables.

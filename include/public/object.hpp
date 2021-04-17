@@ -1,13 +1,13 @@
 // ========================== object.hpp ==========================
 //
-//  Part of the cppltf library, under the BSD-3-Clause License.
-//  See https://github.com/GDI512/cppltf/blob/master/LICENSE for
+//  Part of the citrine library, under the BSD-3-Clause License.
+//  See https://github.com/GDI512/citrine/blob/master/LICENSE for
 //  license information.
 //
 // ================================================================
 
-#ifndef CPPLTF_TYPE_HPP
-#define CPPLTF_TYPE_HPP
+#ifndef CITRINE_TYPE_HPP
+#define CITRINE_TYPE_HPP
 
 #include "../private/utility.hpp"
 

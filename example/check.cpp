@@ -1,6 +1,6 @@
 // ================================================================
 //    This file contains examples of all available assertions.
-//  In cppltf every assertion is defined as a function returning
+//  In citrine every assertion is defined as a function returning
 //  true on success and false on failure.
 // ================================================================
 
