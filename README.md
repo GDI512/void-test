@@ -2,13 +2,13 @@
 [![MacOS Build](https://github.com/GDI512/citrine/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/GDI512/citrine/actions/workflows/macos-ci.yml)
 [![Linux Build](https://github.com/GDI512/citrine/actions/workflows/linux-ci.yml/badge.svg)](https://github.com/GDI512/citrine/actions/workflows/linux-ci.yml)
 # About
-*Citrine* is a modern macro-free library designed for testing small projects.
+*Citrine* is a modern macro-free framework designed for testing small projects.
 It guarantees fast compile times by removing all standard headers from its
-own header files and precompiling all of the
-implementation details into a static library.
+own header files and precompiling all of the implementation details into a
+static library.
 
 Because *Citrine* defines its own main function, it is very easy to use and
-does not require more setup than what can be seen in the example below.
+does not require more setup than what can be seen below.
 
 ```c++
 #include <assert.hpp>   // test::unit, test::check*
@@ -33,8 +33,8 @@ const auto group = test::unit("std::vector", []{
 });
 ```
 
-To learn more about using this library, look into the *example* directory. The
-examples there contain code and comments which explain all API features.
+To learn more, look into the *example* directory. The examples there
+contain code and comments which explain all API features.
 
 # Getting started
 To build and test *Citrine* (assuming you installed CMake on your machine),
