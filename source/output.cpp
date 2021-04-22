@@ -12,26 +12,6 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace format {
-
-    constexpr auto unit = "(\033[93munit\033[0m %s)\n";
-
-    constexpr auto error = "(\033[31merror\033[0m %s)\n";
-
-    constexpr auto success = "(\033[32mok\033[0m %s)\n";
-
-    constexpr auto exception = "(\033[31mexception\033[0m)\n";
-
-    constexpr auto test_error = "(\033[31mtest error\033[0m [%i/%i])\n";
-
-    constexpr auto test_success = "(\033[32mtest ok\033[0m [%i/%i])\n";
-
-    constexpr auto resource_error = "(\033[31mresource error\033[0m [%i/%i] [%i/%i/%i])\n";
-
-    constexpr auto resource_success = "(\033[32mresource ok\033[0m [%i/%i] [%i/%i/%i])\n";
-
-}
-
 namespace test {
 
     integer scope_level = {};
@@ -40,28 +20,28 @@ namespace test {
     auto display<message::unit>(string name) noexcept -> void {
         for (auto count = scope_level; count > 0; count--)
             std::fputs("  ", stdout);
-        std::printf(format::unit, name);
+        std::printf("(\033[93munit\033[0m %s)\n", name);
     }
 
     template <>
     auto display<message::error>(string source) noexcept -> void {
         for (auto count = scope_level; count > 0; count--)
             std::fputs("  ", stdout);
-        std::printf(format::error, source);
+        std::printf("(\033[31merror\033[0m %s)\n", source);
     }
 
     template <>
     auto display<message::success>(string source) noexcept -> void {
         for (auto count = scope_level; count > 0; count--)
             std::fputs("  ", stdout);
-        std::printf(format::success, source);
+        std::printf("(\033[32mok\033[0m %s)\n", source);
     }
 
     template <>
     auto display<message::exception>() noexcept -> void {
         for (auto count = scope_level; count > 0; count--)
             std::fputs("  ", stdout);
-         std::printf(format::exception);
+         std::printf("(\033[31mexception\033[0m)\n");
     }
 
     template <>
@@ -69,7 +49,7 @@ namespace test {
         if (!is_ok(data)) {
             for (auto count = scope_level; count > 0; count--)
                 std::fputs("  ", stdout);
-            std::printf(format::test_error, data.error_count, data.total_count);
+            std::printf("(\033[31mtest error\033[0m [%i/%i])\n", data.error_count, data.total_count);
         }
     }
 
@@ -78,7 +58,7 @@ namespace test {
         if (is_ok(data) && !is_empty(data)) {
             for (auto count = scope_level; count > 0; count--)
                 std::fputs("  ", stdout);
-            std::printf(format::test_success, data.error_count, data.total_count);
+            std::printf("(\033[32mtest ok\033[0m [%i/%i])\n", data.error_count, data.total_count);
         }
     }
 
@@ -87,8 +67,9 @@ namespace test {
         if (!is_ok(data)) {
             for (auto count = scope_level; count > 0; count--)
                 std::fputs("  ", stdout);
-            std::printf(format::resource_error, data.destructor_count, data.constructor_count,
-                data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
+            std::printf("(\033[31mresource error\033[0m [%i/%i] [%i/%i/%i])\n", data.destructor_count,
+                data.constructor_count, data.destructor_error_count, data.constructor_error_count,
+                    data.operator_error_count);
         }
     }
 
@@ -97,8 +78,9 @@ namespace test {
         if (is_ok(data) && !is_empty(data)) {
             for (auto count = scope_level; count > 0; count--)
                 std::fputs("  ", stdout);
-            std::printf(format::resource_success, data.destructor_count, data.constructor_count,
-                data.destructor_error_count, data.constructor_error_count, data.operator_error_count);
+            std::printf("(\033[32mresource ok\033[0m [%i/%i] [%i/%i/%i])\n", data.destructor_count,
+                data.constructor_count, data.destructor_error_count, data.constructor_error_count,
+                    data.operator_error_count);
         }
     }
 
