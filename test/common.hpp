@@ -1,15 +1,19 @@
 #ifndef TEST_COMMON_HPP
 #define TEST_COMMON_HPP
 
+#include <utility.hpp>
 #include <assert.hpp>
-#include <object.hpp>
-#include <cstdlib>
-#include <cstdio>
+#include <output.hpp>
+#include <state.hpp>
+#include <type.hpp>
 
-#define cassert(x)                                      \
-    if (!(x)) {                                         \
-        std::printf("Line: %i %s\n", __LINE__, #x);     \
-        std::exit(1);                                   \
-    }
+#include <forward_list>
+#include <type_traits>
+#include <utility>
+#include <vector>
+#include <new>
+
+template <auto N>
+auto assert() noexcept = delete;
 
 #endif

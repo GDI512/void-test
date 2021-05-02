@@ -11,26 +11,7 @@
 
 namespace test {
 
-    enum class message {
-        unit,
-        unit_error,
-        unit_success,
-        test_error,
-        test_success,
-        resource_error,
-        resource_success,
-        error,
-        success,
-        exception,
-        destructor,
-        constructor,
-        destructor_error,
-        constructor_error,
-        operator_error
-    };
-
     using string = const char*;
-    using integer = int;
 
     struct true_type {
         static constexpr auto value = true;
@@ -60,10 +41,6 @@ namespace test {
 
     template <typename T>
     struct is_lvalue_reference<T&> : true_type {};
-
-}
-
-namespace test::cpp {
 
     template <typename T>
     constexpr decltype(auto) forward(typename remove_reference<T>::type& value) noexcept {
