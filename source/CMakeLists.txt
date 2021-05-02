@@ -2,9 +2,8 @@ cmake_minimum_required (VERSION 3.15)
 
 add_library (citrine STATIC)
 add_library (citrine::citrine ALIAS citrine)
-target_sources (citrine PRIVATE main.cpp object.cpp output.cpp state.cpp)
-target_include_directories (citrine PRIVATE ../include/)
-target_include_directories (citrine PUBLIC ../include/public/)
+target_sources (citrine PRIVATE assert.cpp main.cpp output.cpp state.cpp type.cpp)
+target_include_directories (citrine PUBLIC .)
 target_compile_features (citrine PUBLIC cxx_std_17)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

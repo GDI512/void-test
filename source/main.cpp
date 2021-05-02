@@ -6,10 +6,8 @@
 //
 // ================================================================
 
-#include <private/state.hpp>
-
-using namespace test;
+#include "state.hpp"
 
 int main() {
-    return exit_code;
+    return test::exit_code;
 }
