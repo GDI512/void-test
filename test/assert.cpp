@@ -1,4 +1,9 @@
-#include "common.hpp"
+#include <assert.hpp>
+
+#include <forward_list>
+
+template <auto N>
+auto assert() noexcept = delete;
 
 template <>
 auto assert<0>() noexcept {

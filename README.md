@@ -11,8 +11,8 @@ Because *Citrine* defines its own main function, it is very easy to use and
 does not require more setup than what can be seen below.
 
 ```c++
-#include <assert.hpp>   // test::unit, test::check*
-#include <object.hpp>   // test::counter, test::object
+#include <assert.hpp>
+#include <type.hpp>
 
 const auto group = test::unit("std::vector", []{
 
@@ -23,7 +23,7 @@ const auto group = test::unit("std::vector", []{
     });
 
     test::unit("test::vector::insert()", []{
-        auto vector = std::vector<test::object>(64);
+        auto vector = std::vector<test::counter>(64);
         vector.insert(vector.begin() + 4, 1);
         test::check(vector[4] == 1);
         test::check_equal(vector.size(), 65);

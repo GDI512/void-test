@@ -1,4 +1,11 @@
-#include "common.hpp"
+#include <utility.hpp>
+
+#include <forward_list>
+#include <type_traits>
+#include <utility>
+
+template <auto N>
+auto assert() noexcept = delete;
 
 template <>
 auto assert<0>() noexcept {

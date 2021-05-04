@@ -1,4 +1,10 @@
-#include "common.hpp"
+#include <state.hpp>
+#include <type.hpp>
+
+#include <utility>
+
+template <auto N>
+auto assert() noexcept = delete;
 
 template <>
 auto assert<0>() noexcept {

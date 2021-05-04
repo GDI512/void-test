@@ -1,4 +1,7 @@
-#include "common.hpp"
+#include <assert.hpp>
+
+template <auto N>
+auto assert() noexcept = delete;
 
 template <>
 auto assert<0>() noexcept {

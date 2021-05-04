@@ -81,11 +81,13 @@ namespace test {
     auto report<message::error>(state result) noexcept -> void {
         exit_code = 1;
         current -= result;
+        indent--;
     }
 
     template <>
     auto report<message::success>(state result) noexcept -> void {
         current -= result;
+        indent--;
     }
 
 }

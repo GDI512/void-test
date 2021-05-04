@@ -35,6 +35,7 @@ namespace test {
     template <>
     auto print<message::unit>(string name) noexcept -> void {
         output("(\033[93munit\033[0m %s)\n", name);
+        indent++;
     }
 
     template <>
@@ -54,13 +55,13 @@ namespace test {
 
     template <>
     auto print<message::error>(state data) noexcept -> void {
-        output("(\033[31mtest error\033[0m [%i/%i] [%i/%i])", data.error_count, data.total_count,
+        output("(\033[31mtest error\033[0m [%i/%i] [%i/%i])\n", data.error_count, data.total_count,
           data.destroyed_count, data.constructed_count);
     }
 
     template <>
     auto print<message::success>(state data) noexcept -> void {
-        output("(\033[32mtest ok\033[0m [%i/%i] [%i/%i])", data.error_count, data.total_count,
+        output("(\033[32mtest ok\033[0m [%i/%i] [%i/%i])\n", data.error_count, data.total_count,
           data.destroyed_count, data.constructed_count);
     }
 

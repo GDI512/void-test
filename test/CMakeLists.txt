@@ -9,7 +9,7 @@ endfunction ()
 
 add_test_executable (assert assert.cpp)
 add_test_executable (empty empty.cpp)
-add_test_executable (obj object.cpp)
 add_test_executable (state state.cpp)
+add_test_executable (type type.cpp)
 add_test_executable (unit unit.cpp)
 add_test_executable (utility utility.cpp)
