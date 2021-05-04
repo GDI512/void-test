@@ -1,10 +1,10 @@
 #include <state.hpp>
 
 template <auto N>
-auto assert() noexcept = delete;
+auto check() noexcept = delete;
 
 template <>
-auto assert<0>() noexcept {
+auto check<0>() noexcept {
     test::current = {};
     test::report<test::message::error>();
     if (test::current.total_count != 1)
@@ -15,7 +15,7 @@ auto assert<0>() noexcept {
 }
 
 template <>
-auto assert<1>() noexcept {
+auto check<1>() noexcept {
     test::current = {};
     test::report<test::message::success>();
     if (test::current.total_count != 1)
@@ -26,7 +26,7 @@ auto assert<1>() noexcept {
 }
 
 template <>
-auto assert<2>() noexcept {
+auto check<2>() noexcept {
     test::current = {};
     test::report<test::message::exception>();
     if (test::current.total_count != 0)
@@ -37,7 +37,7 @@ auto assert<2>() noexcept {
 }
 
 template <>
-auto assert<3>() noexcept {
+auto check<3>() noexcept {
     test::current = {};
     test::report<test::message::destructor>();
     if (test::current.destroyed_count != 1)
@@ -48,7 +48,7 @@ auto assert<3>() noexcept {
 }
 
 template <>
-auto assert<4>() noexcept {
+auto check<4>() noexcept {
     test::current = {};
     test::report<test::message::constructor>();
     if (test::current.destroyed_count != 0)
@@ -60,10 +60,10 @@ auto assert<4>() noexcept {
 
 int main() {
     auto exit_code = 0;
-    exit_code += assert<0>();
-    exit_code += assert<1>();
-    exit_code += assert<2>();
-    exit_code += assert<3>();
-    exit_code += assert<4>();
+    exit_code += check<0>();
+    exit_code += check<1>();
+    exit_code += check<2>();
+    exit_code += check<3>();
+    exit_code += check<4>();
     return exit_code;
 }

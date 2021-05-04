@@ -39,7 +39,7 @@ namespace test {
             return handle<message::success>(__func__);
         else
             return handle<message::error>(__func__);
-    };
+    }
 
     template <typename T, typename F>
     auto check(T first, T last, F predicate) {

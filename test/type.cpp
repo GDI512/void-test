@@ -4,10 +4,10 @@
 #include <utility>
 
 template <auto N>
-auto assert() noexcept = delete;
+auto check() noexcept = delete;
 
 template <>
-auto assert<0>() noexcept {
+auto check<0>() noexcept {
     const auto instance = test::counter(4);
     const auto other = test::counter(2);
     if (instance != 4)
@@ -20,7 +20,7 @@ auto assert<0>() noexcept {
 }
 
 template <>
-auto assert<1>() noexcept {
+auto check<1>() noexcept {
     auto instance = test::counter(4);
     const auto other = test::counter(2);
     instance = other;
@@ -32,7 +32,7 @@ auto assert<1>() noexcept {
 }
 
 template <>
-auto assert<2>() noexcept {
+auto check<2>() noexcept {
     auto instance = test::counter(4);
     auto other = test::counter(2);
     instance = std::move(other);
@@ -44,7 +44,7 @@ auto assert<2>() noexcept {
 }
 
 template <>
-auto assert<3>() noexcept {
+auto check<3>() noexcept {
     { test::current = {};
       auto instance = test::counter(); };
     if (test::current.destroyed_count != 1)
@@ -55,7 +55,7 @@ auto assert<3>() noexcept {
 }
 
 template <>
-auto assert<4>() noexcept {
+auto check<4>() noexcept {
     { test::current = {};
       auto instance = test::counter();
       auto other = test::counter(instance); };
@@ -67,7 +67,7 @@ auto assert<4>() noexcept {
 }
 
 template <>
-auto assert<5>() noexcept {
+auto check<5>() noexcept {
     { test::current = {};
       auto instance = test::counter();
       auto other = test::counter(std::move(instance)); }
@@ -79,7 +79,7 @@ auto assert<5>() noexcept {
 }
 
 template <>
-auto assert<6>() noexcept {
+auto check<6>() noexcept {
     { test::current = {};
       auto instance = test::counter();
       auto other = test::counter();
@@ -92,7 +92,7 @@ auto assert<6>() noexcept {
 }
 
 template <>
-auto assert<7>() noexcept {
+auto check<7>() noexcept {
     { test::current = {};
       auto instance = test::counter();
       auto other = test::counter();
@@ -106,13 +106,13 @@ auto assert<7>() noexcept {
 
 int main() {
     auto exit_code = 0;
-    exit_code += assert<0>();
-    exit_code += assert<1>();
-    exit_code += assert<2>();
-    exit_code += assert<3>();
-    exit_code += assert<4>();
-    exit_code += assert<5>();
-    exit_code += assert<6>();
-    exit_code += assert<7>();
+    exit_code += check<0>();
+    exit_code += check<1>();
+    exit_code += check<2>();
+    exit_code += check<3>();
+    exit_code += check<4>();
+    exit_code += check<5>();
+    exit_code += check<6>();
+    exit_code += check<7>();
     return exit_code;
 }
