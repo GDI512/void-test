@@ -12,6 +12,8 @@
 namespace test {
 
     using string = const char*;
+    using size_t = decltype(sizeof(int));
+    using ptrdiff_t = decltype(static_cast<char*>(nullptr) - static_cast<char*>(nullptr));
 
     struct true_type {
         static constexpr auto value = true;
