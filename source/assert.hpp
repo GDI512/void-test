@@ -4,7 +4,7 @@
 #include "utility.hpp"
 #include "state.hpp"
 
-namespace test {
+namespace citrine {
 
     template <typename F>
     auto unit(string name, F function) noexcept {
@@ -26,7 +26,7 @@ namespace test {
 
     template <typename T, typename F>
     auto check(T first, T last, F predicate) {
-        if (test::all_of(first, last, predicate))
+        if (citrine::all_of(first, last, predicate))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
@@ -42,7 +42,7 @@ namespace test {
 
     template <typename I, typename J>
     auto check_equal(I first, I last, J start) {
-        if (test::equal(first, last, start))
+        if (citrine::equal(first, last, start))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
@@ -58,7 +58,7 @@ namespace test {
 
     template <typename T, typename J>
     auto check_not_equal(T first, T last, J start) {
-        if (!test::equal(first, last, start))
+        if (!citrine::equal(first, last, start))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
@@ -99,7 +99,7 @@ namespace test {
     template <typename F, typename... V>
     auto check_throws(F function, V&&... arguments) {
         try {
-            function(test::forward<V>(arguments)...);
+            function(citrine::forward<V>(arguments)...);
             return unit_state::active().on_error(__func__);
         } catch (...) {
             return unit_state::active().on_success(__func__);
@@ -109,7 +109,7 @@ namespace test {
     template <typename F, typename... V>
     auto check_nothrows(F function, V&&... arguments) {
         try {
-            function(test::forward<V>(arguments)...);
+            function(citrine::forward<V>(arguments)...);
             return unit_state::active().on_success(__func__);
         } catch (...) {
             return unit_state::active().on_error(__func__);
@@ -118,7 +118,7 @@ namespace test {
 
     template <typename T, typename F>
     auto check_sorted(T first, T last, F compare) {
-        if (test::is_sorted(first, last, compare))
+        if (citrine::is_sorted(first, last, compare))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
@@ -126,7 +126,7 @@ namespace test {
 
     template <typename I, typename T>
     auto check_contains(I first, I last, const T& value) {
-        if (test::find(first, last, value) != last)
+        if (citrine::find(first, last, value) != last)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);

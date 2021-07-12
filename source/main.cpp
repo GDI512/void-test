@@ -1,5 +1,5 @@
 #include "state.hpp"
 
 int main() {
-    return test::exit_code;
+    return citrine::exit_code;
 }

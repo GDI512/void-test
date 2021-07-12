@@ -3,7 +3,7 @@
 
 #include "utility.hpp"
 
-namespace test {
+namespace citrine {
 
     extern int exit_code;
     extern int indent_count;

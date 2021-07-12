@@ -2,44 +2,44 @@
 
 int main() {
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_error();
         cassert(!state.empty());
         cassert(!state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_success();
         cassert(!state.empty());
         cassert(state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_exception();
         cassert(!state.empty());
         cassert(!state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_destruction();
         cassert(!state.empty());
         cassert(!state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_construction();
         cassert(!state.empty());
         cassert(!state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_construction();
         state.on_destruction();
         cassert(!state.empty());
         cassert(state.good());
     }
     {
-        auto state = test::unit_state();
+        auto state = citrine::unit_state();
         state.on_error();
         state.on_success();
         state.on_exception();

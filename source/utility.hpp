@@ -1,7 +1,7 @@
 #ifndef CITRINE_UTILITY_HPP
 #define CITRINE_UTILITY_HPP
 
-namespace test {
+namespace citrine {
 
     using string = const char*;
     using size_t = decltype(sizeof(int));

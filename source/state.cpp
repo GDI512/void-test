@@ -3,7 +3,7 @@
 #include <cstdarg>
 #include <cstdio>
 
-namespace test {
+namespace citrine {
 
     int exit_code = {};
     int indent_count = {};
@@ -98,11 +98,13 @@ namespace test {
     auto print_unit_error(unit_state::state result) noexcept -> void {
         print("(\033[31mtest error\033[0m [%i/%i] [%i/%i])\n", result.error_count, result.check_count,
           result.destroyed_count, result.constructed_count);
+        indent_count--;
     }
 
     auto print_unit_success(unit_state::state result) noexcept -> void {
         print("(\033[32mtest ok\033[0m [%i/%i] [%i/%i])\n", result.error_count, result.check_count,
           result.destroyed_count, result.constructed_count);
+        indent_count--;
     }
 
 }

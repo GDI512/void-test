@@ -3,7 +3,7 @@
 
 #include "utility.hpp"
 
-namespace test {
+namespace citrine {
 
     class counter {
       private:

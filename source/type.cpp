@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace test {
+namespace citrine {
 
     counter::~counter() noexcept {
         unit_state::active().on_destruction();

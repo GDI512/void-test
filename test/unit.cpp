@@ -2,13 +2,13 @@
 
 int main() {
     {
-        test::unit("", [] { test::check(true); });
-        test::unit("", [] { test::check_equal(0, 0); });
-        cassert(test::exit_code == 0);
+        citrine::unit("", [] { citrine::check(true); });
+        citrine::unit("", [] { citrine::check_equal(0, 0); });
+        cassert(citrine::exit_code == 0);
     }
     {
-        test::unit("", [] { test::check(false); });
-        test::unit("", [] { test::check_equal(0, 0); });
-        cassert(test::exit_code == 1);
+        citrine::unit("", [] { citrine::check(false); });
+        citrine::unit("", [] { citrine::check_equal(0, 0); });
+        cassert(citrine::exit_code == 1);
     }
 }

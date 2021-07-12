@@ -1,41 +1,41 @@
 // ================================================================
-//    The test::unit function is used for grouping assertions and
+//    The citrine::unit function is used for grouping assertions and
 //  other test-related code into logical units. It accepts a
 //  string which is printed to stdout and a function object
 //  to be executed in its context. Because citrine defines its
-//  own entry point, test::unit also returns a placeholder integer
+//  own entry point, citrine::unit also returns a placeholder integer
 //  that makes it possible to define tests by dynamically
 //  initializing global variables.
-//    Keep in mind that nearly everything in test:: namespace
+//    Keep in mind that nearly everything in citrine:: namespace
 //  needs to be run inside a lambda (or other function) passed to
-//  test::unit as seen in the example below. You can define more
+//  citrine::unit as seen in the example below. You can define more
 //  than one test-variable but you should not do it across
 //  multiple translation units
 // ================================================================
 
 #include <citrine.hpp>
 
-const auto group = test::unit("<group>", []{
+const auto group = citrine::unit("<group>", []{
 
-    test::unit("<case>", []{
-        test::check(true);
-        test::check(true);
-        test::check(true);
+    citrine::unit("<case>", []{
+        citrine::check(true);
+        citrine::check(true);
+        citrine::check(true);
     });
 
-    test::unit("<case>", []{
-        test::check(false);
-        test::check(true);
-        test::check(true);
+    citrine::unit("<case>", []{
+        citrine::check(false);
+        citrine::check(true);
+        citrine::check(true);
     });
 
-    test::check(false);
-    test::check(false);
+    citrine::check(false);
+    citrine::check(false);
 
-    test::unit("<case>", []{
-        test::check(true);
-        test::check(true);
-        test::check(false);
+    citrine::unit("<case>", []{
+        citrine::check(true);
+        citrine::check(true);
+        citrine::check(false);
     });
 
 });
@@ -45,16 +45,16 @@ const auto group = test::unit("<group>", []{
 //  caught by that unit and counts as an assertion failure.
 // ================================================================
 
-const auto other = test::unit("<other>", []{
+const auto other = citrine::unit("<other>", []{
 
-    test::unit("<case>", []{
-        test::check(true);
-        test::check(true);
+    citrine::unit("<case>", []{
+        citrine::check(true);
+        citrine::check(true);
     });
 
-    test::unit("<case>", []{
-        test::check(true);
-        test::check(true);
+    citrine::unit("<case>", []{
+        citrine::check(true);
+        citrine::check(true);
     });
 
 });
