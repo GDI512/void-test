@@ -1,85 +1,108 @@
-#include "output.hpp"
 #include "state.hpp"
 
-namespace {
-
-    using namespace test;
-
-    auto operator-(state left, state right) noexcept {
-        return state {
-            left.error_count - right.error_count,
-            left.total_count - right.total_count,
-            left.destroyed_count - right.destroyed_count,
-            left.constructed_count - right.constructed_count,
-        };
-    }
-
-    auto operator-=(state& left, state right) noexcept {
-        left.error_count -= right.error_count;
-        left.total_count -= right.total_count;
-        left.destroyed_count -= right.destroyed_count;
-        left.constructed_count -= right.constructed_count;
-    }
-
-}
+#include <cstdarg>
+#include <cstdio>
 
 namespace test {
 
     int exit_code = {};
-    state current = {};
+    int indent_count = {};
 
-    registry::~registry() noexcept {
-        const auto result = current - snapshot;
-        if (result.error_count > 0 || result.destroyed_count != result.constructed_count) {
-            print<message::error>(result);
-            report<message::error>(result);
-        } else if (result.total_count + result.destroyed_count > 0) {
-            print<message::success>(result);
-            report<message::success>(result);
+    unit_state* unit_state::current = nullptr;
+
+    unit_state::~unit_state() noexcept {
+        if (!good()) {
+            print_unit_error(get());
+            current = previous;
+            exit_code = 1;
+        } else if (!empty()) {
+            print_unit_success(get());
+            current = previous;
         }
     }
 
-    registry::registry(string scope) noexcept : snapshot(current) {
-        print<message::unit>(scope);
+    unit_state::unit_state(string name) noexcept : previous(current), snapshot() {
+        print_unit(name);
+        current = this;
     }
 
-    template <>
-    auto report<message::error>() noexcept -> void {
-        current.error_count++;
-        current.total_count++;
+    auto unit_state::active() noexcept -> unit_state& {
+        return *current;
     }
 
-    template <>
-    auto report<message::success>() noexcept -> void {
-        current.total_count++;
+    auto unit_state::on_error(string check) noexcept -> bool {
+        print_error(check);
+        snapshot.error_count++;
+        snapshot.check_count++;
+        return false;
     }
 
-    template <>
-    auto report<message::exception>() noexcept -> void {
-        current.error_count++;
+    auto unit_state::on_success(string check) noexcept -> bool {
+        print_success(check);
+        snapshot.check_count++;
+        return true;
     }
 
-    template <>
-    auto report<message::destructor>() noexcept -> void {
-        current.destroyed_count++;
+    auto unit_state::on_exception() noexcept -> void {
+        print_exception();
+        snapshot.error_count++;
     }
 
-    template <>
-    auto report<message::constructor>() noexcept -> void {
-        current.constructed_count++;
+    auto unit_state::on_destruction() noexcept -> void {
+        snapshot.destroyed_count++;
     }
 
-    template <>
-    auto report<message::error>(state result) noexcept -> void {
-        exit_code = 1;
-        current -= result;
-        indent--;
+    auto unit_state::on_construction() noexcept -> void {
+        snapshot.constructed_count++;
     }
 
-    template <>
-    auto report<message::success>(state result) noexcept -> void {
-        current -= result;
-        indent--;
+    auto unit_state::get() const noexcept -> state {
+        return snapshot;
+    }
+
+    auto unit_state::good() const noexcept -> bool {
+        return snapshot.error_count == 0 && snapshot.destroyed_count == snapshot.constructed_count;
+    }
+
+    auto unit_state::empty() const noexcept -> bool {
+        return snapshot.check_count + snapshot.error_count +
+            snapshot.destroyed_count + snapshot.constructed_count == 0;
+    }
+
+    auto print(string format, ...) noexcept -> void {
+        va_list args;
+        for (auto level = 0; level < indent_count; level++)
+            fputs("  ", stdout);
+        va_start(args, format);
+        vfprintf(stdout, format, args);
+        va_end(args);
+    }
+
+    auto print_unit(string name) noexcept -> void {
+        print("(\033[93munit\033[0m %s)\n", name);
+        indent_count++;
+    }
+
+    auto print_error(string source) noexcept -> void {
+        print("(\033[31merror\033[0m %s)\n", source);
+    }
+
+    auto print_success(string source) noexcept -> void {
+        print("(\033[32mok\033[0m %s)\n", source);
+    }
+
+    auto print_exception() noexcept -> void {
+        print("(\033[31mexception\033[0m)\n");
+    }
+
+    auto print_unit_error(unit_state::state result) noexcept -> void {
+        print("(\033[31mtest error\033[0m [%i/%i] [%i/%i])\n", result.error_count, result.check_count,
+          result.destroyed_count, result.constructed_count);
+    }
+
+    auto print_unit_success(unit_state::state result) noexcept -> void {
+        print("(\033[32mtest ok\033[0m [%i/%i] [%i/%i])\n", result.error_count, result.check_count,
+          result.destroyed_count, result.constructed_count);
     }
 
 }

@@ -5,6 +5,8 @@ namespace test {
 
     using string = const char*;
 
+    using size_type = decltype(sizeof(int));
+
     struct true_type {
         static constexpr auto value = true;
     };

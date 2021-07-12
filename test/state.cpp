@@ -1,69 +1,53 @@
-#include <state.hpp>
-
-template <auto N>
-auto check() noexcept = delete;
-
-template <>
-auto check<0>() noexcept {
-    test::current = {};
-    test::report<test::message::error>();
-    if (test::current.total_count != 1)
-        return 1;
-    if (test::current.error_count != 1)
-        return 1;
-    return 0;
-}
-
-template <>
-auto check<1>() noexcept {
-    test::current = {};
-    test::report<test::message::success>();
-    if (test::current.total_count != 1)
-        return 1;
-    if (test::current.error_count != 0)
-        return 1;
-    return 0;
-}
-
-template <>
-auto check<2>() noexcept {
-    test::current = {};
-    test::report<test::message::exception>();
-    if (test::current.total_count != 0)
-        return 1;
-    if (test::current.error_count != 1)
-        return 1;
-    return 0;
-}
-
-template <>
-auto check<3>() noexcept {
-    test::current = {};
-    test::report<test::message::destructor>();
-    if (test::current.destroyed_count != 1)
-        return 1;
-    if (test::current.constructed_count != 0)
-        return 1;
-    return 0;
-}
-
-template <>
-auto check<4>() noexcept {
-    test::current = {};
-    test::report<test::message::constructor>();
-    if (test::current.destroyed_count != 0)
-        return 1;
-    if (test::current.constructed_count != 1)
-        return 1;
-    return 0;
-}
+#include "common.hpp"
 
 int main() {
-    auto exit_code = 0;
-    exit_code += check<0>();
-    exit_code += check<1>();
-    exit_code += check<2>();
-    exit_code += check<3>();
-    exit_code += check<4>();
-    return exit_code;
+    {
+        auto state = test::unit_state();
+        state.on_error();
+        cassert(!state.empty());
+        cassert(!state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_success();
+        cassert(!state.empty());
+        cassert(state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_exception();
+        cassert(!state.empty());
+        cassert(!state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_destruction();
+        cassert(!state.empty());
+        cassert(!state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_construction();
+        cassert(!state.empty());
+        cassert(!state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_construction();
+        state.on_destruction();
+        cassert(!state.empty());
+        cassert(state.good());
+    }
+    {
+        auto state = test::unit_state();
+        state.on_error();
+        state.on_success();
+        state.on_exception();
+        state.on_destruction();
+        state.on_construction();
+        cassert(state.get().check_count == 2);
+        cassert(state.get().error_count == 2);
+        cassert(state.get().destroyed_count == 1);
+        cassert(state.get().constructed_count == 1);
+    }
 }

@@ -6,19 +6,19 @@
 namespace test {
 
     counter::~counter() noexcept {
-        report<message::destructor>();
+        unit_state::active().on_destruction();
     }
 
     counter::counter(int value) noexcept : value(value) {
-        report<message::constructor>();
+        unit_state::active().on_construction();
     }
 
     counter::counter(counter&& other) noexcept : value(other.value) {
-        report<message::constructor>();
+        unit_state::active().on_construction();
     }
 
     counter::counter(const counter& other) noexcept : value(other.value) {
-        report<message::constructor>();
+        unit_state::active().on_construction();
     }
 
     counter::operator int() const noexcept {
