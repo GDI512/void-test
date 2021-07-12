@@ -13,7 +13,7 @@
 //  multiple translation units
 // ================================================================
 
-#include <assert.hpp>
+#include <citrine.hpp>
 
 const auto group = test::unit("<group>", []{
 

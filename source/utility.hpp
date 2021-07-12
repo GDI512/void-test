@@ -1,11 +1,3 @@
-// ========================== utility.hpp =========================
-//
-//  Part of the citrine library, under the BSD-3-Clause License.
-//  See https://github.com/GDI512/citrine/blob/master/LICENSE for
-//  license information.
-//
-// ================================================================
-
 #ifndef CITRINE_UTILITY_HPP
 #define CITRINE_UTILITY_HPP
 
@@ -14,6 +6,8 @@ namespace test {
     using string = const char*;
     using size_t = decltype(sizeof(int));
     using ptrdiff_t = decltype(static_cast<char*>(nullptr) - static_cast<char*>(nullptr));
+
+    using size_type = decltype(sizeof(int));
 
     struct true_type {
         static constexpr auto value = true;

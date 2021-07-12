@@ -1,11 +1,3 @@
-// ========================== state.hpp ===========================
-//
-//  Part of the citrine library, under the BSD-3-Clause License.
-//  See https://github.com/GDI512/citrine/blob/master/LICENSE for
-//  license information.
-//
-// ================================================================
-
 #ifndef CITRINE_STATE_HPP
 #define CITRINE_STATE_HPP
 
@@ -14,59 +6,57 @@
 namespace test {
 
     extern int exit_code;
+    extern int indent_count;
 
-    enum class message {
-        unit,
-        exit,
-        error,
-        success,
-        exception,
-        destructor,
-        constructor
-    };
+    class unit_state {
+      public:
+        struct state {
+            size_type error_count;
+            size_type check_count;
+            size_type destroyed_count;
+            size_type constructed_count;
+        };
 
-    extern struct state {
-        int error_count;
-        int total_count;
-        int destroyed_count;
-        int constructed_count;
-    } current;
-
-    class registry {
       private:
+        static unit_state* current;
+
+      private:
+        unit_state* previous;
         state snapshot;
 
       public:
-        ~registry() noexcept;
-        registry(string scope) noexcept;
+        ~unit_state() noexcept;
+        unit_state(string scope = "") noexcept;
+
+      public:
+        static auto active() noexcept -> unit_state&;
+
+      public:
+        auto on_error(string check = "") noexcept -> bool;
+        auto on_success(string check = "") noexcept -> bool;
+        auto on_exception() noexcept -> void;
+        auto on_destruction() noexcept -> void;
+        auto on_construction() noexcept -> void;
+
+      public:
+        auto get() const noexcept -> state;
+        auto good() const noexcept -> bool;
+        auto empty() const noexcept -> bool;
     };
 
-    template <auto N>
-    auto report() noexcept -> void = delete;
+    auto print(string format, ...) noexcept -> void;
 
-    template <auto N>
-    auto report(state) noexcept -> void = delete;
+    auto print_unit(string name) noexcept -> void;
 
-    template <>
-    auto report<message::error>() noexcept -> void;
+    auto print_error(string check) noexcept -> void;
 
-    template <>
-    auto report<message::success>() noexcept -> void;
+    auto print_success(string check) noexcept -> void;
 
-    template <>
-    auto report<message::exception>() noexcept -> void;
+    auto print_exception() noexcept -> void;
 
-    template <>
-    auto report<message::destructor>() noexcept -> void;
+    auto print_unit_error(unit_state::state data) noexcept -> void;
 
-    template <>
-    auto report<message::constructor>() noexcept -> void;
-
-    template <>
-    auto report<message::error>(state result) noexcept -> void;
-
-    template <>
-    auto report<message::success>(state result) noexcept -> void;
+    auto print_unit_success(unit_state::state data) noexcept -> void;
 
 }
 

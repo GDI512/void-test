@@ -4,7 +4,7 @@
 //  true on success and false on failure.
 // ================================================================
 
-#include <assert.hpp>
+#include <citrine.hpp>
 
 const auto unit = test::unit("assertions", []{
 
@@ -29,7 +29,7 @@ const auto unit = test::unit("assertions", []{
     //  Range-based overloads of test::check_equal and
     //  test::check_not_equal use == and != too.
     // ================================================
-
+    
     test::unit("test::check_<rel>", []{
         int array[] = {0, 1, 2, 3, 4};
         int other[] = {0, 1, 2, 4, 4};

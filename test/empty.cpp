@@ -1,3 +1,3 @@
-#include <assert.hpp>
+#include "common.hpp"
 
 const auto unit = test::unit("", []{});
