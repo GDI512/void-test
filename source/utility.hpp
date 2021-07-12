@@ -4,8 +4,6 @@
 namespace citrine {
 
     using string = const char*;
-    using size_t = decltype(sizeof(int));
-    using ptrdiff_t = decltype(static_cast<char*>(nullptr) - static_cast<char*>(nullptr));
 
     using size_type = decltype(sizeof(int));
 
@@ -49,8 +47,8 @@ namespace citrine {
         return static_cast<T&&>(value);
     }
 
-    template <typename I, typename F>
-    constexpr auto is_sorted(I first, I last, F comparison) {
+    template <typename iterator, typename invocable>
+    constexpr auto is_sorted(iterator first, iterator last, invocable comparison) {
         if (first != last) {
             auto next = first;
             while (++next != last) {
@@ -62,24 +60,24 @@ namespace citrine {
         return true;
     }
 
-    template <typename I, typename F>
-    constexpr auto all_of(I first, I last, F predicate) {
+    template <typename iterator, typename invocable>
+    constexpr auto all_of(iterator first, iterator last, invocable predicate) {
         for (; first != last; ++first)
             if (!predicate(*first))
                 return false;
         return true;
     }
 
-    template <typename I, typename J>
-    constexpr auto equal(I first, I last, J other) {
-        for (; first != last; ++first, ++other)
-            if (*first != *other)
+    template <typename iterator, typename other_iterator>
+    constexpr auto equal(iterator first, iterator last, other_iterator start) {
+        for (; first != last; ++first, ++start)
+            if (*first != *start)
                 return false;
         return true;
     }
 
-    template <typename I, typename T>
-    constexpr auto find(I first, I last, const T& value) {
+    template <typename iterator, typename T>
+    constexpr auto find(iterator first, iterator last, const T& value) {
         for (; first != last; ++first)
             if (*first == value)
                 return first;

@@ -6,8 +6,8 @@
 
 namespace citrine {
 
-    template <typename F>
-    auto unit(string name, F function) noexcept {
+    template <typename invocable>
+    auto unit(string name, invocable function) noexcept {
         auto state = unit_state(name);
         try {
             function();
@@ -24,108 +24,108 @@ namespace citrine {
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename F>
-    auto check(T first, T last, F predicate) {
+    template <typename iterator, typename invocable>
+    auto check(iterator first, iterator last, invocable predicate) {
         if (citrine::all_of(first, last, predicate))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_equal(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_equal(const value_type& left, const other_type& right) {
         if (left == right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename I, typename J>
-    auto check_equal(I first, I last, J start) {
+    template <typename iterator, typename other_iterator>
+    auto check_equal(iterator first, iterator last, other_iterator start) {
         if (citrine::equal(first, last, start))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_not_equal(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_equal(const value_type& left, const other_type& right) {
         if (left != right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename J>
-    auto check_not_equal(T first, T last, J start) {
+    template <typename iterator, typename J>
+    auto check_not_equal(iterator first, iterator last, J start) {
         if (!citrine::equal(first, last, start))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_less(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_less(const value_type& left, const other_type& right) {
         if (left < right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_not_less(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_less(const value_type& left, const other_type& right) {
         if (left >= right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_greater(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_greater(const value_type& left, const other_type& right) {
         if (left > right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename T, typename U>
-    auto check_not_greater(const T& left, const U& right) {
+    template <typename value_type, typename other_type>
+    auto check_not_greater(const value_type& left, const other_type& right) {
         if (left <= right)
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename F, typename... V>
-    auto check_throws(F function, V&&... arguments) {
+    template <typename invocable, typename... args>
+    auto check_throws(invocable function, args&&... arguments) {
         try {
-            function(citrine::forward<V>(arguments)...);
+            function(citrine::forward<args>(arguments)...);
             return unit_state::active().on_error(__func__);
         } catch (...) {
             return unit_state::active().on_success(__func__);
         }
     }
 
-    template <typename F, typename... V>
-    auto check_nothrows(F function, V&&... arguments) {
+    template <typename invocable, typename... args>
+    auto check_nothrows(invocable function, args&&... arguments) {
         try {
-            function(citrine::forward<V>(arguments)...);
+            function(citrine::forward<args>(arguments)...);
             return unit_state::active().on_success(__func__);
         } catch (...) {
             return unit_state::active().on_error(__func__);
         }
     }
 
-    template <typename T, typename F>
-    auto check_sorted(T first, T last, F compare) {
+    template <typename iterator, typename invocable>
+    auto check_sorted(iterator first, iterator last, invocable compare) {
         if (citrine::is_sorted(first, last, compare))
             return unit_state::active().on_success(__func__);
         else
             return unit_state::active().on_error(__func__);
     }
 
-    template <typename I, typename T>
-    auto check_contains(I first, I last, const T& value) {
+    template <typename iterator, typename value_type>
+    auto check_contains(iterator first, iterator last, const value_type& value) {
         if (citrine::find(first, last, value) != last)
             return unit_state::active().on_success(__func__);
         else
